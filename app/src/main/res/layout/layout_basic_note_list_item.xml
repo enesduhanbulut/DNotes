@@ -11,13 +11,13 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_width="@dimen/note_list_item_width"
+        android:layout_height="@dimen/note_list_item_height">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="@dimen/note_list_item_card_height"
             app:cardBackgroundColor="@color/yellow_lower_alpha"
             app:setCardViewColor="@{basicNoteListItemUIModel.category.color}">
 
@@ -51,7 +51,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/category"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/note_list_item_category_height"
             android:background="@{basicNoteListItemUIModel.category.color}"
             app:layout_constraintTop_toBottomOf="@id/card"
             tools:background="@color/yellow_higher_alpha">

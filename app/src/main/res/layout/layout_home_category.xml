@@ -29,15 +29,20 @@
             android:clickable="true"
             android:focusable="true"
             android:text="@string/View_All"
+            app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@id/title"
             app:underlined="true" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/items"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/title" />
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/title"
+            tools:itemCount="5"
+            tools:listitem="@layout/layout_basic_note_list_item" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -3,4 +3,8 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="list_item_category_icon_size">24dp</dimen>
+    <dimen name="note_list_item_width">180dp</dimen>
+    <dimen name="note_list_item_height">252dp</dimen>
+    <dimen name="note_list_item_category_height">28dp</dimen>
+    <dimen name="note_list_item_card_height">224dp</dimen>
 </resources>
