@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">DNotes</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="View_All">View All</string>
+</resources>
