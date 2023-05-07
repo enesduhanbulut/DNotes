@@ -13,3 +13,6 @@
 .externalNativeBuild
 .cxx
 local.properties
+/.idea/git_toolbox_prj.xml
+/.idea/sonarlint/issuestore/index.pb
+/.idea/vcs.xml

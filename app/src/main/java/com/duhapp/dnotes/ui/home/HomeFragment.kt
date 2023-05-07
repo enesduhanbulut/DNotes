@@ -1,42 +1,29 @@
 package com.duhapp.dnotes.ui.home
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import com.duhapp.dnotes.R
+import com.duhapp.dnotes.base.ui.BaseFragment
 import com.duhapp.dnotes.databinding.FragmentHomeBinding
 
-class HomeFragment : Fragment() {
+class HomeFragment : BaseFragment<FragmentHomeBinding, HomeUIEvent, HomeUIState, HomeViewModel>() {
 
-    private var _binding: FragmentHomeBinding? = null
+    private val homeViewModel: HomeViewModel by viewModels()
+    override val layoutId: Int
+        get() = R.layout.fragment_home
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
-
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        val textView: TextView = binding.textHome
-        homeViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
-        return root
+    override fun provideViewModel(): HomeViewModel {
+        return homeViewModel
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    override fun setBindingViewModel() {
+        binding.viewModel = viewModel
+    }
+
+    override fun initView(binding: FragmentHomeBinding) {
+        TODO("Not yet implemented")
+    }
+
+    override fun handleUIEvent(it: HomeUIEvent) {
+        TODO("Not yet implemented")
     }
 }
