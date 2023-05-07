@@ -6,7 +6,7 @@ import androidx.annotation.DrawableRes
 abstract class BaseNoteUIModel(
     val id: Int,
     val type: NoteType,
-    val category: NoteCategory,
+    val tag: NoteTag,
     val isPinned: Boolean,
     val isCompletable: Boolean,
     val isCompleted: Boolean
@@ -20,12 +20,10 @@ sealed interface NoteType {
 }
 
 data class CheckListItem(
-    val id: Int,
-    val isChecked: Boolean,
-    val text: String,
-    val subList: List<CheckListItem>
+    val id: Int, val isChecked: Boolean, val text: String, val subList: List<CheckListItem>
 )
-data class NoteCategory(
+
+data class NoteTag(
     val id: Int,
     val title: String,
     @ColorRes val color: Int,
@@ -34,26 +32,24 @@ data class NoteCategory(
 
 class BasicNoteUIModel(
     id: Int,
-    type: NoteType,
-    category: NoteCategory,
+    tag: NoteTag,
     isPinned: Boolean,
     isCompleted: Boolean,
     isCompletable: Boolean,
     val title: String,
     val body: String,
 
-    ) : BaseNoteUIModel(id, type, category, isPinned, isCompleted, isCompletable)
+    ) : BaseNoteUIModel(id, NoteType.BasicNote, tag, isPinned, isCompleted, isCompletable)
 
 class ImageNoteUIModel(
     id: Int,
-    type: NoteType,
-    category: NoteCategory,
+    tag: NoteTag,
     isPinned: Boolean,
     isCompleted: Boolean,
     isCompletable: Boolean,
     val title: String,
     val body: String,
     val image: String,
-) : BaseNoteUIModel(id, type, category, isPinned, isCompleted, isCompletable)
+) : BaseNoteUIModel(id, NoteType.BasicNote, tag, isPinned, isCompleted, isCompletable)
 
 

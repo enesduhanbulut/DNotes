@@ -9,8 +9,6 @@ open class BaseViewModel<UE : BaseUIEvent, US : BaseUIState> : ViewModel() {
     val uiEvent = mutableUIEvent as StateFlow<UE?>
     protected val mutableUIState = MutableStateFlow<US?>(null)
     val uiState = mutableUIState as StateFlow<US?>
-
-
 }
 
 abstract class BaseUIState

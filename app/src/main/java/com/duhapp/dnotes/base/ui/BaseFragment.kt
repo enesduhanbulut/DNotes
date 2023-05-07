@@ -13,8 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.launch
 
-abstract class BaseFragment
-<
+abstract class BaseFragment<
         DB : ViewDataBinding,
         UE : BaseUIEvent,
         US : BaseUIState,
@@ -32,10 +31,10 @@ abstract class BaseFragment
         savedInstanceState: Bundle?,
     ): View? {
         binding = DataBindingUtil.inflate(inflater, layoutId, container, false)
-        initView(binding)
         viewModel = provideViewModel()
-        binding.lifecycleOwner = viewLifecycleOwner
         setBindingViewModel()
+        binding.lifecycleOwner = viewLifecycleOwner
+        initView(binding)
         observeUIEvent()
         return binding.root
     }

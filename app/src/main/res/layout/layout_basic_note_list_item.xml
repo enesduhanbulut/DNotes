@@ -6,7 +6,7 @@
     <data>
 
         <variable
-            name="basicNoteListItemUIModel"
+            name="item"
             type="com.duhapp.dnotes.home_category.ui.BasicNoteUIModel" />
     </data>
 
@@ -19,7 +19,9 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/note_list_item_card_height"
             app:cardBackgroundColor="@color/yellow_lower_alpha"
-            app:setCardViewColor="@{basicNoteListItemUIModel.category.color}">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:setCardViewColor="@{item.tag.color}">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -31,7 +33,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="@{basicNoteListItemUIModel.title}"
+                    android:text="@{item.title}"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="Title" />
 
@@ -40,7 +42,7 @@
                     style="@style/TextAppearance.MaterialComponents.Body1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@{basicNoteListItemUIModel.body}"
+                    android:text="@{item.body}"
                     app:layout_constraintTop_toBottomOf="@id/title"
                     tools:text="Body" />
 
@@ -52,7 +54,7 @@
             android:id="@+id/category"
             android:layout_width="match_parent"
             android:layout_height="@dimen/note_list_item_category_height"
-            android:background="@{basicNoteListItemUIModel.category.color}"
+            android:background="@{item.tag.color}"
             app:layout_constraintTop_toBottomOf="@id/card"
             tools:background="@color/yellow_higher_alpha">
 
@@ -61,7 +63,7 @@
                 android:layout_width="@dimen/list_item_category_icon_size"
                 android:layout_height="@dimen/list_item_category_icon_size"
                 android:adjustViewBounds="true"
-                android:src="@{basicNoteListItemUIModel.category.icon}"
+                android:src="@{item.tag.icon}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -70,7 +72,7 @@
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{basicNoteListItemUIModel.category.title}"
+                android:text="@{item.tag.title}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/category_icon"
                 app:layout_constraintTop_toTopOf="parent"
