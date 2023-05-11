@@ -11,12 +11,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.duhapp.dnotes.generic.ui.ShowMessageBottomSheetViewModel
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.launch
 
 abstract class BaseFragment<
         DB : ViewDataBinding,
-        UE : BaseUIEvent,
-        US : BaseUIState,
+        UE : FragmentUIEvent,
+        US : FragmentUIState,
         VM : BaseViewModel<UE, US>,
         > : Fragment() {
 
@@ -55,10 +57,23 @@ abstract class BaseFragment<
     abstract fun provideViewModel(): VM
     abstract fun setBindingViewModel()
     abstract fun handleUIEvent(it: UE)
-
     override fun onDestroyView() {
         super.onDestroyView()
         binding.unbind()
+    }
+
+    fun showBottomSheetFragment(
+        pair: Pair<BottomSheetDialogFragment, Bundle>,
+        showMessageBottomSheetViewModel: BottomSheetViewModel<*, *> = ShowMessageBottomSheetViewModel(),
+    ): BottomSheetViewModel<*, *> {
+        val fragment = pair.first
+        val bundle = pair.second
+        fragment.arguments = bundle
+        fragment.show(
+            childFragmentManager,
+            fragment.tag,
+        )
+        return showMessageBottomSheetViewModel
     }
 
 }

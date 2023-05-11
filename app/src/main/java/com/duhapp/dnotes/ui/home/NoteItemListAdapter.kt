@@ -1,12 +1,12 @@
-package com.duhapp.dnotes.base.ui
+package com.duhapp.dnotes.ui.home
 
-import com.duhapp.dnotes.base.ui.BaseListAdapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.duhapp.dnotes.R
+import com.duhapp.dnotes.base.ui.BaseListAdapter
 import com.duhapp.dnotes.databinding.LayoutBasicNoteListItemBinding
 import com.duhapp.dnotes.home_category.ui.BaseNoteUIModel
 import com.duhapp.dnotes.home_category.ui.BasicNoteUIModel
@@ -27,7 +27,10 @@ class NoteItemListAdapter : BaseListAdapter<BaseNoteUIModel, ViewDataBinding>() 
         when (viewType) {
             0 -> {
                 binding = DataBindingUtil.inflate<LayoutBasicNoteListItemBinding>(
-                    LayoutInflater.from(parent.context), R.layout.layout_basic_note_list_item, parent, false
+                    LayoutInflater.from(parent.context),
+                    R.layout.layout_basic_note_list_item,
+                    parent,
+                    false
                 )
                 viewHolder = onCreateViewHolder(binding)
             }

@@ -7,4 +7,5 @@
     <dimen name="note_list_item_height">252dp</dimen>
     <dimen name="note_list_item_category_height">28dp</dimen>
     <dimen name="note_list_item_card_height">224dp</dimen>
+    <dimen name="show_message_bottom_sheet_image_size">160dp</dimen>
 </resources>
