@@ -21,7 +21,7 @@ class HomeViewModel @Inject constructor() : BaseViewModel<HomeUIEvent, HomeUISta
                             1, NoteTag(
                                 1,
                                 "Title Of Note Category",
-                                R.color.yellow_higher_alpha,
+                                R.color.secondary_light_color,
                                 R.drawable.baseline_lightbulb_24
                             ), false, false, false, "Title Of Note", "Test"
                         ),
@@ -29,7 +29,7 @@ class HomeViewModel @Inject constructor() : BaseViewModel<HomeUIEvent, HomeUISta
                             2, NoteTag(
                                 1,
                                 "Title Of Note Category",
-                                R.color.yellow_higher_alpha,
+                                R.color.secondary_light_color,
                                 R.drawable.baseline_lightbulb_24
                             ), false, false, false, "Title Of Note 1 ", "Test 1"
                         ),
@@ -37,7 +37,7 @@ class HomeViewModel @Inject constructor() : BaseViewModel<HomeUIEvent, HomeUISta
                             1, NoteTag(
                                 1,
                                 "Title Of Note Category",
-                                R.color.yellow_higher_alpha,
+                                R.color.secondary_light_color,
                                 R.drawable.baseline_lightbulb_24
                             ), false, false, false, "Title Of Note 2", "Test 2"
                         )
@@ -49,7 +49,7 @@ class HomeViewModel @Inject constructor() : BaseViewModel<HomeUIEvent, HomeUISta
                             1, NoteTag(
                                 1,
                                 "Title Of Note Category",
-                                R.color.yellow_higher_alpha,
+                                R.color.secondary_light_color,
                                 R.drawable.baseline_lightbulb_24
                             ), false, false, false, "Title Of Note", "Test"
                         ),
@@ -57,7 +57,7 @@ class HomeViewModel @Inject constructor() : BaseViewModel<HomeUIEvent, HomeUISta
                             2, NoteTag(
                                 1,
                                 "Title Of Note Category",
-                                R.color.yellow_higher_alpha,
+                                R.color.secondary_light_color,
                                 R.drawable.baseline_lightbulb_24
                             ), false, false, false, "Title Of Note 1 ", "Test 1"
                         ),
@@ -65,7 +65,7 @@ class HomeViewModel @Inject constructor() : BaseViewModel<HomeUIEvent, HomeUISta
                             1, NoteTag(
                                 1,
                                 "Title Of Note Category",
-                                R.color.yellow_higher_alpha,
+                                R.color.secondary_light_color,
                                 R.drawable.baseline_lightbulb_24
                             ), false, false, false, "Title Of Note 2", "Test 2"
                         )
@@ -77,7 +77,7 @@ class HomeViewModel @Inject constructor() : BaseViewModel<HomeUIEvent, HomeUISta
                             1, NoteTag(
                                 1,
                                 "Title Of Note Category",
-                                R.color.yellow_higher_alpha,
+                                R.color.secondary_light_color,
                                 R.drawable.baseline_lightbulb_24
                             ), false, false, false, "Title Of Note", "Test"
                         ),
@@ -85,7 +85,7 @@ class HomeViewModel @Inject constructor() : BaseViewModel<HomeUIEvent, HomeUISta
                             2, NoteTag(
                                 1,
                                 "Title Of Note Category",
-                                R.color.yellow_higher_alpha,
+                                R.color.secondary_light_color,
                                 R.drawable.baseline_lightbulb_24
                             ), false, false, false, "Title Of Note 1 ", "Test 1"
                         ),
@@ -93,7 +93,7 @@ class HomeViewModel @Inject constructor() : BaseViewModel<HomeUIEvent, HomeUISta
                             1, NoteTag(
                                 1,
                                 "Title Of Note Category",
-                                R.color.yellow_higher_alpha,
+                                R.color.secondary_light_color,
                                 R.drawable.baseline_lightbulb_24
                             ), false, false, false, "Title Of Note 2", "Test 2"
                         )

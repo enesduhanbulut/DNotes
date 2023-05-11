@@ -18,7 +18,7 @@
             android:id="@+id/card"
             android:layout_width="match_parent"
             android:layout_height="@dimen/note_list_item_card_height"
-            app:cardBackgroundColor="@color/yellow_lower_alpha"
+            app:cardBackgroundColor="@color/secondary_color"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:setCardViewColor="@{item.tag.color}">
@@ -56,7 +56,7 @@
             android:layout_height="@dimen/note_list_item_category_height"
             android:background="@{item.tag.color}"
             app:layout_constraintTop_toBottomOf="@id/card"
-            tools:background="@color/yellow_higher_alpha">
+            tools:background="@color/secondary_light_color">
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/category_icon"
