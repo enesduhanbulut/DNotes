@@ -1,4 +1,4 @@
-package com.duhapp.dnotes.home_category.ui
+package com.duhapp.dnotes.home.home_screen_category.ui
 
 import android.os.Bundle
 import com.duhapp.dnotes.generic.ui.ShowMessageBottomSheet

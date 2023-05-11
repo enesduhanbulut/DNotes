@@ -1,4 +1,4 @@
-package com.duhapp.dnotes.ui.home
+package com.duhapp.dnotes.home
 
 import androidx.fragment.app.viewModels
 import com.duhapp.dnotes.R
@@ -9,8 +9,8 @@ import com.duhapp.dnotes.databinding.LayoutHomeCategoryBinding
 import com.duhapp.dnotes.generic.ui.ButtonStyle
 import com.duhapp.dnotes.generic.ui.ShowMessageBottomSheetUIState
 import com.duhapp.dnotes.generic.ui.ShowMessageBottomSheetViewModel
-import com.duhapp.dnotes.home_category.ui.BottomSheetProvider
-import com.duhapp.dnotes.home_category.ui.HomeCategoryUIModel
+import com.duhapp.dnotes.home.home_screen_category.ui.BottomSheetProvider
+import com.duhapp.dnotes.home.home_screen_category.ui.HomeCategoryUIModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

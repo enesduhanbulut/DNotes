@@ -1,12 +1,12 @@
-package com.duhapp.dnotes.ui.home
+package com.duhapp.dnotes.home
 
 import com.duhapp.dnotes.R
 import com.duhapp.dnotes.base.ui.BaseViewModel
 import com.duhapp.dnotes.base.ui.FragmentUIEvent
 import com.duhapp.dnotes.base.ui.FragmentUIState
-import com.duhapp.dnotes.home_category.ui.BasicNoteUIModel
-import com.duhapp.dnotes.home_category.ui.HomeCategoryUIModel
-import com.duhapp.dnotes.home_category.ui.NoteTag
+import com.duhapp.dnotes.home.home_screen_category.ui.BasicNoteUIModel
+import com.duhapp.dnotes.home.home_screen_category.ui.HomeCategoryUIModel
+import com.duhapp.dnotes.home.home_screen_category.ui.NoteTag
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

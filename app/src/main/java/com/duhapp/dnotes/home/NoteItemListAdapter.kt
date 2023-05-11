@@ -1,4 +1,4 @@
-package com.duhapp.dnotes.ui.home
+package com.duhapp.dnotes.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.duhapp.dnotes.R
 import com.duhapp.dnotes.base.ui.BaseListAdapter
 import com.duhapp.dnotes.databinding.LayoutBasicNoteListItemBinding
-import com.duhapp.dnotes.home_category.ui.BaseNoteUIModel
-import com.duhapp.dnotes.home_category.ui.BasicNoteUIModel
+import com.duhapp.dnotes.home.home_screen_category.ui.BaseNoteUIModel
+import com.duhapp.dnotes.home.home_screen_category.ui.BasicNoteUIModel
 
 class NoteItemListAdapter : BaseListAdapter<BaseNoteUIModel, ViewDataBinding>() {
     override fun getLayoutId() = -1

@@ -1,4 +1,4 @@
-package com.duhapp.dnotes.home_category.ui
+package com.duhapp.dnotes.home.home_screen_category.ui
 
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes

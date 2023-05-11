@@ -7,7 +7,7 @@
 
         <variable
             name="item"
-            type="com.duhapp.dnotes.home_category.ui.BasicNoteUIModel" />
+            type="com.duhapp.dnotes.home.home_screen_category.ui.BasicNoteUIModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

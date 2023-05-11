@@ -7,7 +7,7 @@
 
         <variable
             name="homeCategoryUIModel"
-            type="com.duhapp.dnotes.home_category.ui.HomeCategoryUIModel" />
+            type="com.duhapp.dnotes.home.home_screen_category.ui.HomeCategoryUIModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
