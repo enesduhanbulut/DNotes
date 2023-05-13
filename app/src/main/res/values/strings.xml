@@ -10,4 +10,12 @@
     <string name="blank" />
     <string name="Add_Category">Add Category</string>
     <string name="Select_Category">Select Category</string>
+    <string name="New_Category">New Category</string>
+    <string name="New_Category_Message">Please enter name of category and select an icon</string>
+    <string name="Add">Add</string>
+    <string name="Edit_Category">Edit Category</string>
+    <string name="Edit_Category_Message">Please enter new name and icon of category</string>
+    <string name="Confirm">Confirm</string>
+    <string name="Delete">Delete</string>
+    <string name="Category_Name">Category Name</string>
 </resources>

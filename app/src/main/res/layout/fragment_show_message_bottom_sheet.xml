@@ -7,9 +7,9 @@
 
         <variable
             name="viewModel"
-            type="com.duhapp.dnotes.generic.ui.ShowMessageBottomSheetViewModel" />
+            type="com.duhapp.dnotes.features.generic.ui.ShowMessageBottomSheetViewModel" />
 
-        <import type="com.duhapp.dnotes.generic.ui.ButtonStyle" />
+        <import type="com.duhapp.dnotes.features.generic.ui.ButtonStyle" />
 
         <import type="android.view.View" />
     </data>
@@ -17,14 +17,14 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context=".generic.ui.ShowMessageBottomSheet">
+        tools:context=".features.generic.ui.ShowMessageBottomSheet">
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/image"
+            android:id="@+id/icon"
             android:layout_width="@dimen/show_message_bottom_sheet_image_size"
             android:layout_height="@dimen/show_message_bottom_sheet_image_size"
             android:adjustViewBounds="true"
-            android:src="@{viewModel.uiState.image}"
+            android:src="@{viewModel.uiState.uiModel.image}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -34,17 +34,17 @@
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{viewModel.uiState.title}"
+            android:text="@{viewModel.uiState.uiModel.title}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/image"
+            app:layout_constraintTop_toBottomOf="@id/icon"
             tools:text="Title" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{viewModel.uiState.message}"
+            android:text="@{viewModel.uiState.uiModel.message}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title"
@@ -62,7 +62,7 @@
                 android:id="@+id/positive_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{viewModel.uiState.positiveButtonText}"
+                android:text="@{viewModel.uiState.uiModel.positiveButtonText}"
                 android:visibility="@{viewModel.uiState.buttonStyle != ButtonStyle.Negative ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -78,7 +78,7 @@
                 android:id="@+id/negative_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{viewModel.uiState.positiveButtonText}"
+                android:text="@{viewModel.uiState.uiModel.positiveButtonText}"
                 android:visibility="@{viewModel.uiState.buttonStyle != ButtonStyle.Positive ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

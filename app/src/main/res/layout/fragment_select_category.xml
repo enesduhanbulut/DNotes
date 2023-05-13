@@ -5,11 +5,11 @@
 
     <data>
 
-        <import type="com.duhapp.dnotes.generic.ui.SpaceModel" />
+        <import type="com.duhapp.dnotes.features.generic.ui.SpaceModel" />
 
         <variable
             name="viewModel"
-            type="com.duhapp.dnotes.select_category.ui.SelectCategoryViewModel" />
+            type="com.duhapp.dnotes.features.select_category.ui.SelectCategoryViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,6 +30,7 @@
             android:layout_width="256dp"
             android:layout_height="wrap_content"
             android:text="@string/Add_Category"
+            android:onClickListener="@{() -> viewModel.onAddCategoryClick()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

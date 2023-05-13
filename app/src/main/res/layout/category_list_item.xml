@@ -7,7 +7,7 @@
 
         <variable
             name="uiModel"
-            type="com.duhapp.dnotes.select_category.ui.CategoryItemUIModel" />
+            type="com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -18,7 +18,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@{uiModel.color}"
+            android:background="@{uiModel.colorId}"
             tools:background="@color/primary_color">
 
             <com.google.android.material.imageview.ShapeableImageView
@@ -27,8 +27,8 @@
                 android:layout_height="@dimen/category_list_item_icon_size"
                 android:layout_margin="@dimen/small_margin"
                 android:adjustViewBounds="true"
-                android:src="@{uiModel.icon}"
-                android:tint="@{uiModel.color}"
+                android:src="@{uiModel.iconId}"
+                android:tint="@{uiModel.colorId}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -42,7 +42,7 @@
                 android:layout_marginHorizontal="@dimen/small_margin"
                 android:layout_marginVertical="@dimen/small_margin"
                 android:gravity="start"
-                android:text="@{uiModel.title}"
+                android:text="@{uiModel.name}"
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/category_icon"
@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/small_margin"
                 android:layout_marginBottom="@dimen/small_margin"
-                android:text="@{uiModel.description}"
+                android:text="@{uiModel.descripton}"
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

@@ -10,4 +10,5 @@
     <dimen name="show_message_bottom_sheet_image_size">160dp</dimen>
     <dimen name="category_list_item_icon_size">46dp</dimen>
     <dimen name="small_margin">16dp</dimen>
+    <dimen name="category_bottom_sheet_image_size">96dp</dimen>
 </resources>

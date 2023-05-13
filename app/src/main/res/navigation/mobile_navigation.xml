@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.duhapp.dnotes.home.HomeFragment"
+        android:name="com.duhapp.dnotes.features.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
@@ -22,9 +22,26 @@
         android:name="com.duhapp.dnotes.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
+
     <fragment
         android:id="@+id/selectCategoryFragment"
-        android:name="com.duhapp.dnotes.select_category.ui.SelectCategoryFragment"
+        android:name="com.duhapp.dnotes.features.select_category.ui.SelectCategoryFragment"
         android:label="SelectCategoryFragment"
-        tools:layout="@layout/fragment_select_category" />
+        tools:layout="@layout/fragment_select_category">
+        <action
+            android:id="@+id/action_selectCategoryFragment_to_categoryBottomSheet"
+            app:destination="@id/categoryBottomSheet" />
+    </fragment>
+    <dialog
+        android:id="@+id/categoryBottomSheet"
+        android:name="com.duhapp.dnotes.features.add_or_update_category.ui.CategoryBottomSheet"
+        android:label="CategoryBottomSheet"
+        tools:layout="@layout/fragment_show_message_bottom_sheet">
+        <argument
+            android:name="uiModel"
+            app:argType="com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel" />
+        <argument
+            android:name="categoryShowType"
+            app:argType="com.duhapp.dnotes.features.add_or_update_category.ui.CategoryShowType" />
+    </dialog>
 </navigation>

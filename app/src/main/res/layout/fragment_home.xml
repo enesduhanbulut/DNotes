@@ -7,13 +7,13 @@
 
         <variable
             name="viewModel"
-            type="com.duhapp.dnotes.home.HomeViewModel" />
+            type="com.duhapp.dnotes.features.home.HomeViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".home.HomeFragment">
+        tools:context=".features.home.HomeFragment">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/categories"
