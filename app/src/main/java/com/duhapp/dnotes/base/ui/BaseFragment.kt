@@ -5,12 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
+import androidx.annotation.StringRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.duhapp.dnotes.MainActivity
 import com.duhapp.dnotes.generic.ui.ShowMessageBottomSheetViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.launch
@@ -28,6 +30,8 @@ abstract class BaseFragment<
     @get:LayoutRes
     abstract val layoutId: Int
 
+    @get:StringRes
+    abstract val titleId: Int
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -37,8 +41,27 @@ abstract class BaseFragment<
         setBindingViewModel()
         binding.lifecycleOwner = viewLifecycleOwner
         initView(binding)
+        with(requireActivity()) {
+            lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    setAppBarTitle(titleId)
+                }
+            }
+        }
         observeUIEvent()
         return binding.root
+    }
+
+    protected fun setAppBarTitle(@StringRes titleId: Int) {
+        (requireActivity() as MainActivity).setAppBarTitle(titleId)
+    }
+
+    protected fun setAppBarVisibility(visibility: Int) {
+        (requireActivity() as MainActivity).setAppBarVisibility(visibility)
+    }
+
+    protected fun setBottomNavigationVisibility(visibility: Int) {
+        (requireActivity() as MainActivity).setBottomAppBarVisibility(visibility)
     }
 
     private fun observeUIEvent() {

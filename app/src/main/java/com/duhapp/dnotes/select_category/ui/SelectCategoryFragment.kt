@@ -12,6 +12,8 @@ class SelectCategoryFragment :
             SelectCategoryUIState, SelectCategoryViewModel>() {
     override val layoutId: Int
         get() = R.layout.fragment_select_category
+    override val titleId: Int
+        get() = R.string.Select_Category
     private val selectCategoryViewModel: SelectCategoryViewModel by viewModels()
     override fun initView(binding: FragmentSelectCategoryBinding) {
         binding.categories.addItemDecoration(

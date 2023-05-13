@@ -3,6 +3,7 @@ package com.duhapp.dnotes
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -34,6 +35,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications
             )
         )
+        setSupportActionBar(binding.toolbar)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == R.id.selectCategoryFragment) {
@@ -46,9 +48,29 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.fab.setOnClickListener {
-            navController.navigate(R.id.selectCategoryFragment)
+            navController.navigate(
+                R.id.selectCategoryFragment
+            )
         }
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+    }
+
+    fun setBottomAppBarVisibility(visibility: Int) {
+        binding.bottomAppBar.visibility = visibility
+        binding.fab.visibility = visibility
+    }
+
+    fun setAppBarVisibility(visibility: Int) {
+        binding.toolbar.visibility = visibility
+    }
+
+    fun setAppBarTitle(@StringRes title: Int) {
+        binding.toolbar.title = getString(title)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = findNavController(R.id.nav_host_fragment_activity_main)
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
 }

@@ -21,6 +21,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeUIEvent, HomeUIState,
     private lateinit var adapter: BaseListAdapter<HomeCategoryUIModel, LayoutHomeCategoryBinding>
     override val layoutId: Int
         get() = R.layout.fragment_home
+    override val titleId: Int
+        get() = R.string.title_home
 
     override fun provideViewModel(): HomeViewModel {
         return homeViewModel
