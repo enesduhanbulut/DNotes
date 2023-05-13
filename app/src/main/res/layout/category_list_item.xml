@@ -21,19 +21,27 @@
             android:background="@{uiModel.colorId}"
             tools:background="@color/primary_color">
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/category_icon"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/category_icon_card"
                 android:layout_width="@dimen/category_list_item_icon_size"
                 android:layout_height="@dimen/category_list_item_icon_size"
                 android:layout_margin="@dimen/small_margin"
-                android:adjustViewBounds="true"
-                android:src="@{uiModel.iconId}"
-                android:tint="@{uiModel.colorId}"
+                app:cardCornerRadius="50dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:src="@drawable/baseline_add_circle_24"
-                tools:tint="@color/white" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/category_icon"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:text="@{uiModel.emoji}"
+                    android:textSize="20sp"
+                    tools:text="😀"
+                    tools:tint="@color/white" />
+            </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/title"
@@ -45,7 +53,7 @@
                 android:text="@{uiModel.name}"
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/category_icon"
+                app:layout_constraintStart_toEndOf="@id/category_icon_card"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Title" />
 
@@ -55,11 +63,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/small_margin"
                 android:layout_marginBottom="@dimen/small_margin"
-                android:text="@{uiModel.descripton}"
+                android:text="@{uiModel.description}"
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/category_icon"
+                app:layout_constraintStart_toEndOf="@id/category_icon_card"
                 tools:text="Description" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

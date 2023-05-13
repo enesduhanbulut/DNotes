@@ -14,8 +14,8 @@ class CategoryRepositoryImpl(
     override suspend fun insert(categoryUIModel: CategoryUIModel) {
         val category = CategoryEntity(
             categoryUIModel.name,
-            categoryUIModel.descripton,
-            categoryUIModel.iconId,
+            categoryUIModel.description,
+            categoryUIModel.emoji,
             categoryUIModel.colorId
         )
         dao.insert(category)
@@ -24,8 +24,8 @@ class CategoryRepositoryImpl(
     override suspend fun updateCategory(categoryUIModel: CategoryUIModel) {
         val category = CategoryEntity(
             categoryUIModel.name,
-            categoryUIModel.descripton,
-            categoryUIModel.iconId,
+            categoryUIModel.description,
+            categoryUIModel.emoji,
             categoryUIModel.colorId
         )
         category.id = categoryUIModel.id

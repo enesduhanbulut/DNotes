@@ -17,5 +17,6 @@
     <string name="Edit_Category_Message">Please enter new name and icon of category</string>
     <string name="Confirm">Confirm</string>
     <string name="Delete">Delete</string>
-    <string name="Category_Name">Category Name</string>
+    <string name="Category_Name">Please enter name of category</string>
+    <string name="Category_Description">Please enter description of category</string>
 </resources>

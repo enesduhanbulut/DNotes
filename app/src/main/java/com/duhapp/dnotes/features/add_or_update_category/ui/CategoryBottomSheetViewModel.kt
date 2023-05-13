@@ -32,11 +32,28 @@ class CategoryBottomSheetViewModel @Inject constructor(
         mutableBottomSheetUIState.value =
             CategoryBottomSheetUIState(categoryUIState, categoryShowType)
     }
+
+    fun onCategoryIconClicked() {
+        mutableBottomSheetUIEvent.value = CategoryBottomSheetUIEvent.ShowEmojiBottomSheet
+    }
+
+    fun setEmoji(emoji: String) {
+        mutableBottomSheetUIEvent.value = CategoryBottomSheetUIEvent.CloseEmojiBottomSheet
+        viewModelScope.launch {
+            mutableBottomSheetUIState.emit(
+                mutableBottomSheetUIState.value!!.copy(
+                    categoryUIModel = mutableBottomSheetUIState.value!!.categoryUIModel.copy(
+                        emoji = emoji
+                    )
+                )
+            )
+        }
+    }
 }
 
-class CategoryBottomSheetUIState(
+data class CategoryBottomSheetUIState(
     val categoryUIModel: CategoryUIModel,
-    categoryShowType: CategoryShowType,
+    val categoryShowType: CategoryShowType,
 ) : BottomSheetState {
     @StringRes
     var title: Int = 0
@@ -76,6 +93,8 @@ sealed interface CategoryBottomSheetUIEvent : BottomSheetEvent {
     object Inserted : CategoryBottomSheetUIEvent
     object Updated : CategoryBottomSheetUIEvent
     object Canceled : CategoryBottomSheetUIEvent
+    object ShowEmojiBottomSheet : CategoryBottomSheetUIEvent
+    object CloseEmojiBottomSheet : CategoryBottomSheetUIEvent
 }
 
 @Parcelize

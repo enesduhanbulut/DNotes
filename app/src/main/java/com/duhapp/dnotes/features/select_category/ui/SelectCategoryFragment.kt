@@ -48,7 +48,9 @@ class SelectCategoryFragment :
                         CategoryUIModel(
                             -1,
                             "",
-                            "",
+                            String(Character.toChars(0x1F4DD)),
+                            "Test",
+                            R.color.primary_color
                         ), CategoryShowType.Add
                     )
                 )
