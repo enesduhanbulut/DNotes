@@ -30,7 +30,7 @@ class NoteItemListAdapter : BaseListAdapter<BaseNoteUIModel, ViewDataBinding>() 
                     LayoutInflater.from(parent.context),
                     R.layout.layout_basic_note_list_item,
                     parent,
-                    false
+                    false,
                 )
                 viewHolder = onCreateViewHolder(binding)
             }

@@ -1,5 +1,6 @@
 package com.duhapp.dnotes.features.select_category.ui
 
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.duhapp.dnotes.R
@@ -16,8 +17,9 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class SelectCategoryFragment :
     BaseFragment<
-            FragmentSelectCategoryBinding, SelectCategoryUIEvent,
-            SelectCategoryUIState, SelectCategoryViewModel>() {
+        FragmentSelectCategoryBinding, SelectCategoryUIEvent,
+        SelectCategoryUIState, SelectCategoryViewModel,
+        >() {
     override val layoutId: Int
         get() = R.layout.fragment_select_category
     override val titleId: Int
@@ -32,9 +34,9 @@ class SelectCategoryFragment :
                     16,
                     16,
                     16,
-                    16
-                )
-            )
+                    16,
+                ),
+            ),
         )
         observeUIState()
     }
@@ -52,13 +54,15 @@ class SelectCategoryFragment :
 
             override fun setUIState(
                 binding: CategoryListItemBinding,
-                item: CategoryUIModel
+                item: CategoryUIModel,
             ) {
                 binding.uiModel = item
             }
         }
+        adapter.onItemClickListener = BaseListAdapter.OnItemClickListener(viewModel::handleCategorySelect)
         binding.categories.adapter = adapter
     }
+
 
     override fun handleUIEvent(it: SelectCategoryUIEvent) {
         when (it) {
@@ -70,12 +74,16 @@ class SelectCategoryFragment :
                             "",
                             String(Character.toChars(0x1F4DD)),
                             "Test",
-                            R.color.primary_color
-                        ), CategoryShowType.Add
-                    )
+                            R.color.primary_color,
+                        ),
+                        CategoryShowType.Add,
+                    ),
                 )
             }
 
+            is SelectCategoryUIEvent.OnCategorySelected -> {
+                Toast.makeText(context, it.category.toString(), Toast.LENGTH_LONG).show()
+            }
             else -> {}
         }
     }
