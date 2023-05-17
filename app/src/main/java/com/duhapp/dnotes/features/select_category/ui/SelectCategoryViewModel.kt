@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SelectCategoryViewModel @Inject constructor(
-    private val getCategories: GetCategories
+    private val getCategories: GetCategories,
 ) : BaseViewModel<SelectCategoryUIEvent, SelectCategoryUIState>() {
     init {
         mutableUIEvent.value = SelectCategoryUIEvent.Loading
@@ -28,18 +28,24 @@ class SelectCategoryViewModel @Inject constructor(
         }
     }
 
+    fun handleCategorySelect(category: CategoryUIModel, position: Int) {
+        mutableUIEvent.value = SelectCategoryUIEvent.OnCategorySelected(category)
+    }
+
     fun onAddCategoryClick() {
         mutableUIEvent.value = SelectCategoryUIEvent.NavigateAddCategory
     }
 }
 
 data class SelectCategoryUIState(
-    val categoryList: List<CategoryUIModel>
+    val categoryList: List<CategoryUIModel>,
 ) : FragmentUIState
 
 sealed interface SelectCategoryUIEvent : FragmentUIEvent {
     object NavigateAddCategory : SelectCategoryUIEvent
+    data class OnCategorySelected(
+        val category: CategoryUIModel,
+    ) : SelectCategoryUIEvent
 
-    object OnCreateNoteClicked : SelectCategoryUIEvent
     object Loading : SelectCategoryUIEvent
 }
