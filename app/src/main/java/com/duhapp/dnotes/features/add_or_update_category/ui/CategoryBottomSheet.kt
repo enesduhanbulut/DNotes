@@ -9,7 +9,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class CategoryBottomSheet : BaseBottomSheet<
-        CategoryBottomSheetUIEvent,
+        CategoryUIEvent,
         CategoryBottomSheetUIState,
         CategoryBottomSheetViewModel,
         FragmentCategoryBottomSheetBinding>() {
@@ -36,17 +36,17 @@ class CategoryBottomSheet : BaseBottomSheet<
         binding.viewModel = viewModel
     }
 
-    override fun handleUIEvent(it: CategoryBottomSheetUIEvent) {
+    override fun handleUIEvent(it: CategoryUIEvent) {
         when (it) {
-            is CategoryBottomSheetUIEvent.Canceled -> {
+            is CategoryUIEvent.Canceled -> {
                 dismiss()
             }
 
-            is CategoryBottomSheetUIEvent.Inserted -> {
+            is CategoryUIEvent.Inserted -> {
                 dismiss()
             }
 
-            is CategoryBottomSheetUIEvent.ShowEmojiBottomSheet -> {
+            is CategoryUIEvent.ShowEmojiDialog -> {
                 emojiPopup = EmojiPopup(
                     requireView(), onEmojiClickListener = {
                         binding.categoryIcon.text.clear()
@@ -56,7 +56,7 @@ class CategoryBottomSheet : BaseBottomSheet<
                 emojiPopup.toggle()
             }
 
-            is CategoryBottomSheetUIEvent.CloseEmojiBottomSheet -> {
+            is CategoryUIEvent.Dialog -> {
                 emojiPopup.let {
                     if (it.isShowing) {
                         it.dismiss()

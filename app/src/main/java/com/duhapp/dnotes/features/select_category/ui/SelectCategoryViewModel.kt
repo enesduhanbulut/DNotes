@@ -17,7 +17,7 @@ class SelectCategoryViewModel @Inject constructor(
     private val deleteCategory: DeleteCategory
 ) : BaseViewModel<SelectCategoryUIEvent, SelectCategoryUIState>() {
     init {
-        mutableUIEvent.value = SelectCategoryUIEvent.Loading
+        setEvent(SelectCategoryUIEvent.Loading)
         loadCategories()
     }
 
@@ -31,11 +31,11 @@ class SelectCategoryViewModel @Inject constructor(
     }
 
     fun handleCategorySelect(category: CategoryUIModel, position: Int) {
-        mutableUIEvent.value = SelectCategoryUIEvent.OnCategorySelected(category)
+        setEvent(SelectCategoryUIEvent.OnCategorySelected(category))
     }
 
     fun onAddCategoryClick() {
-        mutableUIEvent.value = SelectCategoryUIEvent.NavigateAddCategory
+        setEvent(SelectCategoryUIEvent.NavigateAddCategory)
     }
 
     fun handleDeleteCategory(categoryUIModel: CategoryUIModel) {

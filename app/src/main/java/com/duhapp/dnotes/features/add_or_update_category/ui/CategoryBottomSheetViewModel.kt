@@ -18,29 +18,30 @@ import javax.inject.Inject
 class CategoryBottomSheetViewModel @Inject constructor(
     private val upsertCategory: UpsertCategory
 ) :
-    BottomSheetViewModel<CategoryBottomSheetUIEvent, CategoryBottomSheetUIState>() {
+    BottomSheetViewModel<CategoryUIEvent, CategoryBottomSheetUIState>() {
     fun onPositiveButtonClicked() {
         viewModelScope.launch {
-            upsertCategory.invoke(mutableBottomSheetUIState.value!!.categoryUIModel)
-            mutableBottomSheetUIEvent.value = CategoryBottomSheetUIEvent.Inserted
+            upsertCategory.invoke(mUIState.value!!.categoryUIModel)
+            setEvent(CategoryUIEvent.Inserted)
         }
     }
 
     fun setViewWithBundle(categoryUIState: CategoryUIModel, categoryShowType: CategoryShowType) {
-        mutableBottomSheetUIState.value =
+        setState(
             CategoryBottomSheetUIState(categoryUIState, categoryShowType)
+        )
     }
 
     fun onCategoryIconClicked() {
-        mutableBottomSheetUIEvent.value = CategoryBottomSheetUIEvent.ShowEmojiBottomSheet
+        setEvent(CategoryUIEvent.ShowEmojiDialog)
     }
 
     fun setEmoji(emoji: String) {
-        mutableBottomSheetUIEvent.value = CategoryBottomSheetUIEvent.CloseEmojiBottomSheet
+        setEvent(CategoryUIEvent.Dialog)
         viewModelScope.launch {
-            mutableBottomSheetUIState.emit(
-                mutableBottomSheetUIState.value!!.copy(
-                    categoryUIModel = mutableBottomSheetUIState.value!!.categoryUIModel.copy(
+            mUIState.emit(
+                mUIState.value!!.copy(
+                    categoryUIModel = mUIState.value!!.categoryUIModel.copy(
                         emoji = emoji
                     )
                 )
@@ -87,12 +88,12 @@ data class CategoryBottomSheetUIState(
 
 }
 
-sealed interface CategoryBottomSheetUIEvent : BottomSheetEvent {
-    object Inserted : CategoryBottomSheetUIEvent
-    object Updated : CategoryBottomSheetUIEvent
-    object Canceled : CategoryBottomSheetUIEvent
-    object ShowEmojiBottomSheet : CategoryBottomSheetUIEvent
-    object CloseEmojiBottomSheet : CategoryBottomSheetUIEvent
+sealed interface CategoryUIEvent : BottomSheetEvent {
+    object Inserted : CategoryUIEvent
+    object Updated : CategoryUIEvent
+    object Canceled : CategoryUIEvent
+    object ShowEmojiDialog : CategoryUIEvent
+    object Dialog : CategoryUIEvent
 }
 
 @Parcelize

@@ -10,6 +10,13 @@ abstract class BaseViewModel<UE : FragmentUIEvent, US : FragmentUIState> : ViewM
     val uiEvent = mutableUIEvent as StateFlow<UE?>
     protected val mutableUIState = MutableStateFlow<US?>(null)
     val uiState = mutableUIState as StateFlow<US?>
+
+    fun setEvent(event: UE) {
+        if (mutableUIEvent.value == event) {
+            mutableUIEvent.value = null
+        }
+        mutableUIEvent.value = event
+    }
 }
 
 interface FragmentUIState

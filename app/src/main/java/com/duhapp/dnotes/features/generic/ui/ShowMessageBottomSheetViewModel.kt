@@ -10,10 +10,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ShowMessageBottomSheetViewModel @Inject constructor() :
-    BottomSheetViewModel<ShowMessageBottomSheetUIEvent, ShowMessageBottomSheetUIState>() {
+    BottomSheetViewModel<ShowMessageUIEvent, ShowMessageBottomSheetUIState>() {
     fun setViewWithBundle(sheetUIState: ShowMessageUIModel, buttonStyle: ButtonStyle) {
-        mutableBottomSheetUIState.value = ShowMessageBottomSheetUIState(
-            sheetUIState, buttonStyle
+        setState(
+            ShowMessageBottomSheetUIState(
+                sheetUIState, buttonStyle
+            )
         )
     }
 }
@@ -23,8 +25,8 @@ data class ShowMessageBottomSheetUIState(
     val buttonStyle: ButtonStyle = ButtonStyle.Both,
 ) : BottomSheetState
 
-sealed interface ShowMessageBottomSheetUIEvent : BottomSheetEvent {
-    object Cancel : ShowMessageBottomSheetUIEvent
+sealed interface ShowMessageUIEvent : BottomSheetEvent {
+    object Cancel : ShowMessageUIEvent
 }
 
 @Parcelize

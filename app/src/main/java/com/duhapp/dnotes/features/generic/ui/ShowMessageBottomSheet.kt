@@ -9,7 +9,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 open class ShowMessageBottomSheet :
-    BaseBottomSheet<ShowMessageBottomSheetUIEvent, ShowMessageBottomSheetUIState,
+    BaseBottomSheet<ShowMessageUIEvent, ShowMessageBottomSheetUIState,
             ShowMessageBottomSheetViewModel, FragmentShowMessageBottomSheetBinding>() {
     private val showMessageBottomSheetViewModel: ShowMessageBottomSheetViewModel by viewModels()
     override val layoutId: Int
@@ -26,9 +26,9 @@ open class ShowMessageBottomSheet :
         binding.viewModel = viewModel
     }
 
-    override fun handleUIEvent(it: ShowMessageBottomSheetUIEvent) {
+    override fun handleUIEvent(it: ShowMessageUIEvent) {
         when (it) {
-            ShowMessageBottomSheetUIEvent.Cancel -> {
+            ShowMessageUIEvent.Cancel -> {
                 dismiss()
             }
         }
