@@ -19,4 +19,5 @@
     <string name="Delete">Delete</string>
     <string name="Category_Name">Please enter name of category</string>
     <string name="Category_Description">Please enter description of category</string>
+    <string name="Edit">Edit</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.duhapp.dnotes.features.select_category.ui
 
 import androidx.lifecycle.viewModelScope
+import com.duhapp.dnotes.features.add_or_update_category.domain.DeleteCategory
 import com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel
 import com.duhapp.dnotes.features.base.ui.BaseViewModel
 import com.duhapp.dnotes.features.base.ui.FragmentUIEvent
@@ -13,6 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SelectCategoryViewModel @Inject constructor(
     private val getCategories: GetCategories,
+    private val deleteCategory: DeleteCategory
 ) : BaseViewModel<SelectCategoryUIEvent, SelectCategoryUIState>() {
     init {
         mutableUIEvent.value = SelectCategoryUIEvent.Loading
@@ -35,17 +37,25 @@ class SelectCategoryViewModel @Inject constructor(
     fun onAddCategoryClick() {
         mutableUIEvent.value = SelectCategoryUIEvent.NavigateAddCategory
     }
+
+    fun handleDeleteCategory(categoryUIModel: CategoryUIModel) {
+        viewModelScope.launch {
+            deleteCategory.invoke(categoryUIModel)
+            loadCategories()
+        }
+    }
 }
 
 data class SelectCategoryUIState(
-    val categoryList: List<CategoryUIModel>,
+    val categoryList: List<CategoryUIModel>
 ) : FragmentUIState
 
 sealed interface SelectCategoryUIEvent : FragmentUIEvent {
     object NavigateAddCategory : SelectCategoryUIEvent
-    data class OnCategorySelected(
-        val category: CategoryUIModel,
-    ) : SelectCategoryUIEvent
 
+    data class OnCategorySelected(val categoryUIModel: CategoryUIModel) : SelectCategoryUIEvent
     object Loading : SelectCategoryUIEvent
+    data class ShowItemMenu(
+        val categoryUIModel: CategoryUIModel
+    ) : SelectCategoryUIEvent
 }

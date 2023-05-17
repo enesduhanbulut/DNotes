@@ -1,6 +1,8 @@
 package com.duhapp.dnotes.features.select_category.ui
 
+import android.view.View
 import android.widget.Toast
+import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.duhapp.dnotes.R
@@ -12,14 +14,15 @@ import com.duhapp.dnotes.features.base.ui.BaseFragment
 import com.duhapp.dnotes.features.base.ui.BaseListAdapter
 import com.duhapp.dnotes.features.generic.ui.SpaceModel
 import com.duhapp.dnotes.features.generic.ui.SpacingItemDecorator
+import com.duhapp.dnotes.features.select_category.ui.SelectCategoryFragment.MenuClickListener
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class SelectCategoryFragment :
     BaseFragment<
-        FragmentSelectCategoryBinding, SelectCategoryUIEvent,
-        SelectCategoryUIState, SelectCategoryViewModel,
-        >() {
+            FragmentSelectCategoryBinding, SelectCategoryUIEvent,
+            SelectCategoryUIState, SelectCategoryViewModel>() {
     override val layoutId: Int
         get() = R.layout.fragment_select_category
     override val titleId: Int
@@ -31,12 +34,9 @@ class SelectCategoryFragment :
         binding.categories.addItemDecoration(
             SpacingItemDecorator(
                 SpaceModel(
-                    16,
-                    16,
-                    16,
-                    16,
-                ),
-            ),
+                    16, 16, 16, 16
+                )
+            )
         )
         observeUIState()
     }
@@ -47,6 +47,13 @@ class SelectCategoryFragment :
 
     override fun setBindingViewModel() {
         binding.viewModel = viewModel
+        initAdapter()
+    }
+
+    private fun initAdapter() {
+        val menuClickListener = MenuClickListener { categoryUIModel, view ->
+            handleMenuClick(categoryUIModel, view)
+        }
         adapter = object : BaseListAdapter<CategoryUIModel, CategoryListItemBinding>() {
             override fun getLayoutId(): Int {
                 return R.layout.category_list_item
@@ -54,15 +61,50 @@ class SelectCategoryFragment :
 
             override fun setUIState(
                 binding: CategoryListItemBinding,
-                item: CategoryUIModel,
+                item: CategoryUIModel
             ) {
                 binding.uiModel = item
+                binding.menuClickListener = menuClickListener
             }
         }
-        adapter.onItemClickListener = BaseListAdapter.OnItemClickListener(viewModel::handleCategorySelect)
+        adapter.onItemClickListener =
+            BaseListAdapter.OnItemClickListener(viewModel::handleCategorySelect)
         binding.categories.adapter = adapter
     }
 
+    private fun handleMenuClick(categoryUIModel: CategoryUIModel, view: View) {
+        val popupMenu = PopupMenu(requireContext(), view)
+        popupMenu.menuInflater.inflate(R.menu.category_item_menu, popupMenu.menu)
+        popupMenu.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.edit -> {
+                    navigateToCategoryBottomSheet(categoryUIModel, CategoryShowType.Edit)
+                    true
+                }
+
+                R.id.delete -> {
+                    viewModel.handleDeleteCategory(categoryUIModel)
+                    true
+                }
+
+                else -> false
+            }
+        }
+        // Showing the popup menu
+        // Showing the popup menu
+        popupMenu.show()
+    }
+
+    private fun navigateToCategoryBottomSheet(
+        categoryUIModel: CategoryUIModel,
+        showType: CategoryShowType
+    ) {
+        findNavController().navigate(
+            SelectCategoryFragmentDirections.actionSelectCategoryFragmentToCategoryBottomSheet(
+                categoryUIModel, showType
+            )
+        )
+    }
 
     override fun handleUIEvent(it: SelectCategoryUIEvent) {
         when (it) {
@@ -73,17 +115,17 @@ class SelectCategoryFragment :
                             -1,
                             "",
                             String(Character.toChars(0x1F4DD)),
-                            "Test",
-                            R.color.primary_color,
-                        ),
-                        CategoryShowType.Add,
-                    ),
+                            "",
+                            R.color.primary_color
+                        ), CategoryShowType.Add
+                    )
                 )
             }
 
             is SelectCategoryUIEvent.OnCategorySelected -> {
-                Toast.makeText(context, it.category.toString(), Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), "Menu Clicked", Toast.LENGTH_SHORT).show()
             }
+
             else -> {}
         }
     }
@@ -91,5 +133,9 @@ class SelectCategoryFragment :
     override fun handleUIState(it: SelectCategoryUIState) {
         super.handleUIState(it)
         adapter.setItems(it.categoryList)
+    }
+
+    fun interface MenuClickListener {
+        fun onMenuClick(categoryUIModel: CategoryUIModel, view: View)
     }
 }

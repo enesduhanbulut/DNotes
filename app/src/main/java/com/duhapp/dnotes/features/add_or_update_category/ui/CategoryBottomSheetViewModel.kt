@@ -5,7 +5,6 @@ import android.view.View
 import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
 import com.duhapp.dnotes.R
-import com.duhapp.dnotes.features.add_or_update_category.domain.DeleteCategory
 import com.duhapp.dnotes.features.add_or_update_category.domain.UpsertCategory
 import com.duhapp.dnotes.features.base.ui.BottomSheetEvent
 import com.duhapp.dnotes.features.base.ui.BottomSheetState
@@ -17,8 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CategoryBottomSheetViewModel @Inject constructor(
-    private val upsertCategory: UpsertCategory,
-    deleteCategory: DeleteCategory
+    private val upsertCategory: UpsertCategory
 ) :
     BottomSheetViewModel<CategoryBottomSheetUIEvent, CategoryBottomSheetUIState>() {
     fun onPositiveButtonClicked() {
@@ -52,8 +50,8 @@ class CategoryBottomSheetViewModel @Inject constructor(
 }
 
 data class CategoryBottomSheetUIState(
-    val categoryUIModel: CategoryUIModel,
-    val categoryShowType: CategoryShowType,
+    var categoryUIModel: CategoryUIModel,
+    var categoryShowType: CategoryShowType,
 ) : BottomSheetState {
     @StringRes
     var title: Int = 0

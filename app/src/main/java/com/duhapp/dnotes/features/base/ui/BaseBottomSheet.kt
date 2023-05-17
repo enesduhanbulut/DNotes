@@ -24,8 +24,8 @@ abstract class BaseBottomSheet<BUE : BottomSheetEvent, BUS : BottomSheetState, V
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = DataBindingUtil.inflate(inflater, layoutId, container, false)
-        viewModel = provideViewModel()
         binding.lifecycleOwner = viewLifecycleOwner
+        viewModel = provideViewModel()
         setBindingViewModel()
         observeUIEvent()
         return binding.root

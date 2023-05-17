@@ -8,6 +8,10 @@
         <variable
             name="uiModel"
             type="com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel" />
+
+        <variable
+            name="menuClickListener"
+            type="com.duhapp.dnotes.features.select_category.ui.SelectCategoryFragment.MenuClickListener" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -52,7 +56,7 @@
                 android:gravity="start"
                 android:text="@{uiModel.name}"
                 android:textColor="@color/white"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/menu"
                 app:layout_constraintStart_toEndOf="@id/category_icon_card"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Title" />
@@ -64,11 +68,26 @@
                 android:layout_marginHorizontal="@dimen/small_margin"
                 android:layout_marginBottom="@dimen/small_margin"
                 android:text="@{uiModel.description}"
+
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/menu"
                 app:layout_constraintStart_toEndOf="@id/category_icon_card"
                 tools:text="Description" />
+
+            <ImageButton
+                android:id="@+id/menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?android:selectableItemBackground"
+                android:importantForAccessibility="no"
+                android:onClickListener="@{(v)-> menuClickListener.onMenuClick(uiModel, v)}"
+                android:padding="@dimen/small_margin"
+                android:src="@drawable/baseline_dehaze_24"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

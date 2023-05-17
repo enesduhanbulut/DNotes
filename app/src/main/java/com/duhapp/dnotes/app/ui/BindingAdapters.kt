@@ -1,5 +1,6 @@
 package com.duhapp.dnotes.app.ui
 
+import android.widget.ImageButton
 import androidx.annotation.ColorRes
 import androidx.core.graphics.ColorUtils
 import androidx.databinding.BindingAdapter
@@ -23,5 +24,15 @@ fun setCardViewColor(materialCardView: MaterialCardView, @ColorRes color: Int) {
     val colorInt = materialCardView.context.getColor(color)
     val alphaColor = ColorUtils.setAlphaComponent(colorInt, 10)
     materialCardView.setCardBackgroundColor(alphaColor)
+}
+
+@BindingAdapter("customFocusChangeListener")
+fun customFocusChangeListener(view: ImageButton, listener: (Boolean) -> Unit) {
+    view.setOnFocusChangeListener { _, hasFocus ->
+        if (!hasFocus) {
+            view.clearFocus()
+        }
+        listener.invoke(hasFocus)
+    }
 }
 
