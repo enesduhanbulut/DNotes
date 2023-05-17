@@ -10,3 +10,6 @@ abstract class BottomSheetViewModel<UE : BottomSheetEvent, US : BottomSheetState
     protected val mutableBottomSheetUIState = MutableStateFlow<US?>(null)
     val uiState: StateFlow<US?> = mutableBottomSheetUIState
 }
+
+interface BottomSheetEvent : FragmentUIEvent
+interface BottomSheetState : FragmentUIState

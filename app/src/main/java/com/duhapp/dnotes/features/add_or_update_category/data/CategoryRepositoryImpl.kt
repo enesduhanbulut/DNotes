@@ -3,6 +3,8 @@ package com.duhapp.dnotes.features.add_or_update_category.data
 import com.duhapp.dnotes.app.database.CategoryDao
 import com.duhapp.dnotes.app.database.CategoryEntity
 import com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class CategoryRepositoryImpl(
     private val dao: CategoryDao
@@ -30,6 +32,21 @@ class CategoryRepositoryImpl(
         )
         category.id = categoryUIModel.id
         dao.update(category)
+    }
+
+    override fun getCategories(): Flow<List<CategoryUIModel>> {
+        return dao.getCategories()
+            .map {
+                it.map { categoryEntity ->
+                    CategoryUIModel(
+                        categoryEntity.id,
+                        categoryEntity.name,
+                        categoryEntity.emoji,
+                        categoryEntity.message,
+                        categoryEntity.colorId
+                    )
+                }
+            }
     }
 
 

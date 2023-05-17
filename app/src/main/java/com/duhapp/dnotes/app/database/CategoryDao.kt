@@ -26,4 +26,7 @@ interface CategoryDao {
 
     @Update
     fun updateCategory(category: CategoryEntity)
+
+    @Query("SELECT * FROM CategoryEntity")
+    fun getCategories(): Flow<List<CategoryEntity>>
 }

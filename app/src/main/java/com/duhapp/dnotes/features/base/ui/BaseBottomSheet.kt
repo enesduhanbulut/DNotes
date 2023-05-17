@@ -51,5 +51,3 @@ abstract class BaseBottomSheet<BUE : BottomSheetEvent, BUS : BottomSheetState, V
     abstract fun handleUIEvent(it: BUE)
 }
 
-interface BottomSheetEvent : FragmentUIEvent
-interface BottomSheetState : FragmentUIState

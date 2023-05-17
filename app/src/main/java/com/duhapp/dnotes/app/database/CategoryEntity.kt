@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 data class CategoryEntity(
     @ColumnInfo(name = "title") val name: String,
     @ColumnInfo(name = "message") val message: String,
-    @ColumnInfo(name = "emoji") val iconId: String,
+    @ColumnInfo(name = "emoji") val emoji: String,
     @ColumnInfo(name = "color_id") val colorId: Int
 ) {
     @PrimaryKey(autoGenerate = true)

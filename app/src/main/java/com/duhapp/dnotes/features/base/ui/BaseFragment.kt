@@ -76,6 +76,22 @@ abstract class BaseFragment<
         }
     }
 
+    fun observeUIState() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect {
+                    if (it != null) {
+                        handleUIState(it)
+                    }
+                }
+            }
+        }
+    }
+
+    protected open fun handleUIState(it: US) {
+        // override this method if you want to handle UIState
+    }
+
     abstract fun initView(binding: DB)
     abstract fun provideViewModel(): VM
     abstract fun setBindingViewModel()
