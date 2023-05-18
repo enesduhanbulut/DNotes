@@ -1,4 +1,4 @@
-# DNtes
+# DNotes
 
 This is a native Android application that combines note-taking and to-do list functionalities to help users stay organized and manage their tasks efficiently. The application provides a user-friendly interface and offers various features to enhance task management and productivity.
 
