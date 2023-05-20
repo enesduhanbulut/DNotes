@@ -3,6 +3,8 @@ package com.duhapp.dnotes.di
 import com.duhapp.dnotes.features.add_or_update_category.data.CategoryRepository
 import com.duhapp.dnotes.features.add_or_update_category.domain.DeleteCategory
 import com.duhapp.dnotes.features.add_or_update_category.domain.UpsertCategory
+import com.duhapp.dnotes.features.note.data.NoteRepository
+import com.duhapp.dnotes.features.note.domain.UpsertNote
 import com.duhapp.dnotes.features.select_category.domain.GetCategories
 import dagger.Module
 import dagger.Provides
@@ -27,4 +29,8 @@ object UseCaseModule {
         return GetCategories(categoryRepository)
     }
 
+    @Provides
+    fun provideUpsertNote(noteRepository: NoteRepository): UpsertNote {
+        return UpsertNote(noteRepository)
+    }
 }

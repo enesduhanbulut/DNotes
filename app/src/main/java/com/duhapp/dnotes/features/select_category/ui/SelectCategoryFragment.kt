@@ -1,6 +1,5 @@
 package com.duhapp.dnotes.features.select_category.ui
 
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.duhapp.dnotes.R
@@ -59,10 +58,10 @@ class SelectCategoryFragment :
                 binding.uiModel = item
             }
         }
-        adapter.onItemClickListener = BaseListAdapter.OnItemClickListener(viewModel::handleCategorySelect)
+        adapter.onItemClickListener =
+            BaseListAdapter.OnItemClickListener(viewModel::handleCategorySelect)
         binding.categories.adapter = adapter
     }
-
 
     override fun handleUIEvent(it: SelectCategoryUIEvent) {
         when (it) {
@@ -80,9 +79,12 @@ class SelectCategoryFragment :
                     ),
                 )
             }
-
             is SelectCategoryUIEvent.OnCategorySelected -> {
-                Toast.makeText(context, it.category.toString(), Toast.LENGTH_LONG).show()
+                this.findNavController().navigate(
+                    SelectCategoryFragmentDirections.actionSelectCategoryFragmentToNoteFragment(
+                        it.category,
+                    ),
+                )
             }
             else -> {}
         }

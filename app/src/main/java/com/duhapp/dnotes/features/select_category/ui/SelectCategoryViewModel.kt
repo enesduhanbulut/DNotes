@@ -30,6 +30,7 @@ class SelectCategoryViewModel @Inject constructor(
 
     fun handleCategorySelect(category: CategoryUIModel, position: Int) {
         mutableUIEvent.value = SelectCategoryUIEvent.OnCategorySelected(category)
+        mutableUIEvent.value = SelectCategoryUIEvent.Loading
     }
 
     fun onAddCategoryClick() {
