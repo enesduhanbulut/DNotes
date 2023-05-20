@@ -16,12 +16,14 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card"
+            style="@style/CustomCardViewStyle"
             android:layout_width="match_parent"
             android:layout_height="@dimen/note_list_item_card_height"
-            app:cardBackgroundColor="@color/secondary_color"
+            app:cardBackgroundColor="@{item.color}"
+            app:cardElevation="0dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:setCardViewColor="@{item.color}">
+            tools:cardBackgroundColor="@color/note_color_red_light">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -29,20 +31,23 @@
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/title"
-                    style="@style/TextAppearance.MaterialComponents.Headline6"
+                    style="@style/text_base_m"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
+                    android:layout_margin="12dp"
                     android:text="@{item.title}"
+                    android:textColor="@color/black"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="Title" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/body"
-                    style="@style/TextAppearance.MaterialComponents.Body1"
+                    style="@style/text_xs_medium"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_margin="12dp"
                     android:text="@{item.body}"
+                    android:textColor="@color/black"
                     app:layout_constraintTop_toBottomOf="@id/title"
                     tools:text="Body" />
 
@@ -56,25 +61,28 @@
             android:layout_height="@dimen/note_list_item_category_height"
             android:background="@{item.category.colorId}"
             app:layout_constraintTop_toBottomOf="@id/card"
-            tools:background="@color/secondary_light_color">
+            tools:background="@color/note_color_red_dark">
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/category_icon"
-                android:layout_width="@dimen/list_item_category_icon_size"
-                android:layout_height="@dimen/list_item_category_icon_size"
-                android:adjustViewBounds="true"
-                android:src="@{item.category.emoji}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:src="@drawable/baseline_lightbulb_24" />
+            <!--            <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/category_icon"
+                            android:layout_width="@dimen/list_item_category_icon_size"
+                            android:layout_height="@dimen/list_item_category_icon_size"
+                            android:adjustViewBounds="true"
+                            android:src="@{item.tag.icon}"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:src="@drawable/baseline_lightbulb_24" />-->
 
             <com.google.android.material.textview.MaterialTextView
+                style="@style/text_xs_medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="12dp"
                 android:text="@{item.category.name}"
+                android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/category_icon"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Category" />
 

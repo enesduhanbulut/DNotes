@@ -7,6 +7,8 @@ import com.duhapp.dnotes.databinding.LayoutHomeCategoryBinding
 import com.duhapp.dnotes.features.base.ui.BaseFragment
 import com.duhapp.dnotes.features.base.ui.BaseListAdapter
 import com.duhapp.dnotes.features.generic.ui.ShowMessageBottomSheetViewModel
+import com.duhapp.dnotes.features.generic.ui.SpaceModel
+import com.duhapp.dnotes.features.generic.ui.SpacingItemDecorator
 import com.duhapp.dnotes.features.home.home_screen_category.ui.HomeCategoryUIModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -34,10 +36,26 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeUIEvent, HomeUIState,
             override fun getLayoutId() = R.layout.layout_home_category
             override fun setUIState(binding: LayoutHomeCategoryBinding, item: HomeCategoryUIModel) {
                 binding.homeCategoryUIModel = item
+                val margin = resources.getDimensionPixelSize(R.dimen.twenty)
+                binding.items.addItemDecoration(
+                    SpacingItemDecorator(
+                        SpaceModel(
+                            0, 0, 0, margin
+                        )
+                    )
+                )
                 binding.items.adapter = NoteItemListAdapter()
                 (binding.items.adapter as NoteItemListAdapter).setItems(item.noteList)
             }
         }
+        val margin = resources.getDimensionPixelSize(R.dimen.xl_margin)
+        binding.categories.addItemDecoration(
+            SpacingItemDecorator(
+                SpaceModel(
+                    margin, 0, 0, 0
+                )
+            )
+        )
         binding.categories.adapter = adapter
         viewModel.uiState.value?.let { adapter.setItems(it.categories) }
 

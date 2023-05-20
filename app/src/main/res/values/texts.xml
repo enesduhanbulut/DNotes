@@ -1,123 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="text_xs_reg">
+    <style name="app_font">
+        <item name="android:fontFamily">@font/inter</item>
+    </style>
+
+    <style name="bold_text" parent="app_font">
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="medium_text" parent="app_font">
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="regular_text" parent="app_font">
+        <item name="android:textStyle">normal</item>
+    </style>
+
+
+    <style name="text_xs_medium" parent="medium_text">
         <item name="android:textSize">10sp</item>
-        <item name="android:textColor">#000000</item>
     </style>
 
-    <style name="text_xs_med">
+    <style name="text_xs_bold" parent="bold_text">
         <item name="android:textSize">10sp</item>
-        <item name="android:textColor">#000000</item>
     </style>
 
-    <style name="text_xs_bol">
-        <item name="android:textSize">10sp</item>
-        <item name="android:textColor">#000000</item>
-    </style>
-
-    <style name="text_2xs_re">
+    <style name="text_2xs_regular" parent="regular_text">
         <item name="android:textSize">12sp</item>
-        <item name="android:textColor">#000000</item>
     </style>
 
-    <style name="text_2xs_me">
+    <style name="text_2xs_me" parent="medium_text">
         <item name="android:textSize">12sp</item>
-        <item name="android:textColor">#000000</item>
     </style>
 
-    <style name="text_2xs_bo">
+    <style name="text_2xs_bo" parent="bold_text">
         <item name="android:textSize">12sp</item>
-        <item name="android:textColor">#000000</item>
     </style>
 
-    <style name="text_sm_reg">
+    <style name="text_sm_reg" parent="regular_text">
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">#000000</item>
     </style>
 
-    <style name="text_sm_med">
+    <style name="text_sm_medium" parent="medium_text">
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">#000000</item>
     </style>
 
-    <style name="text_sm_bol">
+    <style name="text_sm_bold" parent="bold_text">
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">#000000</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="text_base_r">
+    <style name="text_base_r" parent="regular_text">
         <item name="android:textSize">16sp</item>
-        <item name="android:textColor">#3C60DE</item>
     </style>
 
-    <style name="text_base_m">
+    <style name="text_base_m" parent="medium_text">
         <item name="android:textSize">16sp</item>
-        <item name="android:textColor">#3C60DE</item>
     </style>
 
-    <style name="text_base_b">
+    <style name="text_base_b" parent="bold_text">
         <item name="android:textSize">16sp</item>
-        <item name="android:textColor">#3C60DE</item>
     </style>
 
-    <style name="text_lg_reg">
+    <style name="text_lg_reg" parent="regular_text">
         <item name="android:textSize">20sp</item>
-        <item name="android:textColor">#000000</item>
     </style>
 
-    <style name="text_lg_med">
+    <style name="text_lg_medium" parent="medium_text">
         <item name="android:textSize">20sp</item>
-        <item name="android:textColor">#000000</item>
     </style>
 
-    <style name="text_lg_bol">
+    <style name="text_lg_bold" parent="bold_text">
         <item name="android:textSize">20sp</item>
-        <item name="android:textColor">#000000</item>
     </style>
 
-    <style name="text_xl_reg">
+    <style name="text_xl_reg" parent="regular_text">
         <item name="android:textSize">24sp</item>
-        <item name="android:textColor">#000000</item>
     </style>
 
-    <style name="text_xl_med">
+    <style name="text_xl_medium" parent="medium_text">
         <item name="android:textSize">24sp</item>
-        <item name="android:textColor">#000000</item>
     </style>
 
-    <style name="text_xl_bol">
+    <style name="text_xl_bold" parent="bold_text">
         <item name="android:textSize">24sp</item>
-        <item name="android:textColor">#000000</item>
     </style>
 
-    <style name="text_2xl_re">
+    <style name="text_2xl_regular" parent="regular_text">
         <item name="android:textSize">32sp</item>
-        <item name="android:textColor">#000000</item>
     </style>
 
-    <style name="text_2xl_me">
+    <style name="text_2xl_me" parent="medium_text">
         <item name="android:textSize">32sp</item>
-        <item name="android:textColor">#000000</item>
     </style>
 
-    <style name="text_2xl_bo">
+    <style name="text_2xl_bo" parent="bold_text">
         <item name="android:textSize">32sp</item>
-        <item name="android:textColor">#000000</item>
     </style>
 
-    <style name="text_3xl_re">
+    <style name="text_3xl_regular" parent="regular_text">
         <item name="android:textSize">40sp</item>
-        <item name="android:textColor">#000000</item>
     </style>
 
-    <style name="text_3xl_me">
+    <style name="text_3xl_me" parent="medium_text">
         <item name="android:textSize">40sp</item>
-        <item name="android:textColor">#000000</item>
     </style>
 
-    <style name="text_3xl_bo">
+    <style name="text_3xl_bo" parent="bold_text">
         <item name="android:textSize">40sp</item>
-        <item name="android:textColor">#000000</item>
     </style>
 </resources>
