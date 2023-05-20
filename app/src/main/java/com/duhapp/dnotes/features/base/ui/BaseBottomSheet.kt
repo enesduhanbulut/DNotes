@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.duhapp.dnotes.R
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 abstract class BaseBottomSheet<BUE : BottomSheetEvent, BUS : BottomSheetState, VM : BottomSheetViewModel<BUE, BUS>, DB : ViewDataBinding> :
@@ -20,8 +21,12 @@ abstract class BaseBottomSheet<BUE : BottomSheetEvent, BUS : BottomSheetState, V
     abstract val fragmentTag: String
     protected lateinit var binding: DB
     protected lateinit var viewModel: VM
+    protected var observeJobs: MutableList<Job> = mutableListOf()
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View {
         binding = DataBindingUtil.inflate(inflater, layoutId, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
@@ -42,14 +47,17 @@ abstract class BaseBottomSheet<BUE : BottomSheetEvent, BUS : BottomSheetState, V
     }
 
     private fun observeUIEvent() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiEvent.collect {
-                    if (it != null)
-                        handleUIEvent(it)
+        observeJobs.add(
+            lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    viewModel.uiEvent.collect {
+                        if (it != null) {
+                            handleUIEvent(it)
+                        }
+                    }
                 }
-            }
-        }
+            },
+        )
     }
 
     abstract fun initView(binding: DB)
@@ -57,4 +65,3 @@ abstract class BaseBottomSheet<BUE : BottomSheetEvent, BUS : BottomSheetState, V
     abstract fun setBindingViewModel()
     abstract fun handleUIEvent(it: BUE)
 }
-

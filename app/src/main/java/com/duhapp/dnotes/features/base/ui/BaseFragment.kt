@@ -15,15 +15,18 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.duhapp.dnotes.MainActivity
 import com.duhapp.dnotes.features.generic.ui.ShowMessageBottomSheetViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 abstract class BaseFragment<
-        DB : ViewDataBinding,
-        UE : FragmentUIEvent,
-        US : FragmentUIState,
-        VM : BaseViewModel<UE, US>,
-        > : Fragment() {
+    DB : ViewDataBinding,
+    UE : FragmentUIEvent,
+    US : FragmentUIState,
+    VM : BaseViewModel<UE, US>,
+    > : Fragment() {
 
+    protected var observeJobs: MutableList<Job> = mutableListOf()
     protected lateinit var binding: DB
     protected lateinit var viewModel: VM
 
@@ -33,7 +36,8 @@ abstract class BaseFragment<
     @get:StringRes
     abstract val titleId: Int
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
         binding = DataBindingUtil.inflate(inflater, layoutId, container, false)
@@ -41,13 +45,13 @@ abstract class BaseFragment<
         setBindingViewModel()
         binding.lifecycleOwner = viewLifecycleOwner
         initView(binding)
-        with(requireActivity()) {
+        observeJobs.add(
             lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
                     setAppBarTitle(titleId)
                 }
-            }
-        }
+            },
+        )
         observeUIEvent()
         return binding.root
     }
@@ -65,27 +69,31 @@ abstract class BaseFragment<
     }
 
     private fun observeUIEvent() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiEvent.collect {
-                    if (it != null) {
-                        handleUIEvent(it)
+        observeJobs.add(
+            lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    viewModel.uiEvent.stateIn(this).collect {
+                        if (it != null) {
+                            handleUIEvent(it)
+                        }
                     }
                 }
-            }
-        }
+            },
+        )
     }
 
     fun observeUIState() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect {
-                    if (it != null) {
-                        handleUIState(it)
+        observeJobs.add(
+            lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    viewModel.uiState.collect {
+                        if (it != null) {
+                            handleUIState(it)
+                        }
                     }
                 }
-            }
-        }
+            },
+        )
     }
 
     protected open fun handleUIState(it: US) {
@@ -98,6 +106,9 @@ abstract class BaseFragment<
     abstract fun handleUIEvent(it: UE)
     override fun onDestroyView() {
         super.onDestroyView()
+        observeJobs.forEach {
+            it.cancel()
+        }
         binding.unbind()
     }
 
@@ -114,5 +125,4 @@ abstract class BaseFragment<
         )
         return showMessageBottomSheetViewModel
     }
-
 }

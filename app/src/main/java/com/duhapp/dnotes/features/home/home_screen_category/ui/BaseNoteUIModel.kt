@@ -1,16 +1,23 @@
 package com.duhapp.dnotes.features.home.home_screen_category.ui
 
 import androidx.annotation.ColorRes
-import androidx.annotation.DrawableRes
+import com.duhapp.dnotes.app.database.NoteEntity
+import com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel
 
 abstract class BaseNoteUIModel(
-    val id: Int,
+    var id: Int,
     val type: NoteType,
-    val tag: NoteTag,
+    var category: CategoryUIModel,
+    var title: String,
+    var body: String,
+    @ColorRes val color: Int,
+    val image: String,
     val isPinned: Boolean,
     val isCompletable: Boolean,
-    val isCompleted: Boolean
-)
+    val isCompleted: Boolean,
+) {
+    abstract fun toEntity(): NoteEntity
+}
 
 sealed interface NoteType {
     object BasicNote : NoteType
@@ -20,36 +27,68 @@ sealed interface NoteType {
 }
 
 data class CheckListItem(
-    val id: Int, val isChecked: Boolean, val text: String, val subList: List<CheckListItem>
-)
-
-data class NoteTag(
     val id: Int,
-    val title: String,
+    val isChecked: Boolean,
+    val text: String,
+    val subList: List<CheckListItem>,
     @ColorRes val color: Int,
-    @DrawableRes val icon: Int,
 )
 
 class BasicNoteUIModel(
     id: Int,
-    tag: NoteTag,
     isPinned: Boolean,
     isCompleted: Boolean,
     isCompletable: Boolean,
-    val title: String,
-    val body: String,
-
-    ) : BaseNoteUIModel(id, NoteType.BasicNote, tag, isPinned, isCompleted, isCompletable)
+    category: CategoryUIModel,
+    title: String,
+    body: String,
+    @ColorRes color: Int,
+) : BaseNoteUIModel(
+    id = id,
+    type = NoteType.BasicNote,
+    isPinned = isPinned,
+    isCompleted = isCompleted,
+    category = category,
+    isCompletable = isCompletable,
+    title = title,
+    body = body,
+    image = "",
+    color = color,
+) {
+    override fun toEntity() = NoteEntity(
+        id = id,
+        title = title,
+        details = body,
+        categoryId = category.id,
+    )
+}
 
 class ImageNoteUIModel(
     id: Int,
-    tag: NoteTag,
     isPinned: Boolean,
     isCompleted: Boolean,
     isCompletable: Boolean,
-    val title: String,
-    val body: String,
-    val image: String,
-) : BaseNoteUIModel(id, NoteType.BasicNote, tag, isPinned, isCompleted, isCompletable)
-
-
+    category: CategoryUIModel,
+    title: String,
+    body: String,
+    image: String,
+    @ColorRes color: Int,
+) : BaseNoteUIModel(
+    id = id,
+    type = NoteType.BasicNote,
+    isPinned = isPinned,
+    isCompleted = isCompleted,
+    category = category,
+    isCompletable = isCompletable,
+    title = title,
+    body = body,
+    image = image,
+    color = color,
+) {
+    override fun toEntity() = NoteEntity(
+        id = id,
+        title = title,
+        details = body,
+        categoryId = category.id,
+    )
+}

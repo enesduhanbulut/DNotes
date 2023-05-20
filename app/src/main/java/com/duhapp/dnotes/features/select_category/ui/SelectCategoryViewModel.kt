@@ -32,6 +32,7 @@ class SelectCategoryViewModel @Inject constructor(
 
     fun handleCategorySelect(category: CategoryUIModel, position: Int) {
         setEvent(SelectCategoryUIEvent.OnCategorySelected(category))
+        setEvent(SelectCategoryUIEvent.Loading)
     }
 
     fun onAddCategoryClick() {
@@ -47,13 +48,15 @@ class SelectCategoryViewModel @Inject constructor(
 }
 
 data class SelectCategoryUIState(
-    val categoryList: List<CategoryUIModel>
+    val categoryList: List<CategoryUIModel>,
 ) : FragmentUIState
 
 sealed interface SelectCategoryUIEvent : FragmentUIEvent {
     object NavigateAddCategory : SelectCategoryUIEvent
+    data class OnCategorySelected(
+        val category: CategoryUIModel,
+    ) : SelectCategoryUIEvent
 
-    data class OnCategorySelected(val categoryUIModel: CategoryUIModel) : SelectCategoryUIEvent
     object Loading : SelectCategoryUIEvent
     data class ShowItemMenu(
         val categoryUIModel: CategoryUIModel
