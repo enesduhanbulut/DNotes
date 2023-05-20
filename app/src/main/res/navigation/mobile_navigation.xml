@@ -26,7 +26,7 @@
     <fragment
         android:id="@+id/selectCategoryFragment"
         android:name="com.duhapp.dnotes.features.select_category.ui.SelectCategoryFragment"
-        android:label="@string/select_category_fragment"
+        android:label="@string/Select_Category_Fragment"
         tools:layout="@layout/fragment_select_category">
         <action
             android:id="@+id/action_selectCategoryFragment_to_categoryBottomSheet"
@@ -39,7 +39,7 @@
     <fragment
         android:id="@+id/noteFragment"
         android:name="com.duhapp.dnotes.features.note.ui.NoteFragment"
-        android:label="@string/note_fragment"
+        android:label="@string/Note_Fragment"
         tools:layout="@layout/fragment_note">
         <argument
             android:name="category"

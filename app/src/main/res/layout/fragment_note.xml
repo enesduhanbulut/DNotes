@@ -13,9 +13,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@{viewModel.uiState.baseNoteUIModel.color}"
         android:paddingHorizontal="24dp"
-        android:paddingTop="32dp"
-        android:background="@{viewModel.uiState.noteUIModel.categoryUIModel.colorId}">
+        android:paddingTop="32dp">
 
         <ImageButton
             android:id="@+id/edit"
@@ -34,8 +34,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:background="@color/transparent"
-            android:hint="@string/title"
-            android:text="@={viewModel.uiState.noteUIModel.title}"
+            android:hint="@string/Title"
+            android:text="@={viewModel.uiState.baseNoteUIModel.title}"
             app:isLocked="@{viewModel.uiState.editableMode}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -47,8 +47,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:background="@color/transparent"
-            android:hint="@string/details"
-            android:text="@={viewModel.uiState.noteUIModel.details}"
+            android:hint="@string/Details"
+            android:text="@={viewModel.uiState.baseNoteUIModel.body}"
             app:isLocked="@{viewModel.uiState.editableMode}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

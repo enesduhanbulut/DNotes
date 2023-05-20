@@ -26,7 +26,7 @@ abstract class BaseFragment<
     VM : BaseViewModel<UE, US>,
     > : Fragment() {
 
-    private var observeJobs: MutableList<Job> = mutableListOf()
+    protected var observeJobs: MutableList<Job> = mutableListOf()
     protected lateinit var binding: DB
     protected lateinit var viewModel: VM
 

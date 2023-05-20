@@ -15,14 +15,16 @@ class NoteFragment :
         get() = R.layout.fragment_note
 
     override val titleId: Int
-        get() = R.string.note_fragment
+        get() = R.string.Note_Fragment
 
     private val noteViewModel: NoteViewModel by viewModels()
     private val navArgs by navArgs<NoteFragmentArgs>()
 
     override fun initView(binding: FragmentNoteBinding) {
         observeUIState()
-        viewModel.initUIState(navArgs.category)
+        navArgs.category?.let {
+            viewModel.initUIState(it)
+        }
     }
 
     override fun provideViewModel(): NoteViewModel = noteViewModel

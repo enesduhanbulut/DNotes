@@ -1,8 +1,9 @@
 package com.duhapp.dnotes.features.note.data
 
-import com.duhapp.dnotes.features.note.ui.NoteUIModel
+import com.duhapp.dnotes.features.home.home_screen_category.ui.BaseNoteUIModel
 
 interface NoteRepository {
+    suspend fun insert(noteUIModel: BaseNoteUIModel): Int
 
-    suspend fun upsert(noteUIModel: NoteUIModel): NoteUIModel
+    suspend fun update(noteUIModel: BaseNoteUIModel)
 }

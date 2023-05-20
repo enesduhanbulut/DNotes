@@ -19,8 +19,8 @@
     <string name="Delete">Delete</string>
     <string name="Category_Name">Please enter name of category</string>
     <string name="Category_Description">Please enter description of category</string>
-    <string name="select_category_fragment">SelectCategoryFragment</string>
-    <string name="note_fragment">Note</string>
-    <string name="title">Title</string>
-    <string name="details">Details</string>
+    <string name="Select_Category_Fragment">Select Category</string>
+    <string name="Note_Fragment">Note</string>
+    <string name="Title">Title</string>
+    <string name="Details">Details</string>
 </resources>
