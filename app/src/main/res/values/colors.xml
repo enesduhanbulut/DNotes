@@ -10,7 +10,7 @@
     <color name="secondary_light_color">#EB734E</color>
     <color name="black">#180E25</color>
 
-    <color name="dark_grey">##C8C5CB</color>
+    <color name="dark_grey">#C8C5CB</color>
     <color name="base_grey">#827D89</color>
     <color name="light_grey">#EFEEF0</color>
 
@@ -51,4 +51,6 @@
     <color name="note_color_brown_light">#D7CCC8</color>
     <color name="note_color_orange_dark">#F57C00</color>
     <color name="note_color_orange_light">#FFE0B2</color>
+    <color name="bottom_nav_bar">#FFFFFFFF</color>
+    <color name="bottom_nav_bar_unselected">#827D89</color>
 </resources>

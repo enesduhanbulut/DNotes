@@ -25,31 +25,33 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val navView: BottomNavigationView = binding.bottomNavigationView
+        val navView: BottomNavigationView = binding.bottomNavView
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications
-            )
+                R.id.navigation_home,
+                R.id.navigation_dashboard,
+                R.id.navigation_notifications,
+            ),
         )
         setSupportActionBar(binding.toolbar)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == R.id.selectCategoryFragment) {
-                binding.bottomAppBar.visibility = View.GONE
+                binding.bottomNavView.visibility = View.GONE
                 binding.fab.visibility = View.GONE
             } else {
-                binding.bottomAppBar.visibility = View.VISIBLE
+                binding.bottomNavView.visibility = View.VISIBLE
                 binding.fab.visibility = View.VISIBLE
             }
         }
 
         binding.fab.setOnClickListener {
             navController.navigate(
-                R.id.selectCategoryFragment
+                R.id.selectCategoryFragment,
             )
         }
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -57,7 +59,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun setBottomAppBarVisibility(visibility: Int) {
-        binding.bottomAppBar.visibility = visibility
+        binding.bottomNavView.visibility = visibility
         binding.fab.visibility = visibility
     }
 
