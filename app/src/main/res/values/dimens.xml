@@ -11,4 +11,5 @@
     <dimen name="category_list_item_icon_size">64dp</dimen>
     <dimen name="small_margin">16dp</dimen>
     <dimen name="category_bottom_sheet_image_size">96dp</dimen>
+    <dimen name="fab_bottom_margin">36dp</dimen>
 </resources>

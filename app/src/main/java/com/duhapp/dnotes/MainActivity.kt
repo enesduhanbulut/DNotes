@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val navView: BottomNavigationView = binding.bottomNavigationView
+        val navView: BottomNavigationView = binding.bottomNavView
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
         // Passing each menu ID as a set of Ids because each
@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
                 binding.bottomAppBar.visibility = View.GONE
                 binding.fab.visibility = View.GONE
             } else {
-                binding.bottomAppBar.visibility = View.VISIBLE
+                binding.bottomNavView.visibility = View.VISIBLE
                 binding.fab.visibility = View.VISIBLE
             }
         }
@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun setBottomAppBarVisibility(visibility: Int) {
-        binding.bottomAppBar.visibility = visibility
+        binding.bottomNavView.visibility = visibility
         binding.fab.visibility = visibility
     }
 
