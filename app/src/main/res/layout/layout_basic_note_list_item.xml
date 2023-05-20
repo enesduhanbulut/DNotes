@@ -21,7 +21,7 @@
             app:cardBackgroundColor="@color/secondary_color"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:setCardViewColor="@{item.tag.color}">
+            app:setCardViewColor="@{item.color}">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -54,7 +54,7 @@
             android:id="@+id/category"
             android:layout_width="match_parent"
             android:layout_height="@dimen/note_list_item_category_height"
-            android:background="@{item.tag.color}"
+            android:background="@{item.category.colorId}"
             app:layout_constraintTop_toBottomOf="@id/card"
             tools:background="@color/secondary_light_color">
 
@@ -63,7 +63,7 @@
                 android:layout_width="@dimen/list_item_category_icon_size"
                 android:layout_height="@dimen/list_item_category_icon_size"
                 android:adjustViewBounds="true"
-                android:src="@{item.tag.icon}"
+                android:src="@{item.category.emoji}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -72,7 +72,7 @@
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{item.tag.title}"
+                android:text="@{item.category.name}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/category_icon"
                 app:layout_constraintTop_toTopOf="parent"

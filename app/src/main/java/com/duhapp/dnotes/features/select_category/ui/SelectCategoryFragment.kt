@@ -1,8 +1,7 @@
 package com.duhapp.dnotes.features.select_category.ui
 
 import android.view.View
-import android.widget.Toast
-import androidx.appcompat.widget.PopupMenu
+import android.widget.PopupMenu
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.duhapp.dnotes.R
@@ -14,15 +13,13 @@ import com.duhapp.dnotes.features.base.ui.BaseFragment
 import com.duhapp.dnotes.features.base.ui.BaseListAdapter
 import com.duhapp.dnotes.features.generic.ui.SpaceModel
 import com.duhapp.dnotes.features.generic.ui.SpacingItemDecorator
-import com.duhapp.dnotes.features.select_category.ui.SelectCategoryFragment.MenuClickListener
 import dagger.hilt.android.AndroidEntryPoint
-
 
 @AndroidEntryPoint
 class SelectCategoryFragment :
     BaseFragment<
-            FragmentSelectCategoryBinding, SelectCategoryUIEvent,
-            SelectCategoryUIState, SelectCategoryViewModel>() {
+        FragmentSelectCategoryBinding, SelectCategoryUIEvent,
+        SelectCategoryUIState, SelectCategoryViewModel,>() {
     override val layoutId: Int
         get() = R.layout.fragment_select_category
     override val titleId: Int
@@ -34,9 +31,12 @@ class SelectCategoryFragment :
         binding.categories.addItemDecoration(
             SpacingItemDecorator(
                 SpaceModel(
-                    16, 16, 16, 16
-                )
-            )
+                    16,
+                    16,
+                    16,
+                    16,
+                ),
+            ),
         )
         observeUIState()
     }
@@ -61,7 +61,7 @@ class SelectCategoryFragment :
 
             override fun setUIState(
                 binding: CategoryListItemBinding,
-                item: CategoryUIModel
+                item: CategoryUIModel,
             ) {
                 binding.uiModel = item
                 binding.menuClickListener = menuClickListener
@@ -97,12 +97,13 @@ class SelectCategoryFragment :
 
     private fun navigateToCategoryBottomSheet(
         categoryUIModel: CategoryUIModel,
-        showType: CategoryShowType
+        showType: CategoryShowType,
     ) {
         findNavController().navigate(
             SelectCategoryFragmentDirections.actionSelectCategoryFragmentToCategoryBottomSheet(
-                categoryUIModel, showType
-            )
+                categoryUIModel,
+                showType,
+            ),
         )
     }
 
@@ -116,14 +117,19 @@ class SelectCategoryFragment :
                             "",
                             String(Character.toChars(0x1F4DD)),
                             "",
-                            R.color.primary_color
-                        ), CategoryShowType.Add
-                    )
+                            R.color.primary_color,
+                        ),
+                        CategoryShowType.Add,
+                    ),
                 )
             }
 
             is SelectCategoryUIEvent.OnCategorySelected -> {
-                Toast.makeText(requireContext(), "Menu Clicked", Toast.LENGTH_SHORT).show()
+                this.findNavController().navigate(
+                    SelectCategoryFragmentDirections.actionSelectCategoryFragmentToNoteFragment(
+                        it.category,
+                    ),
+                )
             }
 
             else -> {}

@@ -32,13 +32,15 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications
-            )
+                R.id.navigation_home,
+                R.id.navigation_dashboard,
+                R.id.navigation_notifications,
+            ),
         )
         setSupportActionBar(binding.toolbar)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == R.id.selectCategoryFragment) {
+            if (destination.id == R.id.selectCategoryFragment || destination.id == R.id.noteFragment) {
                 binding.bottomAppBar.visibility = View.GONE
                 binding.fab.visibility = View.GONE
             } else {
@@ -49,7 +51,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.fab.setOnClickListener {
             navController.navigate(
-                R.id.selectCategoryFragment
+                R.id.selectCategoryFragment,
             )
         }
         setupActionBarWithNavController(navController, appBarConfiguration)
