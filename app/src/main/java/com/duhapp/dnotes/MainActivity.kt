@@ -53,6 +53,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.selectCategoryFragment,
             )
         }
+        setAppBarVisibility(View.GONE)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
     }

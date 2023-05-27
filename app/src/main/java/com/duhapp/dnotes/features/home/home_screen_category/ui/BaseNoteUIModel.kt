@@ -19,11 +19,13 @@ abstract class BaseNoteUIModel(
     abstract fun toEntity(): NoteEntity
 }
 
-sealed interface NoteType {
-    object BasicNote : NoteType
-    object ImageNote : NoteType
-    data class SubNote(val list: List<BaseNoteUIModel>) : NoteType
-    data class CheckList(val list: List<CheckListItem>) : NoteType
+sealed class NoteType(
+    val id: Int
+) {
+    object BasicNote : NoteType(0)
+    object ImageNote : NoteType(1)
+    data class SubNote(val list: List<BaseNoteUIModel>) : NoteType(2)
+    data class CheckList(val list: List<CheckListItem>) : NoteType(3)
 }
 
 data class CheckListItem(

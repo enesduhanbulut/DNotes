@@ -16,9 +16,8 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card"
-            style="@style/CustomCardViewStyle"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/note_list_item_card_height"
+            android:layout_height="match_parent"
             app:cardBackgroundColor="@{item.color}"
             app:cardElevation="0dp"
             app:layout_constraintStart_toStartOf="parent"
@@ -51,42 +50,44 @@
                     app:layout_constraintTop_toBottomOf="@id/title"
                     tools:text="Body" />
 
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/category"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/note_list_item_category_height"
+                    android:background="@{item.category.colorId}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    tools:background="@color/note_color_red_dark">
+
+                    <!--            <com.google.android.material.imageview.ShapeableImageView
+                                    android:id="@+id/category_icon"
+                                    android:layout_width="@dimen/list_item_category_icon_size"
+                                    android:layout_height="@dimen/list_item_category_icon_size"
+                                    android:adjustViewBounds="true"
+                                    android:src="@{item.tag.icon}"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    tools:src="@drawable/baseline_lightbulb_24" />-->
+
+                    <com.google.android.material.textview.MaterialTextView
+                        style="@style/text_xs_medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="12dp"
+                        android:text="@{item.category.name}"
+                        android:textColor="@color/white"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="Category" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </com.google.android.material.card.MaterialCardView>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/category"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/note_list_item_category_height"
-            android:background="@{item.category.colorId}"
-            app:layout_constraintTop_toBottomOf="@id/card"
-            tools:background="@color/note_color_red_dark">
-
-            <!--            <com.google.android.material.imageview.ShapeableImageView
-                            android:id="@+id/category_icon"
-                            android:layout_width="@dimen/list_item_category_icon_size"
-                            android:layout_height="@dimen/list_item_category_icon_size"
-                            android:adjustViewBounds="true"
-                            android:src="@{item.tag.icon}"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            tools:src="@drawable/baseline_lightbulb_24" />-->
-
-            <com.google.android.material.textview.MaterialTextView
-                style="@style/text_xs_medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="12dp"
-                android:text="@{item.category.name}"
-                android:textColor="@color/white"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="Category" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

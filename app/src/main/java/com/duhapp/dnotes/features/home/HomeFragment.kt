@@ -52,7 +52,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeUIEvent, HomeUIState,
         binding.categories.addItemDecoration(
             SpacingItemDecorator(
                 SpaceModel(
-                    margin, 0, 0, 0
+                    0, margin, 0, 0
                 )
             )
         )
