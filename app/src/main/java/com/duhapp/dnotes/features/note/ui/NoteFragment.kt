@@ -25,11 +25,7 @@ class NoteFragment :
     private val noteViewModel: NoteViewModel by viewModels()
     private val categoryViewModel: SelectCategoryViewModel by activityViewModels()
     override fun initView(binding: FragmentNoteBinding) {
-        viewLifecycleOwner.lifecycleScope.launch {
-            categoryViewModel.uiEvent.collect {
-                Toast.makeText(requireContext(), "Category Selected", Toast.LENGTH_SHORT).show()
-            }
-        }
+        observeUIState()
     }
 
     override fun provideViewModel(): NoteViewModel = noteViewModel
@@ -45,8 +41,14 @@ class NoteFragment :
                     SelectCategoryFragment(),
                     null,
                     categoryViewModel,
-                ) {
-                    Toast.makeText(requireContext(), "Category Selected", Toast.LENGTH_SHORT).show()
+                ) { event ->
+                    when (event) {
+                        is SelectCategoryUIEvent.OnCategorySelected -> {
+                            viewModel.onCategorySelected(event.category)
+                        }
+
+                        else -> {}
+                    }
                 }
             }
 

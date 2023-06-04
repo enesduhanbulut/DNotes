@@ -91,12 +91,12 @@ class ManageCategoryFragment :
                 Snackbar.make(
                     binding.root,
                     R.string.Item_deleted_do_you_want_to_undo,
-                    Snackbar.LENGTH_LONG
+                    Snackbar.LENGTH_LONG,
                 ).setAction(R.string.Confirm) {
                     Toast.makeText(requireContext(), "undo", Toast.LENGTH_SHORT).show()
                 }.show()
-
-            }, SwipeDirection.LEFT
+            },
+            SwipeDirection.LEFT,
         )
         binding.categories.adapter = adapter
     }
@@ -123,10 +123,9 @@ class ManageCategoryFragment :
             bundle = CategoryBottomSheetArgs(
                 categoryUIModel,
                 showType,
-            ).toBundle(), collector = {
+            ).toBundle(), singleEventCollector = {
                 handleBottomSheetResponse(it)
-            }, unsubscribeEvent = CategoryUIEvent.Dismissed
-        )
+            })
     }
 
     private fun handleBottomSheetResponse(it: CategoryUIEvent) {

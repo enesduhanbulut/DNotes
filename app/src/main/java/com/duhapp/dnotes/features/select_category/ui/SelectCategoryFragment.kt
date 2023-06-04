@@ -31,7 +31,7 @@ class SelectCategoryFragment :
                 ),
             ),
         )
-        viewModel.onStart()
+        viewModel.initState()
     }
 
     private fun initAdapter() {
@@ -63,7 +63,13 @@ class SelectCategoryFragment :
     }
 
     override fun handleUIEvent(event: SelectCategoryUIEvent) {
-        dismiss()
+        when (event) {
+            is SelectCategoryUIEvent.OnCategorySelected -> {
+                dismiss()
+            }
+
+            else -> {}
+        }
     }
 
     override fun handleUIState(it: SelectCategoryUIState) {
