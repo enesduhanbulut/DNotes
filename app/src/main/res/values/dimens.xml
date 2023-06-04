@@ -8,7 +8,7 @@
     <dimen name="note_list_item_category_height">28dp</dimen>
     <dimen name="note_list_item_card_height">224dp</dimen>
     <dimen name="show_message_bottom_sheet_image_size">160dp</dimen>
-    <dimen name="category_list_item_icon_size">64dp</dimen>
+    <dimen name="category_list_item_icon_size">46dp</dimen>
     <dimen name="small_margin">16dp</dimen>
     <dimen name="medium_margin">24dp</dimen>
     <dimen name="large_margin">32dp</dimen>

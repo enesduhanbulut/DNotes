@@ -25,4 +25,5 @@
     <string name="Details">Details</string>
     <string name="Edit">Edit</string>
     <string name="Manage_Category_Fragment">Manage Categories</string>
+    <string name="Item_deleted_do_you_want_to_undo">Item deleted. Do you want to undo</string>
 </resources>

@@ -9,6 +9,7 @@
     <color name="secondary_dark_color">#9D3412</color>
     <color name="secondary_light_color">#EB734E</color>
     <color name="black">#180E25</color>
+    <color name="transparent_alpha">#31000000</color>
 
     <color name="dark_grey">#C8C5CB</color>
     <color name="background_color">#FAF8FC</color>

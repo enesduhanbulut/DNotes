@@ -11,6 +11,8 @@ abstract class BaseListAdapter<M, DB : ViewDataBinding> :
     RecyclerView.Adapter<BaseListAdapter<M, DB>.BaseViewHolder>() {
 
     protected var itemList: List<M> = emptyList()
+    val items: List<M>
+        get() = itemList
     var onItemClickListener: OnItemClickListener<M>? = null
 
     abstract fun getLayoutId(): Int
