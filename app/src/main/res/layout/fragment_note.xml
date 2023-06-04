@@ -28,25 +28,36 @@
             app:layout_constraintTop_toTopOf="parent"
             app:lockIcon="@{viewModel.uiState.editableMode}" />
 
+        <ImageButton
+            android:id="@+id/category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edit"
+            app:srcCompat="@drawable/edit"
+            android:backgroundTint="@color/transparent"
+            android:layout_marginTop="16dp"
+            android:onClick="@{() -> viewModel.categorySelectClicked()}"/>
+
         <EditText
             android:id="@+id/title"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:background="@color/transparent"
+            android:backgroundTint="@color/transparent"
             android:hint="@string/Title"
             android:text="@={viewModel.uiState.baseNoteUIModel.title}"
             app:isLocked="@{viewModel.uiState.editableMode}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edit" />
+            app:layout_constraintTop_toTopOf="@id/category"
+            app:layout_constraintBottom_toBottomOf="@id/category"
+            app:layout_constraintStart_toEndOf="@id/category"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <EditText
             android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:background="@color/transparent"
+            android:backgroundTint="@color/transparent"
             android:hint="@string/Details"
             android:text="@={viewModel.uiState.baseNoteUIModel.body}"
             app:isLocked="@{viewModel.uiState.editableMode}"

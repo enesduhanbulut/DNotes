@@ -11,5 +11,5 @@ data class CategoryUIModel(
     var name: String,
     var emoji: String,
     var description: String,
-    @ColorRes var colorId: Int = R.color.primary_color
+    @ColorRes var colorId: Int = R.color.primary_color,
 ) : Parcelable

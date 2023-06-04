@@ -39,12 +39,6 @@ class NoteViewModel @Inject constructor(
         )
     }
 
-    fun initUIState(categoryUIModel: CategoryUIModel) {
-        mutableUIState.value.let {
-            it?.baseNoteUIModel?.category = categoryUIModel
-        }
-    }
-
     fun switchEditMode() {
         viewModelScope.launch {
             mutableUIState.value?.let {
@@ -59,9 +53,30 @@ class NoteViewModel @Inject constructor(
             }
         }
     }
+
+    fun onCategorySelected(category: CategoryUIModel) {
+        println("onCategorySelected: $category")
+        viewModelScope.launch {
+            mutableUIState.value?.let {
+                mutableUIState.value = it.copy(
+                    baseNoteUIModel = it.baseNoteUIModel.apply {
+                        this.category = category
+                    },
+                )
+            }
+        }
+    }
+
+    fun categorySelectClicked() {
+        setEvent(NoteUIEvent.NavigateSelectCategory)
+        setEvent(NoteUIEvent.Loading)
+    }
 }
 
-sealed interface NoteUIEvent : FragmentUIEvent
+sealed interface NoteUIEvent : FragmentUIEvent {
+    object NavigateSelectCategory : NoteUIEvent
+    object Loading : NoteUIEvent
+}
 
 data class NoteUIState(
     var baseNoteUIModel: BaseNoteUIModel = BasicNoteUIModel(

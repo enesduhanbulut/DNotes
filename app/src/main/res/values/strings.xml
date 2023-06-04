@@ -24,4 +24,5 @@
     <string name="Title">Title</string>
     <string name="Details">Details</string>
     <string name="Edit">Edit</string>
+    <string name="Manage_Category_Fragment">Manage Categories</string>
 </resources>

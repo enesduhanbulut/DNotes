@@ -4,24 +4,37 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <import type="com.duhapp.dnotes.features.generic.ui.SpaceModel" />
+
         <variable
             name="viewModel"
-            type="com.duhapp.dnotes.features.select_category.ui.SelectCategoryViewModel" />
+            type="com.duhapp.dnotes.features.manage_category.ui.ManageCategoryViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/categories"
             android:layout_width="match_parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/add_category"
             app:layout_constraintTop_toTopOf="parent"
             tools:itemCount="5"
-            tools:listitem="@layout/category_select_list_item" />
+            tools:listitem="@layout/category_list_item" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/add_category"
+            android:layout_width="256dp"
+            android:layout_height="wrap_content"
+            android:text="@string/Add_Category"
+            android:onClickListener="@{() -> viewModel.onAddCategoryClick()}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

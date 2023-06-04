@@ -40,7 +40,8 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == R.id.selectCategoryFragment || destination.id == R.id.noteFragment) {
+            if (destination.id == R.id.manageCategoryFragment || destination.id == R.id.noteFragment) {
+                binding.bottomNavView.visibility = View.GONE
                 binding.fab.visibility = View.GONE
             } else {
                 binding.bottomNavView.visibility = View.VISIBLE
@@ -50,7 +51,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.fab.setOnClickListener {
             navController.navigate(
-                R.id.selectCategoryFragment,
+                R.id.noteFragment,
             )
         }
         setAppBarVisibility(View.GONE)
