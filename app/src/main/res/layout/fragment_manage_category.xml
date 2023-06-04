@@ -19,22 +19,23 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/categories"
             android:layout_width="match_parent"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@id/add_category"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:itemCount="5"
             tools:listitem="@layout/category_list_item" />
 
-        <com.google.android.material.button.MaterialButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/add_category"
-            android:layout_width="256dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/Add_Category"
+            android:layout_marginEnd="@dimen/small_margin"
+            android:layout_marginBottom="@dimen/small_margin"
             android:onClickListener="@{() -> viewModel.onAddCategoryClick()}"
+            android:src="@drawable/baseline_add_24"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

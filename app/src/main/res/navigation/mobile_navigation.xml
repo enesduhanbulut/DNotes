@@ -9,7 +9,7 @@
         android:id="@+id/navigation_home"
         android:name="com.duhapp.dnotes.features.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home"></fragment>
+        tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_manage_category"
