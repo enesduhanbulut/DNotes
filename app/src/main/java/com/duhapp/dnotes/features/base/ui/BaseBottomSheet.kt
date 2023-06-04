@@ -7,9 +7,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.duhapp.dnotes.R
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.Job
@@ -48,16 +46,30 @@ abstract class BaseBottomSheet<BUE : BottomSheetEvent, BUS : BottomSheetState, V
 
     private fun observeUIEvent() {
         observeJobs.add(
-            lifecycleScope.launch {
-                repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    viewModel.uiEvent.collect {
-                        if (it != null) {
-                            handleUIEvent(it)
-                        }
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.uiEvent.collect {
+                    if (it != null) {
+                        handleUIEvent(it)
                     }
                 }
             },
         )
+    }
+
+    fun observeUIState() {
+        observeJobs.add(
+            lifecycleScope.launch {
+                viewModel.uiState.collect {
+                    if (it != null) {
+                        handleUIState(it)
+                    }
+                }
+            },
+        )
+    }
+
+    open fun handleUIState(it: BUS) {
+        // no-op
     }
 
     abstract fun initView(binding: DB)

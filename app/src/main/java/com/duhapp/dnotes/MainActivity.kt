@@ -33,14 +33,14 @@ class MainActivity : AppCompatActivity() {
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.navigation_home,
-                R.id.navigation_dashboard,
+                R.id.navigation_manage_category,
                 R.id.navigation_notifications,
             ),
         )
         setSupportActionBar(binding.toolbar)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == R.id.manageCategoryFragment || destination.id == R.id.noteFragment) {
+            if (destination.id == R.id.noteFragment) {
                 binding.bottomNavView.visibility = View.GONE
                 binding.fab.visibility = View.GONE
             } else {

@@ -13,6 +13,7 @@ import com.duhapp.dnotes.features.base.ui.BaseFragment
 import com.duhapp.dnotes.features.base.ui.BaseListAdapter
 import com.duhapp.dnotes.features.generic.ui.SpaceModel
 import com.duhapp.dnotes.features.generic.ui.SpacingItemDecorator
+import com.duhapp.dnotes.features.manage_category.ui.ManageCategoryFragment.MenuClickListener
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -40,6 +41,7 @@ class ManageCategoryFragment :
             ),
         )
         observeUIState()
+        setAppBarVisibility(View.GONE)
     }
 
     override fun provideViewModel(): ManageCategoryViewModel {
@@ -100,18 +102,18 @@ class ManageCategoryFragment :
         categoryUIModel: CategoryUIModel,
         showType: CategoryShowType,
     ) {
-        findNavController().navigate(
+        /*findNavController().navigate(
             ManageCategoryFragmentDirections.actionManageCategoryFragmentToCategoryBottomSheet(
                 categoryUIModel,
                 showType,
             ),
-        )
+        )*/
     }
 
     override fun handleUIEvent(it: ManageCategoryUIEvent) {
         when (it) {
             is ManageCategoryUIEvent.NavigateAddCategory -> {
-                findNavController().navigate(
+                /*findNavController().navigate(
                     ManageCategoryFragmentDirections.actionManageCategoryFragmentToCategoryBottomSheet(
                         CategoryUIModel(
                             -1,
@@ -121,12 +123,11 @@ class ManageCategoryFragment :
                             R.color.primary_color,
                         ),
                         CategoryShowType.Add,
-                    ),
-                )
+                    )
+                )*/
             }
 
             is ManageCategoryUIEvent.OnCategorySelected -> {
-                dismiss()
             }
 
             else -> {}

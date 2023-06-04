@@ -1,9 +1,8 @@
 package com.duhapp.dnotes.features.select_category.ui
 
-import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
+import androidx.fragment.app.activityViewModels
 import com.duhapp.dnotes.R
-import com.duhapp.dnotes.databinding.CategoryListItemBinding
+import com.duhapp.dnotes.databinding.CategorySelectListItemBinding
 import com.duhapp.dnotes.databinding.FragmentSelectCategoryBinding
 import com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel
 import com.duhapp.dnotes.features.base.ui.BaseBottomSheet
@@ -15,11 +14,13 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class SelectCategoryFragment :
     BaseBottomSheet<SelectCategoryUIEvent, SelectCategoryUIState, SelectCategoryViewModel, FragmentSelectCategoryBinding>() {
-
-    private val selectCategoryViewModel: SelectCategoryViewModel by viewModels()
-    private lateinit var adapter: BaseListAdapter<CategoryUIModel, CategoryListItemBinding>
+    override val layoutId = R.layout.fragment_select_category
+    override val fragmentTag = "SelectCategoryFragment"
+    private val selectCategoryViewModel: SelectCategoryViewModel by activityViewModels()
+    private lateinit var adapter: BaseListAdapter<CategoryUIModel, CategorySelectListItemBinding>
 
     override fun initView(binding: FragmentSelectCategoryBinding) {
+        observeUIState()
         binding.categories.addItemDecoration(
             SpacingItemDecorator(
                 SpaceModel(
@@ -33,17 +34,15 @@ class SelectCategoryFragment :
     }
 
     private fun initAdapter() {
-        adapter = object : BaseListAdapter<CategoryUIModel, CategoryListItemBinding>() {
+        adapter = object : BaseListAdapter<CategoryUIModel, CategorySelectListItemBinding>() {
             override fun getLayoutId(): Int {
-                return R.layout.category_list_item
+                return R.layout.category_select_list_item
             }
 
-            override fun setUIState(
-                binding: CategoryListItemBinding,
-                item: CategoryUIModel,
-            ) {
+            override fun setUIState(binding: CategorySelectListItemBinding, item: CategoryUIModel) {
                 binding.uiModel = item
             }
+
         }
         adapter.onItemClickListener =
             BaseListAdapter.OnItemClickListener { categoryUIModel, _ ->
@@ -52,8 +51,6 @@ class SelectCategoryFragment :
         binding.categories.adapter = adapter
     }
 
-    override val layoutId = R.layout.fragment_select_category
-    override val fragmentTag = "SelectCategoryFragment"
 
     override fun provideViewModel(): SelectCategoryViewModel {
         return selectCategoryViewModel
@@ -65,14 +62,11 @@ class SelectCategoryFragment :
     }
 
     override fun handleUIEvent(event: SelectCategoryUIEvent) {
-        when (event) {
-            is SelectCategoryUIEvent.OnCategorySelected -> {
-                findNavController().previousBackStackEntry?.savedStateHandle?.set(
-                    "category",
-                    event.category,
-                )
-                findNavController().popBackStack()
-            }
-        }
+        dismiss()
+    }
+
+    override fun handleUIState(it: SelectCategoryUIState) {
+        super.handleUIState(it)
+        adapter.setItems(it.categories)
     }
 }

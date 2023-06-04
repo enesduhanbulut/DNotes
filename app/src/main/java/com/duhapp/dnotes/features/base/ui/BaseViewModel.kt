@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-@Suppress("Unchecked_cast")
 abstract class BaseViewModel<UE : FragmentUIEvent, US : FragmentUIState> : ViewModel() {
     protected val mutableUIEvent = MutableSharedFlow<UE?>()
     val uiEvent = mutableUIEvent as SharedFlow<UE?>
