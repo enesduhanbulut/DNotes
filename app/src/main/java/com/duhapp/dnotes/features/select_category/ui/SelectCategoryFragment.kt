@@ -31,6 +31,7 @@ class SelectCategoryFragment :
                 ),
             ),
         )
+        viewModel.initState()
     }
 
     private fun initAdapter() {
@@ -42,7 +43,6 @@ class SelectCategoryFragment :
             override fun setUIState(binding: CategorySelectListItemBinding, item: CategoryUIModel) {
                 binding.uiModel = item
             }
-
         }
         adapter.onItemClickListener =
             BaseListAdapter.OnItemClickListener { categoryUIModel, _ ->
@@ -50,7 +50,6 @@ class SelectCategoryFragment :
             }
         binding.categories.adapter = adapter
     }
-
 
     override fun provideViewModel(): SelectCategoryViewModel {
         return selectCategoryViewModel
@@ -62,7 +61,13 @@ class SelectCategoryFragment :
     }
 
     override fun handleUIEvent(event: SelectCategoryUIEvent) {
-        dismiss()
+        when (event) {
+            is SelectCategoryUIEvent.OnCategorySelected -> {
+                dismiss()
+            }
+
+            else -> {}
+        }
     }
 
     override fun handleUIState(it: SelectCategoryUIState) {

@@ -15,12 +15,13 @@ abstract class BaseNoteUIModel(
     val isPinned: Boolean,
     val isCompletable: Boolean,
     val isCompleted: Boolean,
-) {
+) : Cloneable {
+    abstract fun newCopy(): BaseNoteUIModel
     abstract fun toEntity(): NoteEntity
 }
 
 sealed class NoteType(
-    val id: Int
+    val id: Int,
 ) {
     object BasicNote : NoteType(0)
     object ImageNote : NoteType(1)
@@ -63,6 +64,10 @@ class BasicNoteUIModel(
         details = body,
         categoryId = category.id,
     )
+
+    override fun newCopy(): BasicNoteUIModel {
+        return super.clone() as BasicNoteUIModel
+    }
 }
 
 class ImageNoteUIModel(
@@ -93,4 +98,8 @@ class ImageNoteUIModel(
         details = body,
         categoryId = category.id,
     )
+
+    override fun newCopy(): ImageNoteUIModel {
+        return super.clone() as ImageNoteUIModel
+    }
 }
