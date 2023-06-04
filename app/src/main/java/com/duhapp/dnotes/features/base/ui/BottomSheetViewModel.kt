@@ -1,6 +1,5 @@
 package com.duhapp.dnotes.features.base.ui
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -10,19 +9,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 abstract class BottomSheetViewModel<UE : BottomSheetEvent, US : BottomSheetState> : ViewModel() {
-    protected val mUIEvent = MutableSharedFlow<UE?>(1)
-    val uiEvent: SharedFlow<UE?> = mUIEvent
+    protected val mUIEvent = MutableSharedFlow<UE>()
+    val uiEvent: SharedFlow<UE> = mUIEvent
     protected val mUIState = MutableStateFlow<US?>(null)
     val uiState: StateFlow<US?> = mUIState
     fun setEvent(event: UE) =
         viewModelScope.launch {
-            val res = mUIEvent.tryEmit(event)
-            Log.d("BottomSheetViewModel", "setEvent: $res")
-            Log.d("BottomSheetViewModel", mUIEvent.subscriptionCount.toString())
-            if (!res) {
-                throw Exception("Event is not emitted")
-            }
-
+            mUIEvent.emit(event)
         }
 
     fun setState(state: US) {

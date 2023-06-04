@@ -13,18 +13,16 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.duhapp.dnotes.MainActivity
-import com.duhapp.dnotes.features.generic.ui.ShowMessageBottomSheetViewModel
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 abstract class BaseFragment<
-    DB : ViewDataBinding,
-    UE : FragmentUIEvent,
-    US : FragmentUIState,
-    VM : BaseViewModel<UE, US>,
-    > : Fragment() {
+        DB : ViewDataBinding,
+        UE : FragmentUIEvent,
+        US : FragmentUIState,
+        VM : BaseViewModel<UE, US>,
+        > : Fragment() {
 
     protected var observeJobs: MutableList<Job> = mutableListOf()
     protected lateinit var binding: DB
@@ -112,17 +110,21 @@ abstract class BaseFragment<
         binding.unbind()
     }
 
-    fun showBottomSheetFragment(
-        pair: Pair<BottomSheetDialogFragment, Bundle>,
-        showMessageBottomSheetViewModel: BottomSheetViewModel<*, *> = ShowMessageBottomSheetViewModel(),
-    ): BottomSheetViewModel<*, *> {
-        val fragment = pair.first
-        val bundle = pair.second
+    fun <T : BottomSheetEvent> showBottomSheet(
+        fragment: BaseBottomSheet<*, *, *, *>,
+        bundle: Bundle? = null,
+        activityViewModel: BottomSheetViewModel<T, *>,
+        collector: (T) -> Unit
+    ) {
+        lifecycleScope.launch {
+            activityViewModel.uiEvent.collect {
+                collector.invoke(it)
+            }
+        }
         fragment.arguments = bundle
         fragment.show(
             childFragmentManager,
             fragment.tag,
         )
-        return showMessageBottomSheetViewModel
     }
 }

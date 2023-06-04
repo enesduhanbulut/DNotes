@@ -42,8 +42,13 @@ class NoteFragment :
     override fun handleUIEvent(it: NoteUIEvent) {
         when (it) {
             is NoteUIEvent.NavigateSelectCategory -> {
-                val fragment = SelectCategoryFragment()
-                fragment.show(childFragmentManager, fragment.fragmentTag)
+                showBottomSheet(
+                    SelectCategoryFragment(),
+                    null,
+                    categoryViewModel
+                ) {
+                    Toast.makeText(requireContext(), "Category Selected", Toast.LENGTH_SHORT).show()
+                }
             }
 
             else -> {}
