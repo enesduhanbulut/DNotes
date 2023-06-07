@@ -18,21 +18,19 @@ class ManageCategoryViewModel @Inject constructor(
 ) : BaseViewModel<ManageCategoryUIEvent, ManageCategoryUIState>() {
     init {
         setEvent(ManageCategoryUIEvent.Loading)
-        mutableUIState.value = ManageCategoryUIState(emptyList())
+        setState(ManageCategoryUIState(emptyList()))
         loadCategories()
     }
 
     private fun loadCategories() {
         viewModelScope.launch {
-            getCategories.invoke()
-                .collect {
-                    mutableUIState.emit(ManageCategoryUIState(it))
-                }
+            val list = getCategories.invoke()
+            setState(uiState.value!!.copy(categoryList = list))
         }
     }
 
     fun handleCategorySelect(category: CategoryUIModel, position: Int) {
-        setEvent(ManageCategoryUIEvent.OnCategorySelected(category))
+        setEvent(ManageCategoryUIEvent.OnCategorySelected(category.copy()))
     }
 
     fun onAddCategoryClick() {
@@ -46,8 +44,12 @@ class ManageCategoryViewModel @Inject constructor(
         }
     }
 
-    fun onCategoryItemSelected(categoryUIModel: CategoryUIModel) {
-        setEvent(ManageCategoryUIEvent.ShowItemMenu(categoryUIModel))
+    fun onCategoryAdded() {
+        loadCategories()
+    }
+
+    fun onCategoryUpdated() {
+        loadCategories()
     }
 }
 

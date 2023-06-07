@@ -78,4 +78,7 @@ dependencies {
     //Emoji
     implementation "com.vanniktech:emoji-google:0.16.0"
 
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.11'
+
+
 }

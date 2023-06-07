@@ -10,13 +10,14 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
+import kotlinx.coroutines.Dispatchers
 
 @InstallIn(ViewModelComponent::class)
 @Module
 object DomainModule {
     @Provides
     fun provideCategoryRepository(categoryDao: CategoryDao): CategoryRepository {
-        return CategoryRepositoryImpl(categoryDao)
+        return CategoryRepositoryImpl(categoryDao, Dispatchers.IO)
     }
 
     @Provides

@@ -1,6 +1,6 @@
 package com.duhapp.dnotes.features.add_or_update_category.ui
 
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import com.duhapp.dnotes.R
 import com.duhapp.dnotes.databinding.FragmentCategoryBottomSheetBinding
 import com.duhapp.dnotes.features.base.ui.BaseBottomSheet
@@ -18,7 +18,7 @@ class CategoryBottomSheet : BaseBottomSheet<
         get() = R.layout.fragment_category_bottom_sheet
     override val fragmentTag: String
         get() = "CategoryBottomSheet"
-    private val categoryBottomSheetViewModel: CategoryBottomSheetViewModel by viewModels()
+    private val categoryBottomSheetViewModel: CategoryBottomSheetViewModel by activityViewModels()
 
     override fun initView(binding: FragmentCategoryBottomSheetBinding) {
         arguments.let { it ->

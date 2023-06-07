@@ -3,14 +3,17 @@ package com.duhapp.dnotes.features.add_or_update_category.data
 import com.duhapp.dnotes.app.database.CategoryDao
 import com.duhapp.dnotes.app.database.CategoryEntity
 import com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import com.duhapp.dnotes.features.base.data.BaseRepository
+import kotlinx.coroutines.CoroutineDispatcher
 
 class CategoryRepositoryImpl(
-    private val dao: CategoryDao
-) : CategoryRepository {
+    private val dao: CategoryDao,
+    dispatcher: CoroutineDispatcher
+) : CategoryRepository, BaseRepository(dispatcher) {
     override suspend fun deleteCategory(categoryUIModel: CategoryUIModel) {
-        dao.deleteCategoryWithId(categoryUIModel.id)
+        runOnIO {
+            dao.deleteCategoryWithId(categoryUIModel.id)
+        }
     }
 
     override suspend fun insert(categoryUIModel: CategoryUIModel) {
@@ -20,7 +23,7 @@ class CategoryRepositoryImpl(
             categoryUIModel.emoji,
             categoryUIModel.colorId
         )
-        dao.insert(category)
+        runOnIO { dao.insert(category) }
     }
 
     override suspend fun updateCategory(categoryUIModel: CategoryUIModel) {
@@ -31,22 +34,19 @@ class CategoryRepositoryImpl(
             categoryUIModel.colorId
         )
         category.id = categoryUIModel.id
-        dao.update(category)
+        runOnIO { dao.update(category) }
     }
 
-    override fun getCategories(): Flow<List<CategoryUIModel>> {
-        return dao.getCategories()
-            .map {
-                it.map { categoryEntity ->
-                    CategoryUIModel(
-                        categoryEntity.id,
-                        categoryEntity.name,
-                        categoryEntity.emoji,
-                        categoryEntity.message,
-                        categoryEntity.colorId
-                    )
-                }
-            }
+    override suspend fun getCategories(): List<CategoryUIModel> = runOnIO {
+        dao.getCategories().map { categoryEntity ->
+            CategoryUIModel(
+                categoryEntity.id,
+                categoryEntity.name,
+                categoryEntity.emoji,
+                categoryEntity.message,
+                categoryEntity.colorId
+            )
+        }
     }
 
 

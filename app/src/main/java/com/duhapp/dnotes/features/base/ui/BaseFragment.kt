@@ -14,7 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.duhapp.dnotes.MainActivity
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 abstract class BaseFragment<
@@ -25,6 +25,7 @@ abstract class BaseFragment<
         > : Fragment() {
 
     protected var observeJobs: MutableList<Job> = mutableListOf()
+    private var mBinding: DB? = null
     protected lateinit var binding: DB
     protected lateinit var viewModel: VM
 
@@ -38,11 +39,12 @@ abstract class BaseFragment<
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        binding = DataBindingUtil.inflate(inflater, layoutId, container, false)
+        mBinding = DataBindingUtil.inflate(inflater, layoutId, container, false)
+        binding = mBinding!!
         viewModel = provideViewModel()
         setBindingViewModel()
-        binding.lifecycleOwner = viewLifecycleOwner
-        initView(binding)
+        mBinding!!.lifecycleOwner = viewLifecycleOwner
+        initView(mBinding!!)
         observeJobs.add(
             lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -51,7 +53,8 @@ abstract class BaseFragment<
             },
         )
         observeUIEvent()
-        return binding.root
+        observeUIState()
+        return mBinding!!.root
     }
 
     protected fun setAppBarTitle(@StringRes titleId: Int) {
@@ -69,25 +72,21 @@ abstract class BaseFragment<
     private fun observeUIEvent() {
         observeJobs.add(
             lifecycleScope.launch {
-                repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    viewModel.uiEvent.stateIn(this).collect {
-                        if (it != null) {
-                            handleUIEvent(it)
-                        }
+                viewModel.uiEvent.collect {
+                    if (it != null) {
+                        handleUIEvent(it)
                     }
                 }
             },
         )
     }
 
-    fun observeUIState() {
+    protected fun observeUIState() {
         observeJobs.add(
             lifecycleScope.launch {
-                repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    viewModel.uiState.collect {
-                        if (it != null) {
-                            handleUIState(it)
-                        }
+                viewModel.uiState.collect {
+                    if (it != null) {
+                        handleUIState(it)
                     }
                 }
             },
@@ -107,19 +106,60 @@ abstract class BaseFragment<
         observeJobs.forEach {
             it.cancel()
         }
-        binding.unbind()
+        mBinding!!.unbind()
+        mBinding!!.lifecycleOwner = null
+        mBinding = null
     }
 
     fun <T : BottomSheetEvent> showBottomSheet(
         fragment: BaseBottomSheet<*, *, *, *>,
         bundle: Bundle? = null,
         activityViewModel: BottomSheetViewModel<T, *>,
-        collector: (T) -> Unit
+        collector: (T) -> Unit,
+        unsubscribeEvent: BottomSheetEvent
     ) {
-        lifecycleScope.launch {
-            activityViewModel.uiEvent.collect {
-                collector.invoke(it)
+        showBottomSheet(fragment, bundle, activityViewModel, null, collector, unsubscribeEvent)
+    }
+
+    fun <T : BottomSheetEvent> showBottomSheet(
+        fragment: BaseBottomSheet<*, *, *, *>,
+        bundle: Bundle? = null,
+        activityViewModel: BottomSheetViewModel<T, *>,
+        singleEventCollector: (T) -> Unit
+    ) {
+        showBottomSheet(
+            fragment,
+            bundle,
+            activityViewModel,
+            singleEventCollector,
+            null, null
+        )
+    }
+
+    private fun <T : BottomSheetEvent> showBottomSheet(
+        fragment: BaseBottomSheet<*, *, *, *>,
+        bundle: Bundle? = null,
+        activityViewModel: BottomSheetViewModel<T, *>,
+        singleEventCollector: ((T) -> Unit)?,
+        collector: ((T) -> Unit)?,
+        unsubscribeEvent: BottomSheetEvent? = null,
+    ) {
+        var job: Job? = null
+        job = lifecycleScope.launch {
+            if (singleEventCollector != null)
+                activityViewModel.uiEvent.collectLatest {
+                    singleEventCollector.invoke(it)
+                    job?.cancel()
+                }
+            else {
+                activityViewModel.uiEvent.collect {
+                    collector?.invoke(it)
+                    if (it == unsubscribeEvent) {
+                        job?.cancel()
+                    }
+                }
             }
+
         }
         fragment.arguments = bundle
         fragment.show(

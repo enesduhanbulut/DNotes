@@ -1,13 +1,11 @@
 package com.duhapp.dnotes.features.select_category.ui
 
-import androidx.lifecycle.viewModelScope
 import com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel
 import com.duhapp.dnotes.features.base.ui.BottomSheetEvent
 import com.duhapp.dnotes.features.base.ui.BottomSheetState
 import com.duhapp.dnotes.features.base.ui.BottomSheetViewModel
 import com.duhapp.dnotes.features.manage_category.domain.GetCategories
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -16,10 +14,8 @@ class SelectCategoryViewModel @Inject constructor(
 ) :
     BottomSheetViewModel<SelectCategoryUIEvent, SelectCategoryUIState>() {
     init {
-        viewModelScope.launch {
-            getCategories.invoke().collect {
-                setState(SelectCategoryUIState(it))
-            }
+        runInIO {
+            setState(SelectCategoryUIState(getCategories.invoke()))
         }
 
     }
