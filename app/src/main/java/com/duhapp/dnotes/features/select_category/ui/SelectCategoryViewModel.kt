@@ -12,17 +12,18 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SelectCategoryViewModel @Inject constructor(
-    getCategories: GetCategories
+    private val getCategories: GetCategories
 ) :
     BottomSheetViewModel<SelectCategoryUIEvent, SelectCategoryUIState>() {
-    init {
-        viewModelScope.launch {
-            setState(SelectCategoryUIState(getCategories.invoke()))
-        }
-    }
 
     fun handleCategorySelect(category: CategoryUIModel) {
         setEvent(SelectCategoryUIEvent.OnCategorySelected(category))
+    }
+
+    fun onStart() {
+        viewModelScope.launch {
+            setState(SelectCategoryUIState(getCategories.invoke()))
+        }
     }
 }
 

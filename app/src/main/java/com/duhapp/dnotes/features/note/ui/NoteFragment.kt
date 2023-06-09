@@ -44,7 +44,7 @@ class NoteFragment :
                 showBottomSheet(
                     SelectCategoryFragment(),
                     null,
-                    categoryViewModel
+                    categoryViewModel,
                 ) {
                     Toast.makeText(requireContext(), "Category Selected", Toast.LENGTH_SHORT).show()
                 }

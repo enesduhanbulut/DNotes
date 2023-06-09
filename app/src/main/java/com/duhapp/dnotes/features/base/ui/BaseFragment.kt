@@ -154,7 +154,7 @@ abstract class BaseFragment<
             else {
                 activityViewModel.uiEvent.collect {
                     collector?.invoke(it)
-                    if (it == unsubscribeEvent) {
+                    if (it.javaClass == unsubscribeEvent?.javaClass) {
                         job?.cancel()
                     }
                 }

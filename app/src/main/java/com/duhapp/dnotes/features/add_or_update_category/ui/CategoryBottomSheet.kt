@@ -67,18 +67,13 @@ class CategoryBottomSheet : BaseBottomSheet<
 
     override fun handleUIEvent(it: CategoryUIEvent) {
         when (it) {
-            is CategoryUIEvent.Canceled -> {
-                dismiss()
-            }
-
-            is CategoryUIEvent.Inserted -> {
+            is CategoryUIEvent.Canceled, CategoryUIEvent.Upserted -> {
                 dismiss()
             }
 
             is CategoryUIEvent.ShowEmojiDialog -> {
                 emojiPopup = EmojiPopup(
                     requireView(), onEmojiClickListener = {
-                        binding.categoryIcon.text.clear()
                         categoryBottomSheetViewModel.setEmoji(it.unicode)
                     }, editText = binding.categoryIcon
                 )
@@ -95,6 +90,11 @@ class CategoryBottomSheet : BaseBottomSheet<
 
             else -> {}
         }
+    }
+
+    override fun dismiss() {
+        super.dismiss()
+        categoryBottomSheetViewModel.onDismissed()
     }
 
 }
