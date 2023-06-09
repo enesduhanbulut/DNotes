@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-abstract class BaseViewModel<UE : FragmentUIEvent, US : FragmentUIState> : ViewModel() {
-    protected val mutableUIEvent = MutableSharedFlow<UE?>()
+abstract class BaseViewModel<UE : BaseUIEvent, US : BaseUIState> : ViewModel() {
+    protected val mutableUIEvent = MutableSharedFlow<UE>()
     val uiEvent = mutableUIEvent.asSharedFlow()
     protected val mutableUIState = MutableStateFlow<US?>(null)
     val uiState = mutableUIState.asStateFlow()
@@ -23,12 +23,12 @@ abstract class BaseViewModel<UE : FragmentUIEvent, US : FragmentUIState> : ViewM
     }
 }
 
-interface FragmentUIState : Cloneable {
-    fun newCopy(): FragmentUIState {
-        return super.clone() as FragmentUIState
+interface BaseUIState : Cloneable {
+    fun newCopy(): BaseUIState {
+        return super.clone() as BaseUIState
     }
 
 }
 
-interface FragmentUIEvent
+interface BaseUIEvent
 

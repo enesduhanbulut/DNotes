@@ -2,9 +2,9 @@ package com.duhapp.dnotes.features.note.ui
 
 import androidx.lifecycle.viewModelScope
 import com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel
-import com.duhapp.dnotes.features.base.ui.BaseViewModel
 import com.duhapp.dnotes.features.base.ui.FragmentUIEvent
 import com.duhapp.dnotes.features.base.ui.FragmentUIState
+import com.duhapp.dnotes.features.base.ui.FragmentViewModel
 import com.duhapp.dnotes.features.home.home_screen_category.ui.BaseNoteUIModel
 import com.duhapp.dnotes.features.home.home_screen_category.ui.BasicNoteUIModel
 import com.duhapp.dnotes.features.note.domain.UpsertNote
@@ -15,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class NoteViewModel @Inject constructor(
     private val upsertNote: UpsertNote,
-) : BaseViewModel<NoteUIEvent, NoteUIState>() {
+) : FragmentViewModel<NoteUIEvent, NoteUIState>() {
 
     init {
         mutableUIState.value = NoteUIState(

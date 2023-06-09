@@ -85,7 +85,7 @@ class CategoryBottomSheet : BaseBottomSheet<
                 emojiPopup.toggle()
             }
 
-            is CategoryUIEvent.Dialog -> {
+            is CategoryUIEvent.DismissedEmojiDialog -> {
                 emojiPopup.let {
                     if (it.isShowing) {
                         it.dismiss()

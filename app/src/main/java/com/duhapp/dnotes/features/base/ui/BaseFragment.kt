@@ -21,7 +21,7 @@ abstract class BaseFragment<
         DB : ViewDataBinding,
         UE : FragmentUIEvent,
         US : FragmentUIState,
-        VM : BaseViewModel<UE, US>,
+        VM : FragmentViewModel<UE, US>,
         > : Fragment() {
 
     protected var observeJobs: MutableList<Job> = mutableListOf()

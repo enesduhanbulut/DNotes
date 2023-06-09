@@ -37,7 +37,7 @@ class CategoryBottomSheetViewModel @Inject constructor(
     }
 
     fun setEmoji(emoji: String) {
-        setEvent(CategoryUIEvent.Dialog)
+        setEvent(CategoryUIEvent.DismissedEmojiDialog)
         viewModelScope.launch {
             setState(
                 mUIState.value!!.copy(
@@ -93,7 +93,7 @@ sealed interface CategoryUIEvent : BottomSheetEvent {
     object Updated : CategoryUIEvent
     object Canceled : CategoryUIEvent
     object ShowEmojiDialog : CategoryUIEvent
-    object Dialog : CategoryUIEvent
+    object DismissedEmojiDialog : CategoryUIEvent
 }
 
 @Parcelize
