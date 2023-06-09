@@ -21,7 +21,7 @@ class CategoryBottomSheetViewModel @Inject constructor(
     BottomSheetViewModel<CategoryUIEvent, CategoryBottomSheetUIState>() {
     fun onPositiveButtonClicked() {
         viewModelScope.launch {
-            upsertCategory.invoke(mUIState.value!!.categoryUIModel)
+            upsertCategory.invoke(mutableUIState.value!!.categoryUIModel)
             setEvent(CategoryUIEvent.Inserted)
         }
     }
@@ -40,8 +40,8 @@ class CategoryBottomSheetViewModel @Inject constructor(
         setEvent(CategoryUIEvent.DismissedEmojiDialog)
         viewModelScope.launch {
             setState(
-                mUIState.value!!.copy(
-                    categoryUIModel = mUIState.value!!.categoryUIModel.copy(
+                mutableUIState.value!!.copy(
+                    categoryUIModel = mutableUIState.value!!.categoryUIModel.copy(
                         emoji = emoji
                     )
                 )
