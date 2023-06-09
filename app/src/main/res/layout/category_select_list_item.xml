@@ -27,7 +27,7 @@
                 android:layout_width="@dimen/category_list_item_icon_size"
                 android:layout_height="@dimen/category_list_item_icon_size"
                 android:layout_margin="@dimen/small_margin"
-                android:background="@drawable/rounded_backgroud"
+                android:background="@drawable/rounded_alpha_background"
                 android:backgroundTintMode="src_in"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

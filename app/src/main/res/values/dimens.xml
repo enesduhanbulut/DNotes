@@ -16,4 +16,5 @@
     <dimen name="twenty">20dp</dimen>
     <dimen name="category_bottom_sheet_image_size">96dp</dimen>
     <dimen name="fab_bottom_margin">36dp</dimen>
+    <dimen name="color_item_size">46dp</dimen>
 </resources>

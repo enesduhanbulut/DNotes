@@ -22,8 +22,8 @@ class SpacingItemDecorator(
 }
 
 data class SpaceModel(
-    val topSpace: Int,
-    val bottomSpace: Int,
-    val leftSpace: Int,
-    val rightSpace: Int
+    val topSpace: Int = 0,
+    val bottomSpace: Int = 0,
+    val leftSpace: Int = 0,
+    val rightSpace: Int = 0
 )

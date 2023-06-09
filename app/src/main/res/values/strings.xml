@@ -17,8 +17,8 @@
     <string name="Edit_Category_Message">Please enter new name and icon of category</string>
     <string name="Confirm">Confirm</string>
     <string name="Delete">Delete</string>
-    <string name="Category_Name">Please enter name of category</string>
-    <string name="Category_Description">Please enter description of category</string>
+    <string name="Category_Name">Title</string>
+    <string name="Category_Description">Description</string>
     <string name="Select_Category_Fragment">Select Category</string>
     <string name="Note_Fragment">Note</string>
     <string name="Title">Title</string>
@@ -26,4 +26,6 @@
     <string name="Edit">Edit</string>
     <string name="Manage_Category_Fragment">Manage Categories</string>
     <string name="Item_deleted_do_you_want_to_undo">Item deleted. Do you want to undo</string>
+    <string name="Choose_a_color">Choose a background color</string>
+    <string name="fill_the_title_and_description_click_on_the_icon_to_change">Fill the title and description. Click on the icon to change it.</string>
 </resources>

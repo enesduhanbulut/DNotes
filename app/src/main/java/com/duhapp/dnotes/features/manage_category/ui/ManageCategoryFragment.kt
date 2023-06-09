@@ -145,7 +145,4 @@ class ManageCategoryFragment :
         adapter.setItems(it.categoryList)
     }
 
-    fun interface MenuClickListener {
-        fun onMenuClick(categoryUIModel: CategoryUIModel, view: View)
-    }
 }

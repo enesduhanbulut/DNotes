@@ -1,6 +1,7 @@
 package com.duhapp.dnotes.app.ui
 
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import androidx.annotation.ColorRes
 import androidx.core.graphics.ColorUtils
 import androidx.databinding.BindingAdapter
@@ -36,3 +37,7 @@ fun customFocusChangeListener(view: ImageButton, listener: (Boolean) -> Unit) {
     }
 }
 
+@BindingAdapter("layoutBackground")
+fun layoutBackground(view: LinearLayout, @ColorRes color: Int) {
+    view.backgroundTintList = view.context.getColorStateList(color)
+}

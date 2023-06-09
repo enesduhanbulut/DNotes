@@ -1,9 +1,14 @@
 package com.duhapp.dnotes.features.add_or_update_category.ui
 
 import androidx.fragment.app.activityViewModels
+import com.duhapp.dnotes.NoteColor
 import com.duhapp.dnotes.R
 import com.duhapp.dnotes.databinding.FragmentCategoryBottomSheetBinding
+import com.duhapp.dnotes.databinding.LayoutColorSelectorItemBinding
 import com.duhapp.dnotes.features.base.ui.BaseBottomSheet
+import com.duhapp.dnotes.features.base.ui.BaseListAdapter
+import com.duhapp.dnotes.features.generic.ui.SpaceModel
+import com.duhapp.dnotes.features.generic.ui.SpacingItemDecorator
 import com.vanniktech.emoji.EmojiPopup
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -26,6 +31,30 @@ class CategoryBottomSheet : BaseBottomSheet<
                 viewModel.setViewWithBundle(it.uiModel, it.categoryShowType)
             }
         }
+        val adapter = object :
+            BaseListAdapter<ColorItemUIModel, LayoutColorSelectorItemBinding>() {
+            override fun getLayoutId() = R.layout.layout_color_selector_item
+
+            override fun setUIState(
+                binding: LayoutColorSelectorItemBinding,
+                item: ColorItemUIModel
+            ) {
+                binding.uiModel = item
+            }
+
+        }
+        binding.colorSelector.addItemDecoration(
+            SpacingItemDecorator(
+                SpaceModel(rightSpace = 32)
+            ),
+        )
+        binding.colorSelector.adapter = adapter
+        val items = NoteColor.values().map {
+            ColorItemUIModel(
+                it
+            )
+        }
+        adapter.setItems(items)
     }
 
     override fun provideViewModel(): CategoryBottomSheetViewModel {

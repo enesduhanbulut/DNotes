@@ -20,38 +20,79 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@{viewModel.uiState.categoryUIModel.colorId}"
-            tools:background="@color/primary_color">
+            android:background="@color/white"
+            tools:background="@color/white">
 
-            <com.google.android.material.card.MaterialCardView
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/color_selector_title"
+                style="@style/medium_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/small_margin"
+                android:text="@string/Choose_a_color"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/color_selector"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/small_margin"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/color_selector_title"
+                tools:itemCount="10"
+                tools:listitem="@layout/layout_color_selector_item"
+                tools:orientation="horizontal" />
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_margin="@dimen/small_margin"
+                android:background="@android:color/darker_gray"
+                app:layout_constraintTop_toBottomOf="@id/color_selector" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/fields_title"
+                style="@style/medium_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/small_margin"
+                android:text="@string/fill_the_title_and_description_click_on_the_icon_to_change"
+                app:layout_constraintTop_toBottomOf="@id/divider" />
+
+            <RelativeLayout
                 android:id="@+id/category_icon_card"
                 android:layout_width="@dimen/category_list_item_icon_size"
                 android:layout_height="@dimen/category_list_item_icon_size"
                 android:layout_margin="@dimen/small_margin"
-                app:cardCornerRadius="50dp"
+                android:background="@drawable/rounded_alpha_background"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toBottomOf="@id/fields_title">
 
                 <EditText
                     android:id="@+id/category_icon"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/white"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_centerInParent="true"
+                    android:background="@color/transparent"
                     android:clickable="false"
                     android:cursorVisible="false"
+                    android:ellipsize="end"
                     android:focusable="false"
                     android:gravity="center"
-                    android:inputType=""
-                    android:text="@={viewModel.uiState.categoryUIModel.emoji}"
-                    android:textSize="40sp"
-                    tools:text="😀"
-                    tools:tint="@color/white" />
+                    android:maxLines="1"
+                    android:text="@{viewModel.uiState.categoryUIModel.emoji}"
+                    android:textColor="@color/white"
+                    tools:text="😀" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:onClickListener="@{() -> viewModel.onCategoryIconClicked()}" />
-            </com.google.android.material.card.MaterialCardView>
+            </RelativeLayout>
+
 
             <EditText
                 android:id="@+id/name_text_input_layout"
@@ -63,10 +104,10 @@
                 android:hint="@string/Category_Name"
                 android:inputType="text"
                 android:text="@={viewModel.uiState.categoryUIModel.name}"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
                 android:textSize="12sp"
-                app:boxStrokeColor="@color/white"
+                app:boxStrokeColor="@color/dark_grey"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/category_icon_card"
                 app:layout_constraintTop_toTopOf="@id/category_icon_card" />
@@ -77,36 +118,31 @@
                 android:layout_width="0dp"
                 android:layout_height="36dp"
                 android:layout_marginHorizontal="@dimen/small_margin"
+                android:autofillHints=""
                 android:hint="@string/Category_Description"
                 android:inputType="text"
                 android:text="@={viewModel.uiState.categoryUIModel.description}"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
                 android:textSize="12sp"
-                app:boxStrokeColor="@color/white"
-                app:layout_constraintBottom_toBottomOf="@id/category_icon_card"
+                app:boxStrokeColor="@color/dark_grey"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/category_icon_card" />
+                app:layout_constraintStart_toEndOf="@id/category_icon_card"
+                app:layout_constraintTop_toBottomOf="@id/name_text_input_layout" />
 
-            <LinearLayout
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/positive_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/small_margin"
+                android:layout_margin="36dp"
+                android:onClick="@{() -> viewModel.onPositiveButtonClicked()}"
+                android:text="@{viewModel.uiState.positiveButtonText}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/category_icon_card">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/positive_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="@{() -> viewModel.onPositiveButtonClicked()}"
-                    android:text="@{viewModel.uiState.positiveButtonText}"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    tools:text="Confirm" />
-            </LinearLayout>
+                app:layout_constraintTop_toBottomOf="@id/description_text_input_layout"
+                tools:text="Confirm" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

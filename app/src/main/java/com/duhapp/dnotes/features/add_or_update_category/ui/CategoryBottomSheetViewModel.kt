@@ -39,7 +39,7 @@ class CategoryBottomSheetViewModel @Inject constructor(
     fun setEmoji(emoji: String) {
         setEvent(CategoryUIEvent.Dialog)
         viewModelScope.launch {
-            mUIState.emit(
+            setState(
                 mUIState.value!!.copy(
                     categoryUIModel = mUIState.value!!.categoryUIModel.copy(
                         emoji = emoji
