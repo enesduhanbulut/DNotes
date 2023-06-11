@@ -57,6 +57,8 @@ class MainActivity : AppCompatActivity() {
         setAppBarVisibility(View.GONE)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        viewModel.initializeDefaultDataModels()
     }
 
     fun setBottomAppBarVisibility(visibility: Int) {

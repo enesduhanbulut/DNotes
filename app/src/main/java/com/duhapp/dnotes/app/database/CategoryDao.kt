@@ -3,6 +3,7 @@ package com.duhapp.dnotes.app.database
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
@@ -29,4 +30,7 @@ interface CategoryDao {
 
     @Query("SELECT * FROM CategoryEntity")
     suspend fun getCategories(): List<CategoryEntity>
+
+    @Query("SELECT * FROM CategoryEntity WHERE id = :id")
+    suspend fun getById(id: Int): CategoryEntity?
 }
