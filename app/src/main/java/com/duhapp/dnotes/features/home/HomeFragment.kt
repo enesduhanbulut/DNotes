@@ -57,11 +57,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeUIEvent, HomeUIState,
             )
         )
         binding.categories.adapter = adapter
-        viewModel.uiState.value?.let { adapter.setItems(it.categories) }
+        viewModel.loadCategories()
 
     }
 
     override fun handleUIEvent(it: HomeUIEvent) {
         TODO("Not yet implemented")
+    }
+
+    override fun handleUIState(it: HomeUIState) {
+        adapter.setItems(it.categories)
     }
 }
