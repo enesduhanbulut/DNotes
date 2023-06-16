@@ -22,7 +22,7 @@ class CategoryBottomSheetViewModel @Inject constructor(
     fun onPositiveButtonClicked() {
         viewModelScope.launch {
             upsertCategory.invoke(mutableUIState.value!!.categoryUIModel)
-            setEvent(CategoryUIEvent.Inserted)
+            setEvent(CategoryUIEvent.Upserted)
         }
     }
 
@@ -32,21 +32,23 @@ class CategoryBottomSheetViewModel @Inject constructor(
         )
     }
 
-    fun onCategoryIconClicked() {
+    fun onEmojiClicked() {
         setEvent(CategoryUIEvent.ShowEmojiDialog)
     }
 
     fun setEmoji(emoji: String) {
         setEvent(CategoryUIEvent.DismissedEmojiDialog)
-        viewModelScope.launch {
-            setState(
-                mutableUIState.value!!.copy(
-                    categoryUIModel = mutableUIState.value!!.categoryUIModel.copy(
-                        emoji = emoji
-                    )
+        setState(
+            mutableUIState.value!!.copy(
+                categoryUIModel = mutableUIState.value!!.categoryUIModel.copy(
+                    emoji = emoji
                 )
             )
-        }
+        )
+    }
+
+    fun onDismissed() {
+        setEvent(CategoryUIEvent.Dismissed)
     }
 }
 
@@ -89,9 +91,9 @@ data class CategoryBottomSheetUIState(
 }
 
 sealed interface CategoryUIEvent : BottomSheetEvent {
-    object Inserted : CategoryUIEvent
-    object Updated : CategoryUIEvent
+    object Upserted : CategoryUIEvent
     object Canceled : CategoryUIEvent
+    object Dismissed : CategoryUIEvent
     object ShowEmojiDialog : CategoryUIEvent
     object DismissedEmojiDialog : CategoryUIEvent
 }

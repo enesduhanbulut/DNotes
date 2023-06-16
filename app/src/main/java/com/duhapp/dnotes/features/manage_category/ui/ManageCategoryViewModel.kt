@@ -1,5 +1,6 @@
 package com.duhapp.dnotes.features.manage_category.ui
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.duhapp.dnotes.features.add_or_update_category.domain.DeleteCategory
 import com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel
@@ -23,6 +24,7 @@ class ManageCategoryViewModel @Inject constructor(
     }
 
     private fun loadCategories() {
+        Log.d("Duhan", "loadCategories: ")
         viewModelScope.launch {
             val list = getCategories.invoke()
             setState(uiState.value!!.copy(categoryList = list))
@@ -44,11 +46,7 @@ class ManageCategoryViewModel @Inject constructor(
         }
     }
 
-    fun onCategoryAdded() {
-        loadCategories()
-    }
-
-    fun onCategoryUpdated() {
+    fun onCategoryUpserted() {
         loadCategories()
     }
 }

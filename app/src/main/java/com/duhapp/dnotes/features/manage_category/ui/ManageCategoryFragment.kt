@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.View
 import android.widget.Toast
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.duhapp.dnotes.R
@@ -78,14 +79,13 @@ class ManageCategoryFragment :
             BaseListAdapter.OnItemClickListener(viewModel::handleCategorySelect)
         // TODO There is a warning at resources.getDrawable, Use ResourcesCompat.getDrawable()
         binding.categories.addSwipeListener(
-            resources.getDrawable(R.drawable.baseline_lightbulb_24, requireActivity().theme),
+            ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.baseline_lightbulb_24,
+                requireActivity().theme
+            )!!,
             ColorDrawable(Color.RED),
             {
-                Toast.makeText(requireContext(), "move", Toast.LENGTH_SHORT)
-                    .show()
-            },
-            {
-                // show a undo snackbar
                 Snackbar.make(
                     binding.root,
                     R.string.Item_deleted_do_you_want_to_undo,
@@ -109,7 +109,8 @@ class ManageCategoryFragment :
                 showBottomSheet(it.category, CategoryShowType.Edit)
             }
 
-            else -> {}
+            else -> {
+            }
         }
     }
 
@@ -120,24 +121,20 @@ class ManageCategoryFragment :
             bundle = CategoryBottomSheetArgs(
                 categoryUIModel,
                 showType,
-            ).toBundle(),
-            singleEventCollector = {
+            ).toBundle(), collector = {
                 handleBottomSheetResponse(it)
-            },
+            }, unsubscribeEvent = CategoryUIEvent.Dismissed
         )
     }
 
     private fun handleBottomSheetResponse(it: CategoryUIEvent) {
         when (it) {
-            is CategoryUIEvent.Inserted -> {
-                viewModel.onCategoryAdded()
+            is CategoryUIEvent.Upserted -> {
+                viewModel.onCategoryUpserted()
             }
 
-            is CategoryUIEvent.Updated -> {
-                viewModel.onCategoryUpdated()
+            else -> {
             }
-
-            else -> {}
         }
     }
 

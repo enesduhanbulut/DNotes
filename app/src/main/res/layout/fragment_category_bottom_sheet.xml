@@ -83,14 +83,14 @@
                     android:focusable="false"
                     android:gravity="center"
                     android:maxLines="1"
-                    android:text="@{viewModel.uiState.categoryUIModel.emoji}"
+                    android:text="@={viewModel.uiState.categoryUIModel.emoji}"
                     android:textColor="@color/white"
                     tools:text="😀" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:onClickListener="@{() -> viewModel.onCategoryIconClicked()}" />
+                    android:onClickListener="@{() -> viewModel.onEmojiClicked()}" />
             </RelativeLayout>
 
 
@@ -136,7 +136,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="36dp"
-                android:onClick="@{() -> viewModel.onPositiveButtonClicked()}"
+                android:onClickListener="@{() -> viewModel.onPositiveButtonClicked()}"
                 android:text="@{viewModel.uiState.positiveButtonText}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

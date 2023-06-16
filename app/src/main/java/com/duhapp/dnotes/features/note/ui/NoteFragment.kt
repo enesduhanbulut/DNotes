@@ -48,7 +48,6 @@ class NoteFragment :
                         else -> {}
                     }
                 }
-            }
 
             else -> {}
         }
