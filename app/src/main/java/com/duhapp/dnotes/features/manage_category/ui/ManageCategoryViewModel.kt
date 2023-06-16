@@ -41,8 +41,13 @@ class ManageCategoryViewModel @Inject constructor(
 
     fun handleDeleteCategory(categoryUIModel: CategoryUIModel) {
         viewModelScope.launch {
-            deleteCategory.invoke(categoryUIModel)
-            loadCategories()
+            try {
+                deleteCategory.invoke(categoryUIModel)
+                loadCategories()
+            } catch (exception: Exception) {
+                // TODO: 2021-09-19 handle errors
+                setState(uiState.value!!.copy(errorMessage = exception.message))
+            }
         }
     }
 
@@ -53,6 +58,7 @@ class ManageCategoryViewModel @Inject constructor(
 
 data class ManageCategoryUIState(
     val categoryList: List<CategoryUIModel>,
+    val errorMessage: String? = "",
 ) : FragmentUIState
 
 sealed interface ManageCategoryUIEvent : FragmentUIEvent {

@@ -1,12 +1,14 @@
 package com.duhapp.dnotes.features.note.ui
 
 import androidx.lifecycle.viewModelScope
+import androidx.room.util.copy
 import com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel
 import com.duhapp.dnotes.features.base.ui.FragmentUIEvent
 import com.duhapp.dnotes.features.base.ui.FragmentUIState
 import com.duhapp.dnotes.features.base.ui.FragmentViewModel
 import com.duhapp.dnotes.features.home.home_screen_category.ui.BaseNoteUIModel
 import com.duhapp.dnotes.features.home.home_screen_category.ui.BasicNoteUIModel
+import com.duhapp.dnotes.features.note.domain.GetDefaultCategory
 import com.duhapp.dnotes.features.note.domain.UpsertNote
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -15,6 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class NoteViewModel @Inject constructor(
     private val upsertNote: UpsertNote,
+    private val getDefaultCategory: GetDefaultCategory,
 ) : FragmentViewModel<NoteUIEvent, NoteUIState>() {
 
     init {
@@ -55,21 +58,32 @@ class NoteViewModel @Inject constructor(
     }
 
     fun onCategorySelected(category: CategoryUIModel) {
-        println("onCategorySelected: $category")
-        viewModelScope.launch {
-            mutableUIState.value?.let {
-                mutableUIState.value = it.copy(
-                    baseNoteUIModel = it.baseNoteUIModel.apply {
-                        this.category = category
-                    },
-                )
-            }
+        mutableUIState.value?.let {
+            mutableUIState.value = it.copy(
+                baseNoteUIModel = it.baseNoteUIModel.newCopy().apply {
+                    this.category = category
+                },
+            )
         }
     }
 
     fun categorySelectClicked() {
         setEvent(NoteUIEvent.NavigateSelectCategory)
         setEvent(NoteUIEvent.Loading)
+    }
+
+    fun initState() {
+        viewModelScope.launch {
+            getDefaultCategory.invoke().let { defaultCategory ->
+                mutableUIState.value = mutableUIState.value?.baseNoteUIModel?.newCopy()?.apply {
+                    this.category = defaultCategory
+                }?.let {
+                    mutableUIState.value?.copy(
+                        baseNoteUIModel = it
+                    )
+                }
+            }
+        }
     }
 }
 
