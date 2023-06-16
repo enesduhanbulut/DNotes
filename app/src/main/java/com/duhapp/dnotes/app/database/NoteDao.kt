@@ -2,6 +2,7 @@ package com.duhapp.dnotes.app.database
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.Query
 import androidx.room.Upsert
 
 @Dao
@@ -12,4 +13,7 @@ interface NoteDao {
 
     @Upsert
     suspend fun update(noteEntity: NoteEntity)
+
+    @Query("SELECT * FROM NoteEntity WHERE category_id = :categoryId")
+    suspend fun getNoteByCategoryId(categoryId: Int): List<NoteEntity>
 }
