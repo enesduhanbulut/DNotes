@@ -121,10 +121,9 @@ class ManageCategoryFragment :
             bundle = CategoryBottomSheetArgs(
                 categoryUIModel,
                 showType,
-            ).toBundle(), collector = {
+            ).toBundle(), singleEventCollector = {
                 handleBottomSheetResponse(it)
-            }, unsubscribeEvent = CategoryUIEvent.Dismissed
-        )
+            })
     }
 
     private fun handleBottomSheetResponse(it: CategoryUIEvent) {

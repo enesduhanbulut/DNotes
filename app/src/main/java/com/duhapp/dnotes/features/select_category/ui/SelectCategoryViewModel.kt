@@ -19,7 +19,7 @@ class SelectCategoryViewModel @Inject constructor(
             setState(SelectCategoryUIState(getCategories.invoke()))
         }
     }
-    
+
     fun handleCategorySelect(category: CategoryUIModel) {
         setEvent(SelectCategoryUIEvent.OnCategorySelected(category))
     }

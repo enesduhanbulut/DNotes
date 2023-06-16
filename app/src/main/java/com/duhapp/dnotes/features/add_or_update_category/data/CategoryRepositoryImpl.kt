@@ -18,20 +18,35 @@ class CategoryRepositoryImpl(
 
     override suspend fun insert(categoryUIModel: CategoryUIModel) {
         val category = CategoryEntity(
-            categoryUIModel.name,
-            categoryUIModel.description,
-            categoryUIModel.emoji,
-            categoryUIModel.colorId
+            name = categoryUIModel.name,
+            message = categoryUIModel.description,
+            emoji = categoryUIModel.emoji,
+            colorId = categoryUIModel.colorId,
+            isDefault = categoryUIModel.isDefault
         )
         runOnIO { dao.insert(category) }
     }
 
+    override suspend fun getById(id: Int): CategoryUIModel? = runOnIO {
+        dao.getById(id)?.let { categoryEntity ->
+            CategoryUIModel(
+                id = categoryEntity.id,
+                name = categoryEntity.name,
+                emoji = categoryEntity.emoji,
+                description = categoryEntity.message,
+                colorId = categoryEntity.colorId,
+                isDefault = categoryEntity.isDefault
+            )
+        }
+    }
+
     override suspend fun updateCategory(categoryUIModel: CategoryUIModel) {
         val category = CategoryEntity(
-            categoryUIModel.name,
-            categoryUIModel.description,
-            categoryUIModel.emoji,
-            categoryUIModel.colorId
+            name = categoryUIModel.name,
+            message = categoryUIModel.description,
+            emoji = categoryUIModel.emoji,
+            colorId = categoryUIModel.colorId,
+            isDefault = categoryUIModel.isDefault
         )
         category.id = categoryUIModel.id
         runOnIO { dao.update(category) }
@@ -40,11 +55,12 @@ class CategoryRepositoryImpl(
     override suspend fun getCategories(): List<CategoryUIModel> = runOnIO {
         dao.getCategories().map { categoryEntity ->
             CategoryUIModel(
-                categoryEntity.id,
-                categoryEntity.name,
-                categoryEntity.emoji,
-                categoryEntity.message,
-                categoryEntity.colorId
+                id = categoryEntity.id,
+                name = categoryEntity.name,
+                emoji = categoryEntity.emoji,
+                description = categoryEntity.message,
+                colorId = categoryEntity.colorId,
+                isDefault = categoryEntity.isDefault
             )
         }
     }

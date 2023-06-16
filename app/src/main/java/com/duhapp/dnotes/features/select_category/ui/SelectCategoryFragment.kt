@@ -31,7 +31,7 @@ class SelectCategoryFragment :
                 ),
             ),
         )
-        viewModel.onStart()
+        viewModel.initState()
     }
 
     private fun initAdapter() {
