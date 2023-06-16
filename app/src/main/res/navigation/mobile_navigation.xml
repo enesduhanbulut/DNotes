@@ -9,7 +9,11 @@
         android:id="@+id/navigation_home"
         android:name="com.duhapp.dnotes.features.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_note"
+            app:destination="@id/navigation_note" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_manage_category"
@@ -24,11 +28,14 @@
         tools:layout="@layout/fragment_notifications" />
 
     <fragment
-        android:id="@+id/noteFragment"
+        android:id="@+id/navigation_note"
         android:name="com.duhapp.dnotes.features.note.ui.NoteFragment"
         android:label="@string/Note_Fragment"
         tools:layout="@layout/fragment_note">
 
+        <action
+            android:id="@+id/action_navigation_note_to_selectCategoryFragment"
+            app:destination="@id/navigation_select_category" />
     </fragment>
 
     <dialog
@@ -43,4 +50,8 @@
             android:name="categoryShowType"
             app:argType="com.duhapp.dnotes.features.add_or_update_category.ui.CategoryShowType" />
     </dialog>
+    <dialog
+        android:id="@+id/navigation_select_category"
+        android:name="com.duhapp.dnotes.features.select_category.ui.SelectCategoryFragment"
+        android:label="SelectCategoryFragment" />
 </navigation>

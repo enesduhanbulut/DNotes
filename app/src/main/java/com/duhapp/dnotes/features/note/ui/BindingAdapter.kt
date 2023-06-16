@@ -1,10 +1,11 @@
 package com.duhapp.dnotes.features.note.ui
 
-import android.text.InputType
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.RelativeLayout
 import androidx.databinding.BindingAdapter
 import com.duhapp.dnotes.R
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 @BindingAdapter("lockIcon")
 fun lockIcon(view: ImageButton, isLocked: Boolean) {
@@ -15,11 +16,21 @@ fun lockIcon(view: ImageButton, isLocked: Boolean) {
     }
 }
 
-@BindingAdapter("isLocked")
-fun lockIcon(view: EditText, isLocked: Boolean) {
+@BindingAdapter("lockIcon")
+fun lockIcon(view: FloatingActionButton, isLocked: Boolean) {
     if (isLocked) {
-        view.inputType = InputType.TYPE_NULL
+        view.setImageResource(R.drawable.edit)
     } else {
-        view.inputType = InputType.TYPE_CLASS_TEXT
+        view.setImageResource(R.drawable.save)
     }
+}
+
+@BindingAdapter("isLocked")
+fun setEditable(view: EditText, isLocked: Boolean) {
+    view.isEnabled = !isLocked
+}
+
+@BindingAdapter("isLocked")
+fun setClickable(view: RelativeLayout, isLocked: Boolean) {
+    view.isClickable = !isLocked
 }

@@ -28,9 +28,9 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ManageCategoryFragment :
     BaseFragment<
-            FragmentManageCategoryBinding, ManageCategoryUIEvent,
-            ManageCategoryUIState, ManageCategoryViewModel,
-            >() {
+        FragmentManageCategoryBinding, ManageCategoryUIEvent,
+        ManageCategoryUIState, ManageCategoryViewModel,
+        >() {
     override val layoutId: Int
         get() = R.layout.fragment_manage_category
     override val titleId: Int
@@ -77,26 +77,24 @@ class ManageCategoryFragment :
         }
         adapter.onItemClickListener =
             BaseListAdapter.OnItemClickListener(viewModel::handleCategorySelect)
+        // TODO There is a warning at resources.getDrawable, Use ResourcesCompat.getDrawable()
         binding.categories.addSwipeListener(
             ResourcesCompat.getDrawable(
                 resources,
                 R.drawable.baseline_lightbulb_24,
                 requireActivity().theme
             )!!,
-            ColorDrawable(Color.RED), {
-                Toast.makeText(requireContext(), "move", Toast.LENGTH_SHORT)
-                    .show()
-            },
+            ColorDrawable(Color.RED),
             {
                 Snackbar.make(
                     binding.root,
                     R.string.Item_deleted_do_you_want_to_undo,
-                    Snackbar.LENGTH_LONG
+                    Snackbar.LENGTH_LONG,
                 ).setAction(R.string.Confirm) {
                     Toast.makeText(requireContext(), "undo", Toast.LENGTH_SHORT).show()
                 }.show()
-
-            }, SwipeDirection.LEFT
+            },
+            SwipeDirection.LEFT,
         )
         binding.categories.adapter = adapter
     }
@@ -147,5 +145,4 @@ class ManageCategoryFragment :
         }
         adapter.setItems(it.categoryList)
     }
-
 }

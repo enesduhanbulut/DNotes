@@ -1,6 +1,7 @@
 package com.duhapp.dnotes.features.note.ui
 
 import androidx.lifecycle.viewModelScope
+import androidx.room.util.copy
 import com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel
 import com.duhapp.dnotes.features.base.ui.FragmentUIEvent
 import com.duhapp.dnotes.features.base.ui.FragmentUIState
@@ -55,15 +56,12 @@ class NoteViewModel @Inject constructor(
     }
 
     fun onCategorySelected(category: CategoryUIModel) {
-        println("onCategorySelected: $category")
-        viewModelScope.launch {
-            mutableUIState.value?.let {
-                mutableUIState.value = it.copy(
-                    baseNoteUIModel = it.baseNoteUIModel.apply {
-                        this.category = category
-                    },
-                )
-            }
+        mutableUIState.value?.let {
+            mutableUIState.value = it.copy(
+                baseNoteUIModel = it.baseNoteUIModel.newCopy().apply {
+                    this.category = category
+                },
+            )
         }
     }
 
