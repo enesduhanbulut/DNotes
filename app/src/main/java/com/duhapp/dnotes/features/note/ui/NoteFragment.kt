@@ -1,16 +1,14 @@
 package com.duhapp.dnotes.features.note.ui
 
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import com.duhapp.dnotes.R
 import com.duhapp.dnotes.databinding.FragmentNoteBinding
 import com.duhapp.dnotes.features.base.ui.BaseFragment
 import com.duhapp.dnotes.features.select_category.ui.SelectCategoryFragment
+import com.duhapp.dnotes.features.select_category.ui.SelectCategoryUIEvent
 import com.duhapp.dnotes.features.select_category.ui.SelectCategoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class NoteFragment :
@@ -51,7 +49,6 @@ class NoteFragment :
                         else -> {}
                     }
                 }
-            }
 
             else -> {}
         }

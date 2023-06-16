@@ -28,9 +28,9 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ManageCategoryFragment :
     BaseFragment<
-            FragmentManageCategoryBinding, ManageCategoryUIEvent,
-            ManageCategoryUIState, ManageCategoryViewModel,
-            >() {
+        FragmentManageCategoryBinding, ManageCategoryUIEvent,
+        ManageCategoryUIState, ManageCategoryViewModel,
+        >() {
     override val layoutId: Int
         get() = R.layout.fragment_manage_category
     override val titleId: Int
@@ -77,16 +77,14 @@ class ManageCategoryFragment :
         }
         adapter.onItemClickListener =
             BaseListAdapter.OnItemClickListener(viewModel::handleCategorySelect)
+        // TODO There is a warning at resources.getDrawable, Use ResourcesCompat.getDrawable()
         binding.categories.addSwipeListener(
             ResourcesCompat.getDrawable(
                 resources,
                 R.drawable.baseline_lightbulb_24,
                 requireActivity().theme
             )!!,
-            ColorDrawable(Color.RED), {
-                Toast.makeText(requireContext(), "move", Toast.LENGTH_SHORT)
-                    .show()
-            },
+            ColorDrawable(Color.RED),
             {
                 Snackbar.make(
                     binding.root,
@@ -146,5 +144,4 @@ class ManageCategoryFragment :
         }
         adapter.setItems(it.categoryList)
     }
-
 }
