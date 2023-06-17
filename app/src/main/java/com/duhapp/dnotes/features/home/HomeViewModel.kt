@@ -1,13 +1,11 @@
 package com.duhapp.dnotes.features.home
 
 import androidx.lifecycle.viewModelScope
-import com.duhapp.dnotes.R
 import com.duhapp.dnotes.features.add_or_update_category.domain.FetchHomeData
-import com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel
 import com.duhapp.dnotes.features.base.ui.FragmentUIEvent
 import com.duhapp.dnotes.features.base.ui.FragmentUIState
 import com.duhapp.dnotes.features.base.ui.FragmentViewModel
-import com.duhapp.dnotes.features.home.home_screen_category.ui.BasicNoteUIModel
+import com.duhapp.dnotes.features.home.home_screen_category.ui.BaseNoteUIModel
 import com.duhapp.dnotes.features.home.home_screen_category.ui.HomeCategoryUIModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -44,6 +42,9 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun onNoteItemClick(noteModel: BaseNoteUIModel) {
+        setEvent(HomeUIEvent.OnNoteClicked(noteModel))
+    }
 }
 
 data class HomeUIState(
@@ -53,5 +54,7 @@ data class HomeUIState(
 
 sealed interface HomeUIEvent : FragmentUIEvent {
     object Idle : HomeUIEvent
-    object OnCreateNoteClicked : HomeUIEvent
+    data class OnNoteClicked(
+        val note: BaseNoteUIModel
+    ) : HomeUIEvent
 }

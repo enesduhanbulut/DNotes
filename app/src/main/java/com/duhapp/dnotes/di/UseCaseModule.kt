@@ -47,6 +47,7 @@ object UseCaseModule {
         categoryRepository: CategoryRepository
     ): FetchHomeData {
         return FetchHomeData(noteRepository, categoryRepository)
+    }
 
     @Provides
     fun provideCreateDefaultCategory(

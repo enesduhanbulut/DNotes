@@ -1,41 +1,67 @@
 package com.duhapp.dnotes.features.home.home_screen_category.ui
 
+import android.os.Parcelable
 import androidx.annotation.ColorRes
 import com.duhapp.dnotes.app.database.NoteEntity
 import com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel
+import kotlinx.parcelize.Parcelize
 
-abstract class BaseNoteUIModel(
-    var id: Int,
-    val type: NoteType,
-    var category: CategoryUIModel,
-    var title: String,
-    var body: String,
-    @ColorRes val color: Int,
-    val image: String,
-    val isPinned: Boolean,
-    val isCompletable: Boolean,
-    val isCompleted: Boolean,
-) : Cloneable {
-    abstract fun newCopy(): BaseNoteUIModel
-    abstract fun toEntity(): NoteEntity
+@Parcelize
+open class BaseNoteUIModel(
+    open var id: Int,
+    open val type: NoteType,
+    open var category: CategoryUIModel,
+    open var title: String,
+    open var body: String,
+    @ColorRes open val color: Int,
+    open val image: String,
+    open val isPinned: Boolean,
+    open val isCompletable: Boolean,
+    open val isCompleted: Boolean,
+) : Parcelable {
+    open fun newCopy(): BaseNoteUIModel {
+        return BaseNoteUIModel(
+            id = id,
+            type = type,
+            category = category,
+            title = title,
+            body = body,
+            color = color,
+            image = image,
+            isPinned = isPinned,
+            isCompletable = isCompletable,
+            isCompleted = isCompleted,
+        )
+    }
+
+    open fun toEntity(): NoteEntity {
+        return NoteEntity(
+            id = id,
+            categoryId = category.id,
+            title = title,
+            details = body,
+        )
+    }
 }
 
+@Parcelize
 sealed class NoteType(
     val id: Int,
-) {
+) : Parcelable {
     object BasicNote : NoteType(0)
     object ImageNote : NoteType(1)
     data class SubNote(val list: List<BaseNoteUIModel>) : NoteType(2)
     data class CheckList(val list: List<CheckListItem>) : NoteType(3)
 }
 
+@Parcelize
 data class CheckListItem(
     val id: Int,
     val isChecked: Boolean,
     val text: String,
     val subList: List<CheckListItem>,
     @ColorRes val color: Int,
-)
+) : Parcelable
 
 class BasicNoteUIModel(
     id: Int,
@@ -66,7 +92,16 @@ class BasicNoteUIModel(
     )
 
     override fun newCopy(): BasicNoteUIModel {
-        return super.clone() as BasicNoteUIModel
+        return BasicNoteUIModel(
+            id = id,
+            category = category,
+            title = title,
+            body = body,
+            color = color,
+            isPinned = isPinned,
+            isCompletable = isCompletable,
+            isCompleted = isCompleted,
+        )
     }
 }
 
@@ -100,6 +135,16 @@ class ImageNoteUIModel(
     )
 
     override fun newCopy(): ImageNoteUIModel {
-        return super.clone() as ImageNoteUIModel
+        return ImageNoteUIModel(
+            id = id,
+            category = category,
+            title = title,
+            body = body,
+            color = color,
+            isPinned = isPinned,
+            isCompletable = isCompletable,
+            isCompleted = isCompleted,
+            image = image,
+        )
     }
 }

@@ -72,17 +72,23 @@ class NoteViewModel @Inject constructor(
         setEvent(NoteUIEvent.Loading)
     }
 
-    fun initState() {
+    fun initState(baseNoteUIModel: BaseNoteUIModel?) {
         viewModelScope.launch {
-            getDefaultCategory.invoke().let { defaultCategory ->
-                mutableUIState.value = mutableUIState.value?.baseNoteUIModel?.newCopy()?.apply {
-                    this.category = defaultCategory
-                }?.let {
-                    mutableUIState.value?.copy(
-                        baseNoteUIModel = it
-                    )
-                }
-            }
+           if (baseNoteUIModel != null) {
+                mutableUIState.value = mutableUIState.value?.copy(
+                     baseNoteUIModel = baseNoteUIModel,
+                )
+           } else {
+               getDefaultCategory.invoke().let { defaultCategory ->
+                   mutableUIState.value = mutableUIState.value?.baseNoteUIModel?.newCopy()?.apply {
+                       this.category = defaultCategory
+                   }?.let {
+                       mutableUIState.value?.copy(
+                           baseNoteUIModel = it
+                       )
+                   }
+               }
+           }
         }
     }
 }

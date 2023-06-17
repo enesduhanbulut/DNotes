@@ -1,6 +1,7 @@
 package com.duhapp.dnotes.features.home
 
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.duhapp.dnotes.R
 import com.duhapp.dnotes.databinding.FragmentHomeBinding
 import com.duhapp.dnotes.databinding.LayoutHomeCategoryBinding
@@ -9,6 +10,7 @@ import com.duhapp.dnotes.features.base.ui.BaseListAdapter
 import com.duhapp.dnotes.features.generic.ui.ShowMessageBottomSheetViewModel
 import com.duhapp.dnotes.features.generic.ui.SpaceModel
 import com.duhapp.dnotes.features.generic.ui.SpacingItemDecorator
+import com.duhapp.dnotes.features.home.home_screen_category.ui.BaseNoteUIModel
 import com.duhapp.dnotes.features.home.home_screen_category.ui.HomeCategoryUIModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -45,6 +47,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeUIEvent, HomeUIState,
                     )
                 )
                 binding.items.adapter = NoteItemListAdapter()
+                binding.items.adapter.let {
+                    (it as NoteItemListAdapter).onItemClickListener =
+                        OnItemClickListener { item, _ -> viewModel.onNoteItemClick(item) }
+                }
                 (binding.items.adapter as NoteItemListAdapter).setItems(item.noteList)
             }
         }
@@ -62,7 +68,17 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeUIEvent, HomeUIState,
     }
 
     override fun handleUIEvent(it: HomeUIEvent) {
-        TODO("Not yet implemented")
+        when (it) {
+            is HomeUIEvent.OnNoteClicked -> {
+                findNavController().navigate(
+                    HomeFragmentDirections.actionNavigationHomeToNavigationNote(
+                        it.note
+                    )
+                )
+            }
+
+            else -> {}
+        }
     }
 
     override fun handleUIState(it: HomeUIState) {

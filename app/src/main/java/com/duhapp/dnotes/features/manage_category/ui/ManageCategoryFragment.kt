@@ -28,9 +28,9 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ManageCategoryFragment :
     BaseFragment<
-        FragmentManageCategoryBinding, ManageCategoryUIEvent,
-        ManageCategoryUIState, ManageCategoryViewModel,
-        >() {
+            FragmentManageCategoryBinding, ManageCategoryUIEvent,
+            ManageCategoryUIState, ManageCategoryViewModel,
+            >() {
     override val layoutId: Int
         get() = R.layout.fragment_manage_category
     override val titleId: Int
@@ -94,8 +94,12 @@ class ManageCategoryFragment :
                     Toast.makeText(requireContext(), "undo", Toast.LENGTH_SHORT).show()
                 }.show()
             },
+            {
+                Toast.makeText(requireContext(), "swipped", Toast.LENGTH_SHORT).show()
+            },
             SwipeDirection.LEFT,
-        )
+
+            )
         binding.categories.adapter = adapter
     }
 

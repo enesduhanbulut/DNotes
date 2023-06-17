@@ -36,6 +36,10 @@
         <action
             android:id="@+id/action_navigation_note_to_selectCategoryFragment"
             app:destination="@id/navigation_select_category" />
+        <argument
+            android:name="noteModel"
+            app:argType="com.duhapp.dnotes.features.home.home_screen_category.ui.BaseNoteUIModel"
+            app:nullable="true" />
     </fragment>
 
     <dialog
