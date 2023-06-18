@@ -12,7 +12,7 @@ import javax.inject.Inject
 class ShowMessageBottomSheetViewModel @Inject constructor() :
     BottomSheetViewModel<ShowMessageUIEvent, ShowMessageBottomSheetUIState>() {
     fun setViewWithBundle(sheetUIState: ShowMessageUIModel, buttonStyle: ButtonStyle) {
-        setState(
+        setSuccessState(
             ShowMessageBottomSheetUIState(
                 sheetUIState, buttonStyle
             )

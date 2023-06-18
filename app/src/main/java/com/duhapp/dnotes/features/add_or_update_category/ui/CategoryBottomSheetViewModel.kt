@@ -4,6 +4,7 @@ import android.os.Parcelable
 import android.view.View
 import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
+import com.duhapp.dnotes.NoteColor
 import com.duhapp.dnotes.R
 import com.duhapp.dnotes.features.add_or_update_category.domain.UpsertCategory
 import com.duhapp.dnotes.features.base.ui.BottomSheetEvent
@@ -20,15 +21,25 @@ class CategoryBottomSheetViewModel @Inject constructor(
 ) :
     BottomSheetViewModel<CategoryUIEvent, CategoryBottomSheetUIState>() {
     fun onPositiveButtonClicked() {
-        viewModelScope.launch {
-            upsertCategory.invoke(mutableUIState.value!!.categoryUIModel)
-            setEvent(CategoryUIEvent.Upserted)
+        withStateValue {
+            viewModelScope.launch {
+                upsertCategory.invoke(it.categoryUIModel)
+            }
+            it
         }
+        setEvent(CategoryUIEvent.Upserted)
     }
 
     fun setViewWithBundle(categoryUIState: CategoryUIModel, categoryShowType: CategoryShowType) {
-        setState(
-            CategoryBottomSheetUIState(categoryUIState, categoryShowType)
+        setSuccessState(
+            CategoryBottomSheetUIState(
+                NoteColor.values().toList().map {
+                    ColorItemUIModel(
+                        isSelected = it == categoryUIState.color.color,
+                        color = it
+                    )
+                }, categoryUIState, categoryShowType
+            )
         )
     }
 
@@ -38,23 +49,46 @@ class CategoryBottomSheetViewModel @Inject constructor(
 
     fun setEmoji(emoji: String) {
         setEvent(CategoryUIEvent.DismissedEmojiDialog)
-        setState(
-            mutableUIState.value!!.copy(
-                categoryUIModel = mutableUIState.value!!.categoryUIModel.copy(
-                    emoji = emoji
-                )
-            )
+        setSuccessState(
+            withStateValue {
+                it.apply {
+                    it.categoryUIModel.emoji = emoji
+                }
+            }
         )
     }
 
     fun onDismissed() {
         setEvent(CategoryUIEvent.Dismissed)
     }
+
+    fun onColorSelected(itemUIModel: ColorItemUIModel) {
+        val list = uiState.value?.colors?.subList(0, uiState.value?.colors!!.size)
+        list?.forEach {
+            it.isSelected = it.color == itemUIModel.color
+        }
+        setSuccessState(
+            withStateValue {
+                it.apply {
+                    it.colors = emptyList()
+                    it.categoryUIModel.color = itemUIModel.apply {
+                        isSelected = true
+                    }
+                }
+            }
+        )
+        setSuccessState(
+            withStateValue {
+                it.apply { it.colors = list!! }
+            }
+        )
+    }
 }
 
 data class CategoryBottomSheetUIState(
-    var categoryUIModel: CategoryUIModel,
-    var categoryShowType: CategoryShowType,
+    var colors: List<ColorItemUIModel>,
+    val categoryUIModel: CategoryUIModel,
+    val categoryShowType: CategoryShowType,
 ) : BottomSheetState {
     @StringRes
     var title: Int = 0
@@ -91,6 +125,7 @@ data class CategoryBottomSheetUIState(
 }
 
 sealed interface CategoryUIEvent : BottomSheetEvent {
+    data class ColorSelected(val list: List<ColorItemUIModel>) : CategoryUIEvent
     object Upserted : CategoryUIEvent
     object Canceled : CategoryUIEvent
     object Dismissed : CategoryUIEvent

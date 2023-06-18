@@ -19,7 +19,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@{uiModel.colorId}"
+            android:background="@{context.getColor(uiModel.color.color.darkColor)}"
             tools:background="@color/primary_color">
 
             <RelativeLayout

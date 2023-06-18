@@ -1,6 +1,5 @@
 package com.duhapp.dnotes.features.manage_category.ui
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.duhapp.dnotes.features.add_or_update_category.domain.DeleteCategory
 import com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel
@@ -19,15 +18,14 @@ class ManageCategoryViewModel @Inject constructor(
 ) : FragmentViewModel<ManageCategoryUIEvent, ManageCategoryUIState>() {
     init {
         setEvent(ManageCategoryUIEvent.Loading)
-        setState(ManageCategoryUIState(emptyList()))
+        setSuccessState(ManageCategoryUIState(emptyList()))
         loadCategories()
     }
 
     private fun loadCategories() {
-        Log.d("Duhan", "loadCategories: ")
         viewModelScope.launch {
             val list = getCategories.invoke()
-            setState(uiState.value!!.copy(categoryList = list))
+            setSuccessState(ManageCategoryUIState(list))
         }
     }
 
@@ -46,7 +44,12 @@ class ManageCategoryViewModel @Inject constructor(
                 loadCategories()
             } catch (exception: Exception) {
                 // TODO: 2021-09-19 handle errors
-                setState(uiState.value!!.copy(errorMessage = exception.message))
+                setSuccessState(
+                    withStateValue {
+                        it.apply {
+                            it.errorMessage = exception.message ?: ""
+                        }
+                    })
             }
         }
     }
@@ -57,8 +60,8 @@ class ManageCategoryViewModel @Inject constructor(
 }
 
 data class ManageCategoryUIState(
-    val categoryList: List<CategoryUIModel>,
-    val errorMessage: String? = "",
+    var categoryList: List<CategoryUIModel>,
+    var errorMessage: String? = "",
 ) : FragmentUIState
 
 sealed interface ManageCategoryUIEvent : FragmentUIEvent {

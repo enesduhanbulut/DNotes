@@ -18,7 +18,7 @@
             android:id="@+id/card"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:cardBackgroundColor="@{item.color}"
+            app:cardBackgroundColor="@{context.getColor(item.category.color.color.lightColor)}"
             app:cardElevation="0dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -54,7 +54,7 @@
                     android:id="@+id/category"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/note_list_item_category_height"
-                    android:background="@{item.category.colorId}"
+                    app:background="@{context.getColor(item.category.color.color.darkColor)}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     tools:background="@color/note_color_red_dark">
 

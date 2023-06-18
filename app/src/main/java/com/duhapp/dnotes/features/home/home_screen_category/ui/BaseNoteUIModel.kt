@@ -3,6 +3,7 @@ package com.duhapp.dnotes.features.home.home_screen_category.ui
 import androidx.annotation.ColorRes
 import com.duhapp.dnotes.app.database.NoteEntity
 import com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel
+import com.duhapp.dnotes.features.base.ui.BaseListItem
 
 abstract class BaseNoteUIModel(
     var id: Int,
@@ -15,7 +16,7 @@ abstract class BaseNoteUIModel(
     val isPinned: Boolean,
     val isCompletable: Boolean,
     val isCompleted: Boolean,
-) : Cloneable {
+) : Cloneable, BaseListItem {
     abstract fun newCopy(): BaseNoteUIModel
     abstract fun toEntity(): NoteEntity
 }

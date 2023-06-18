@@ -20,7 +20,7 @@ data class NoteEntity(
         title = title,
         body = details,
         category = category,
-        color = category.colorId,
+        color = category.color.color.ordinal,
         isPinned = false,
         isCompletable = false,
         isCompleted = false,

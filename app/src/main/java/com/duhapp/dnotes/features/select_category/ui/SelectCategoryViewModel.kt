@@ -16,7 +16,7 @@ class SelectCategoryViewModel @Inject constructor(
 ) : BottomSheetViewModel<SelectCategoryUIEvent, SelectCategoryUIState>() {
     fun initState() {
         viewModelScope.launch {
-            setState(SelectCategoryUIState(getCategories.invoke()))
+            setSuccessState(SelectCategoryUIState(getCategories.invoke()))
         }
     }
 

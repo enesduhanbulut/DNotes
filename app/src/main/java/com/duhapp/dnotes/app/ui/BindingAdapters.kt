@@ -1,12 +1,22 @@
 package com.duhapp.dnotes.app.ui
 
+import android.content.res.Resources
+import android.graphics.drawable.ColorDrawable
+import android.widget.Button
 import android.widget.ImageButton
-import android.widget.LinearLayout
 import androidx.annotation.ColorRes
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.ColorUtils
 import androidx.databinding.BindingAdapter
+import androidx.databinding.BindingConversion
+import androidx.databinding.ViewDataBinding
+import androidx.recyclerview.widget.RecyclerView
+import com.duhapp.dnotes.R
+import com.duhapp.dnotes.features.base.ui.BaseListAdapter
+import com.duhapp.dnotes.features.base.ui.BaseListItem
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textview.MaterialTextView
+
 
 @BindingAdapter("setUnderlined")
 fun setUnderlined(materialTextView: MaterialTextView, isUnderlined: Boolean) {
@@ -37,7 +47,44 @@ fun customFocusChangeListener(view: ImageButton, listener: (Boolean) -> Unit) {
     }
 }
 
-@BindingAdapter("layoutBackground")
-fun layoutBackground(view: LinearLayout, @ColorRes color: Int) {
+@BindingAdapter("layoutBackgroundColor")
+fun layoutBackgroundColor(view: Button, @ColorRes color: Int) {
     view.backgroundTintList = view.context.getColorStateList(color)
+}
+
+@BindingAdapter("isSelected")
+fun setCardViewBorder(view: MaterialCardView, isSelected: Boolean) {
+    if (isSelected) {
+        view.strokeWidth = pxToDp(20)
+        view.strokeColor =
+            ResourcesCompat.getColor(view.resources, R.color.white, view.context.theme)
+    } else {
+        view.strokeWidth = pxToDp(0)
+    }
+}
+
+@BindingAdapter("setAdapter")
+fun setAdapter(
+    recyclerView: RecyclerView,
+    adapter: BaseListAdapter<BaseListItem, ViewDataBinding>?
+) {
+    adapter?.let {
+        recyclerView.adapter = it
+    }
+}
+
+@Suppress("UNCHECKED_CAST")
+@BindingAdapter("submitList")
+fun submitList(recyclerView: RecyclerView, list: List<BaseListItem>?) {
+    val adapter = recyclerView.adapter as BaseListAdapter<BaseListItem, ViewDataBinding>?
+    adapter?.setItems(list ?: listOf())
+}
+
+fun pxToDp(px: Int): Int {
+    return (px / Resources.getSystem().displayMetrics.density).toInt()
+}
+
+@BindingConversion
+fun convertColorToDrawable(color: Int): ColorDrawable? {
+    return if (color != 0) ColorDrawable(color) else null
 }

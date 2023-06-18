@@ -4,6 +4,7 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="View_All">View All</string>
+    <string name="Error">Error</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_profile">Profile</string>
@@ -28,7 +29,9 @@
     <string name="Item_deleted_do_you_want_to_undo">Item deleted. Do you want to undo</string>
     <string name="Choose_a_color">Choose a background color</string>
     <string name="fill_the_title_and_description_click_on_the_icon_to_change">Fill the title and description. Click on the icon to change it.</string>
+    <string name="select_a_category_for_edit">Select A Category For Edit</string>
     <string name="default_category_name" >This category is default category</string>
     <string name="default_category_emoji">😀</string>
     <string name="default_category_description" >You can edit but can\'t delete.</string>
+    <string name="An_error_occurred_please_try_again_later">An error occurred. Please try again later</string>
 </resources>

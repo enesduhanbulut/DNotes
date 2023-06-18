@@ -6,10 +6,10 @@ import com.duhapp.dnotes.features.add_or_update_category.domain.FetchHomeData
 import com.duhapp.dnotes.features.add_or_update_category.domain.UpsertCategory
 import com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel
 import com.duhapp.dnotes.features.manage_category.domain.CreateDefaultCategory
-import com.duhapp.dnotes.features.note.data.NoteRepository
-import com.duhapp.dnotes.features.note.domain.UpsertNote
 import com.duhapp.dnotes.features.manage_category.domain.GetCategories
+import com.duhapp.dnotes.features.note.data.NoteRepository
 import com.duhapp.dnotes.features.note.domain.GetDefaultCategory
+import com.duhapp.dnotes.features.note.domain.UpsertNote
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -47,6 +47,7 @@ object UseCaseModule {
         categoryRepository: CategoryRepository
     ): FetchHomeData {
         return FetchHomeData(noteRepository, categoryRepository)
+    }
 
     @Provides
     fun provideCreateDefaultCategory(

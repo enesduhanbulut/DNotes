@@ -6,6 +6,10 @@
     <data>
 
         <variable
+            name="adapter"
+            type="com.duhapp.dnotes.features.base.ui.BaseListAdapter" />
+
+        <variable
             name="viewModel"
             type="com.duhapp.dnotes.features.add_or_update_category.ui.CategoryBottomSheetViewModel" />
 
@@ -21,37 +25,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
+            android:backgroundTint="@{context.getColor(viewModel.uiState.categoryUIModel.color.color.lightColor)}"
             tools:background="@color/white">
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/color_selector_title"
-                style="@style/medium_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/small_margin"
-                android:text="@string/Choose_a_color"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/color_selector"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/small_margin"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/color_selector_title"
-                tools:itemCount="10"
-                tools:listitem="@layout/layout_color_selector_item"
-                tools:orientation="horizontal" />
-
-            <View
-                android:id="@+id/divider"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_margin="@dimen/small_margin"
-                android:background="@android:color/darker_gray"
-                app:layout_constraintTop_toBottomOf="@id/color_selector" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/fields_title"
@@ -60,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/small_margin"
                 android:text="@string/fill_the_title_and_description_click_on_the_icon_to_change"
-                app:layout_constraintTop_toBottomOf="@id/divider" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <RelativeLayout
                 android:id="@+id/category_icon_card"
@@ -131,6 +106,40 @@
                 app:layout_constraintTop_toBottomOf="@id/name_text_input_layout" />
 
 
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_margin="@dimen/small_margin"
+                android:background="@android:color/darker_gray"
+                app:layout_constraintTop_toBottomOf="@id/description_text_input_layout" />
+
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/color_selector_title"
+                style="@style/medium_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/small_margin"
+                android:text="@string/Choose_a_color"
+                app:layout_constraintTop_toBottomOf="@id/divider" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/color_selector"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/small_margin"
+                android:adapter="@{adapter}"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/color_selector_title"
+                app:submitList="@{viewModel.uiState.colors}"
+                tools:itemCount="10"
+                tools:listitem="@layout/layout_color_selector_item"
+                tools:orientation="horizontal" />
+
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/positive_button"
                 android:layout_width="wrap_content"
@@ -141,7 +150,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/description_text_input_layout"
+                app:layout_constraintTop_toBottomOf="@id/color_selector"
                 tools:text="Confirm" />
 
 

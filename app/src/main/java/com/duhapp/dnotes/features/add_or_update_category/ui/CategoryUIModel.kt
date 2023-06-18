@@ -1,9 +1,9 @@
 package com.duhapp.dnotes.features.add_or_update_category.ui
 
 import android.os.Parcelable
-import androidx.annotation.ColorRes
-import com.duhapp.dnotes.R
+import com.duhapp.dnotes.NoteColor
 import com.duhapp.dnotes.app.database.CategoryEntity
+import com.duhapp.dnotes.features.base.ui.BaseListItem
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -12,14 +12,16 @@ data class CategoryUIModel(
     var name: String = "",
     var emoji: String = "",
     var description: String = "",
-    @ColorRes var colorId: Int = R.color.primary_color,
+    var color: ColorItemUIModel = ColorItemUIModel(
+        color = NoteColor.fromOrdinal(0)
+    ),
     var isDefault: Boolean = false
-) : Parcelable {
+) : Parcelable, BaseListItem {
     fun toEntity() = CategoryEntity(
         name = name,
         emoji = emoji,
         message = description,
-        colorId = colorId,
+        colorId = color.color.ordinal,
         isDefault = isDefault
     )
 }

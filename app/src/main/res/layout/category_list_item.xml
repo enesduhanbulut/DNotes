@@ -12,13 +12,13 @@
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:backgroundTint="@{context.getColor(uiModel.color.color.darkColor)}"
+        tools:backgroundTint="@color/primary_color">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@{uiModel.colorId}"
-            tools:background="@color/primary_color">
+            android:layout_height="wrap_content">
 
             <RelativeLayout
                 android:id="@+id/category_icon_card"

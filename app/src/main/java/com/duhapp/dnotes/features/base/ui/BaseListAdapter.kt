@@ -7,7 +7,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 
-abstract class BaseListAdapter<M, DB : ViewDataBinding> :
+abstract class BaseListAdapter<M : BaseListItem, DB : ViewDataBinding> :
     RecyclerView.Adapter<BaseListAdapter<M, DB>.BaseViewHolder>() {
 
     protected var itemList: List<M> = emptyList()
@@ -27,10 +27,13 @@ abstract class BaseListAdapter<M, DB : ViewDataBinding> :
     }
 
     fun setItems(items: List<M>) {
-        // Calculate the diff between the current and new items list
-        val diffResult = DiffUtil.calculateDiff(DiffCallback(itemList, items))
-        itemList = items
+        // TODO: Use DiffUtil to calculate the difference between the old and new list
+
+        /*val diffResult = DiffUtil.calculateDiff(DiffCallback(itemList, items.toList()))
         diffResult.dispatchUpdatesTo(this)
+        */
+        notifyDataSetChanged()
+        itemList = items.toList()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
@@ -91,7 +94,7 @@ abstract class BaseListAdapter<M, DB : ViewDataBinding> :
 
         private fun areItemsSame(oldItem: T, newItem: T): Boolean {
             // Implement your logic to determine if two items represent the same object
-            return oldItem == newItem
+            return oldItem === newItem
         }
 
         private fun areContentsSame(oldItem: T, newItem: T): Boolean {

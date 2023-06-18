@@ -13,7 +13,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@{viewModel.uiState.baseNoteUIModel.color}"
+        android:background="@{context.getColor(viewModel.uiState.baseNoteUIModel.category.color.color.lightColor)}"
+        tools:background="@color/note_color_red_dark"
         android:paddingHorizontal="24dp"
         android:paddingTop="32dp">
 
@@ -36,13 +37,12 @@
             android:background="@drawable/rounded_alpha_background"
             android:onClick="@{() -> viewModel.categorySelectClicked()}"
             app:isLocked="@{viewModel.uiState.editableMode}"
-            android:backgroundTint="@{viewModel.uiState.baseNoteUIModel.category.colorId}"
             app:layout_constraintStart_toStartOf="@id/description"
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/category_icon"
-                android:layout_width="19dp"
+                android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:layout_centerInParent="true"
                 android:background="@color/transparent"

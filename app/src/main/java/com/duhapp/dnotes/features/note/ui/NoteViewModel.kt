@@ -1,8 +1,9 @@
 package com.duhapp.dnotes.features.note.ui
 
 import androidx.lifecycle.viewModelScope
-import androidx.room.util.copy
+import com.duhapp.dnotes.NoteColor
 import com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel
+import com.duhapp.dnotes.features.add_or_update_category.ui.ColorItemUIModel
 import com.duhapp.dnotes.features.base.ui.FragmentUIEvent
 import com.duhapp.dnotes.features.base.ui.FragmentUIState
 import com.duhapp.dnotes.features.base.ui.FragmentViewModel
@@ -21,50 +22,61 @@ class NoteViewModel @Inject constructor(
 ) : FragmentViewModel<NoteUIEvent, NoteUIState>() {
 
     init {
-        mutableUIState.value = NoteUIState(
-            baseNoteUIModel = BasicNoteUIModel(
-                id = -1,
-                isPinned = false,
-                isCompleted = false,
-                isCompletable = false,
-                title = "",
-                body = "",
-                category = CategoryUIModel(
+        setSuccessState(
+            NoteUIState(
+                baseNoteUIModel = BasicNoteUIModel(
                     id = -1,
-                    name = "",
-                    emoji = "",
-                    description = "",
-                    colorId = -1,
+                    isPinned = false,
+                    isCompleted = false,
+                    isCompletable = false,
+                    title = "",
+                    body = "",
+                    category = CategoryUIModel(
+                        id = -1,
+                        name = "",
+                        emoji = "",
+                        description = "",
+                        color = ColorItemUIModel(
+                            color = NoteColor.BLUE,
+                        )
+                    ),
+                    color = -1,
                 ),
-                color = -1,
-            ),
-            editableMode = false,
+                editableMode = false,
+            )
         )
     }
 
     fun switchEditMode() {
         viewModelScope.launch {
-            mutableUIState.value?.let {
-                val noteModel = it.baseNoteUIModel
-                if (mutableUIState.value?.editableMode == false) {
-                    noteModel.id = upsertNote.invoke(noteModel)
-                }
-                mutableUIState.value = it.copy(
-                    editableMode = !it.editableMode,
-                    baseNoteUIModel = noteModel,
-                )
-            }
+            setSuccessState(
+                withStateValue { it ->
+                    it.copy(
+                        editableMode = !it.editableMode
+                    ).also {
+                        val noteModel = it.baseNoteUIModel
+                        if (!it.editableMode) {
+                            viewModelScope.launch {
+                                noteModel.id = upsertNote.invoke(noteModel)
+                            }
+                        }
+
+                    }
+
+                })
         }
     }
 
     fun onCategorySelected(category: CategoryUIModel) {
-        mutableUIState.value?.let {
-            mutableUIState.value = it.copy(
-                baseNoteUIModel = it.baseNoteUIModel.newCopy().apply {
-                    this.category = category
-                },
-            )
-        }
+        setSuccessState(
+            withStateValue {
+                it.copy(
+                    baseNoteUIModel = it.baseNoteUIModel.newCopy().apply {
+                        this.category = category
+                    }
+                )
+            }
+        )
     }
 
     fun categorySelectClicked() {
@@ -75,13 +87,12 @@ class NoteViewModel @Inject constructor(
     fun initState() {
         viewModelScope.launch {
             getDefaultCategory.invoke().let { defaultCategory ->
-                mutableUIState.value = mutableUIState.value?.baseNoteUIModel?.newCopy()?.apply {
-                    this.category = defaultCategory
-                }?.let {
-                    mutableUIState.value?.copy(
-                        baseNoteUIModel = it
-                    )
-                }
+                setSuccessState(
+                    withStateValue {
+                        it.baseNoteUIModel.category = defaultCategory
+                        it
+                    }
+                )
             }
         }
     }
@@ -105,7 +116,9 @@ data class NoteUIState(
             name = "",
             emoji = "",
             description = "",
-            colorId = -1,
+            color = ColorItemUIModel(
+                color = NoteColor.BLUE,
+            )
         ),
         color = -1,
     ),

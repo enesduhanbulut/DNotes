@@ -43,6 +43,9 @@ class MainActivity : AppCompatActivity() {
             if (destination.id == R.id.navigation_note || destination.id == R.id.navigation_manage_category) {
                 binding.bottomNavContainer.visibility = View.GONE
                 binding.fab.visibility = View.GONE
+            } else if (destination.id == R.id.navigation_manage_category) {
+                binding.bottomNavContainer.visibility = View.VISIBLE
+                binding.fab.visibility = View.GONE
             } else {
                 binding.bottomNavContainer.visibility = View.VISIBLE
                 binding.fab.visibility = View.VISIBLE
@@ -77,5 +80,9 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
         return navController.navigateUp() || super.onSupportNavigateUp()
+    }
+
+    fun setFabVisibility(visibility: Int) {
+        binding.fab.visibility = visibility
     }
 }

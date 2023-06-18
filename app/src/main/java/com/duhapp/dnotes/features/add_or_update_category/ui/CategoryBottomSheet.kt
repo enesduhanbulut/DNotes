@@ -1,7 +1,6 @@
 package com.duhapp.dnotes.features.add_or_update_category.ui
 
 import androidx.fragment.app.activityViewModels
-import com.duhapp.dnotes.NoteColor
 import com.duhapp.dnotes.R
 import com.duhapp.dnotes.databinding.FragmentCategoryBottomSheetBinding
 import com.duhapp.dnotes.databinding.LayoutColorSelectorItemBinding
@@ -24,14 +23,20 @@ class CategoryBottomSheet : BaseBottomSheet<
     override val fragmentTag: String
         get() = "CategoryBottomSheet"
     private val categoryBottomSheetViewModel: CategoryBottomSheetViewModel by activityViewModels()
+    private lateinit var adapter: BaseListAdapter<ColorItemUIModel, LayoutColorSelectorItemBinding>
 
     override fun initView(binding: FragmentCategoryBottomSheetBinding) {
         arguments.let { it ->
             CategoryBottomSheetArgs.fromBundle(it!!).let {
-                viewModel.setViewWithBundle(it.uiModel, it.categoryShowType)
+                viewModel.setViewWithBundle(it.uiModel.copy(), it.categoryShowType)
             }
         }
-        val adapter = object :
+
+        val onClickListener =
+            BaseListAdapter.OnItemClickListener<ColorItemUIModel> { item, position ->
+                viewModel.onColorSelected(item)
+            }
+        adapter = object :
             BaseListAdapter<ColorItemUIModel, LayoutColorSelectorItemBinding>() {
             override fun getLayoutId() = R.layout.layout_color_selector_item
 
@@ -43,18 +48,13 @@ class CategoryBottomSheet : BaseBottomSheet<
             }
 
         }
+        adapter.onItemClickListener = onClickListener
         binding.colorSelector.addItemDecoration(
             SpacingItemDecorator(
                 SpaceModel(rightSpace = 32)
             ),
         )
-        binding.colorSelector.adapter = adapter
-        val items = NoteColor.values().map {
-            ColorItemUIModel(
-                it
-            )
-        }
-        adapter.setItems(items)
+        binding.adapter = adapter
     }
 
     override fun provideViewModel(): CategoryBottomSheetViewModel {
@@ -69,6 +69,10 @@ class CategoryBottomSheet : BaseBottomSheet<
         when (it) {
             is CategoryUIEvent.Canceled, CategoryUIEvent.Upserted -> {
                 dismiss()
+            }
+
+            is CategoryUIEvent.ColorSelected -> {
+
             }
 
             is CategoryUIEvent.ShowEmojiDialog -> {

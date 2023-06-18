@@ -60,9 +60,8 @@ abstract class BaseBottomSheet<BUE : BottomSheetEvent, BUS : BottomSheetState, V
         observeJobs.add(
             lifecycleScope.launch {
                 viewModel.uiState.collect {
-                    if (it != null) {
+                    if (it != null)
                         handleUIState(it)
-                    }
                 }
             },
         )

@@ -49,7 +49,7 @@ class NoteFragment :
                         else -> {}
                     }
                 }
-
+            }
             else -> {}
         }
     }

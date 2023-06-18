@@ -2,7 +2,6 @@ package com.duhapp.dnotes.features.manage_category.ui
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.view.View
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.activityViewModels
@@ -43,14 +42,10 @@ class ManageCategoryFragment :
         binding.categories.addItemDecoration(
             SpacingItemDecorator(
                 SpaceModel(
-                    16,
-                    16,
-                    16,
-                    16,
+                    bottomSpace = 24
                 ),
             ),
         )
-        setAppBarVisibility(View.GONE)
     }
 
     override fun provideViewModel(): ManageCategoryViewModel {
@@ -85,6 +80,7 @@ class ManageCategoryFragment :
                 requireActivity().theme
             )!!,
             ColorDrawable(Color.RED),
+            { },
             {
                 Snackbar.make(
                     binding.root,
@@ -106,7 +102,7 @@ class ManageCategoryFragment :
             }
 
             is ManageCategoryUIEvent.OnCategorySelected -> {
-                showBottomSheet(it.category, CategoryShowType.Edit)
+                showBottomSheet(it.category.copy(), CategoryShowType.Edit)
             }
 
             else -> {
@@ -121,9 +117,10 @@ class ManageCategoryFragment :
             bundle = CategoryBottomSheetArgs(
                 categoryUIModel,
                 showType,
-            ).toBundle(), singleEventCollector = {
+            ).toBundle(), collector = {
                 handleBottomSheetResponse(it)
-            })
+            }, unsubscribeEvent = CategoryUIEvent.Dismissed
+        )
     }
 
     private fun handleBottomSheetResponse(it: CategoryUIEvent) {

@@ -57,6 +57,11 @@ abstract class BaseFragment<
         return mBinding!!.root
     }
 
+    fun setFabVisibility(visible: Int) {
+        (requireActivity() as MainActivity).setFabVisibility(titleId)
+
+    }
+
     protected fun setAppBarTitle(@StringRes titleId: Int) {
         (requireActivity() as MainActivity).setAppBarTitle(titleId)
     }
@@ -102,13 +107,13 @@ abstract class BaseFragment<
     abstract fun setBindingViewModel()
     abstract fun handleUIEvent(it: UE)
     override fun onDestroyView() {
-        super.onDestroyView()
         observeJobs.forEach {
             it.cancel()
         }
         mBinding!!.unbind()
         mBinding!!.lifecycleOwner = null
         mBinding = null
+        super.onDestroyView()
     }
 
     fun <T : BottomSheetEvent> showBottomSheet(

@@ -1,8 +1,10 @@
 package com.duhapp.dnotes.features.add_or_update_category.data
 
+import com.duhapp.dnotes.NoteColor
 import com.duhapp.dnotes.app.database.CategoryDao
 import com.duhapp.dnotes.app.database.CategoryEntity
 import com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel
+import com.duhapp.dnotes.features.add_or_update_category.ui.ColorItemUIModel
 import com.duhapp.dnotes.features.base.data.BaseRepository
 import kotlinx.coroutines.CoroutineDispatcher
 
@@ -21,7 +23,7 @@ class CategoryRepositoryImpl(
             name = categoryUIModel.name,
             message = categoryUIModel.description,
             emoji = categoryUIModel.emoji,
-            colorId = categoryUIModel.colorId,
+            colorId = categoryUIModel.color.color.ordinal,
             isDefault = categoryUIModel.isDefault
         )
         runOnIO { dao.insert(category) }
@@ -34,7 +36,9 @@ class CategoryRepositoryImpl(
                 name = categoryEntity.name,
                 emoji = categoryEntity.emoji,
                 description = categoryEntity.message,
-                colorId = categoryEntity.colorId,
+                color = ColorItemUIModel(
+                    color = NoteColor.fromOrdinal(categoryEntity.colorId)
+                ),
                 isDefault = categoryEntity.isDefault
             )
         }
@@ -45,7 +49,7 @@ class CategoryRepositoryImpl(
             name = categoryUIModel.name,
             message = categoryUIModel.description,
             emoji = categoryUIModel.emoji,
-            colorId = categoryUIModel.colorId,
+            colorId = categoryUIModel.color.color.ordinal,
             isDefault = categoryUIModel.isDefault
         )
         category.id = categoryUIModel.id
@@ -59,7 +63,9 @@ class CategoryRepositoryImpl(
                 name = categoryEntity.name,
                 emoji = categoryEntity.emoji,
                 description = categoryEntity.message,
-                colorId = categoryEntity.colorId,
+                color = ColorItemUIModel(
+                    color = NoteColor.fromOrdinal(categoryEntity.colorId)
+                ),
                 isDefault = categoryEntity.isDefault
             )
         }
