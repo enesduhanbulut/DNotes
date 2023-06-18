@@ -8,8 +8,8 @@ import com.duhapp.dnotes.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 @BindingAdapter("lockIcon")
-fun lockIcon(view: ImageButton, isLocked: Boolean) {
-    if (isLocked) {
+fun lockIcon(view: ImageButton, editableModeEnabled: Boolean) {
+    if (!editableModeEnabled) {
         view.setImageResource(R.drawable.edit)
     } else {
         view.setImageResource(R.drawable.save)
@@ -17,8 +17,8 @@ fun lockIcon(view: ImageButton, isLocked: Boolean) {
 }
 
 @BindingAdapter("lockIcon")
-fun lockIcon(view: FloatingActionButton, isLocked: Boolean) {
-    if (isLocked) {
+fun lockIcon(view: FloatingActionButton, editableModeEnabled: Boolean) {
+    if (!editableModeEnabled) {
         view.setImageResource(R.drawable.edit)
     } else {
         view.setImageResource(R.drawable.save)
@@ -26,11 +26,17 @@ fun lockIcon(view: FloatingActionButton, isLocked: Boolean) {
 }
 
 @BindingAdapter("isLocked")
-fun setEditable(view: EditText, isLocked: Boolean) {
-    view.isEnabled = !isLocked
+fun setEditable(view: EditText, editableModeEnabled: Boolean) {
+    if (!editableModeEnabled) {
+        view.isFocusable = false
+        view.isFocusableInTouchMode = false
+    } else {
+        view.isFocusable = true
+        view.isFocusableInTouchMode = true
+    }
 }
 
 @BindingAdapter("isLocked")
-fun setClickable(view: RelativeLayout, isLocked: Boolean) {
-    view.isClickable = !isLocked
+fun setClickable(view: RelativeLayout, editableModeEnabled: Boolean) {
+    view.isClickable = editableModeEnabled
 }

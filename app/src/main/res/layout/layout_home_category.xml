@@ -6,6 +6,10 @@
     <data>
 
         <variable
+            name="adapter"
+            type="com.duhapp.dnotes.features.home.NoteItemListAdapter" />
+
+        <variable
             name="homeCategoryUIModel"
             type="com.duhapp.dnotes.features.home.home_screen_category.ui.HomeCategoryUIModel" />
     </data>
@@ -43,6 +47,8 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:orientation="horizontal"
+            android:adapter="@{adapter}"
+            app:submitList="@{homeCategoryUIModel.noteList}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintTop_toBottomOf="@id/title"
             tools:itemCount="5"

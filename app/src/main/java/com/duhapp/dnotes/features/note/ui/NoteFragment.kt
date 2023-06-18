@@ -24,7 +24,7 @@ class NoteFragment :
     private val categoryViewModel: SelectCategoryViewModel by activityViewModels()
     override fun initView(binding: FragmentNoteBinding) {
         observeUIState()
-        viewModel.initState()
+        viewModel.initState(NoteFragmentArgs.fromBundle(requireArguments()))
     }
 
     override fun provideViewModel(): NoteViewModel = noteViewModel

@@ -6,6 +6,10 @@
     <data>
 
         <variable
+            name="adapter"
+            type="com.duhapp.dnotes.features.base.ui.BaseListAdapter" />
+
+        <variable
             name="viewModel"
             type="com.duhapp.dnotes.features.home.HomeViewModel" />
     </data>
@@ -22,6 +26,8 @@
             android:layout_marginTop="24dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:adapter="@{adapter}"
+            app:submitList="@{viewModel.uiState.categories}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

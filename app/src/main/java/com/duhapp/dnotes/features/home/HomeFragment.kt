@@ -1,11 +1,13 @@
 package com.duhapp.dnotes.features.home
 
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.duhapp.dnotes.R
 import com.duhapp.dnotes.databinding.FragmentHomeBinding
 import com.duhapp.dnotes.databinding.LayoutHomeCategoryBinding
 import com.duhapp.dnotes.features.base.ui.BaseFragment
 import com.duhapp.dnotes.features.base.ui.BaseListAdapter
+import com.duhapp.dnotes.features.base.ui.BaseListAdapter.OnItemClickListener
 import com.duhapp.dnotes.features.generic.ui.ShowMessageBottomSheetViewModel
 import com.duhapp.dnotes.features.generic.ui.SpaceModel
 import com.duhapp.dnotes.features.generic.ui.SpacingItemDecorator
@@ -44,8 +46,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeUIEvent, HomeUIState,
                         )
                     )
                 )
-                binding.items.adapter = NoteItemListAdapter()
-                (binding.items.adapter as NoteItemListAdapter).setItems(item.noteList)
+                binding.adapter = NoteItemListAdapter().apply {
+                    onItemClickListener = OnItemClickListener { noteUIModel, _ ->
+                        viewModel.onNoteClick(noteUIModel)
+                    }
+                }
             }
         }
         val margin = resources.getDimensionPixelSize(R.dimen.xl_margin)
@@ -56,13 +61,25 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeUIEvent, HomeUIState,
                 )
             )
         )
-        binding.categories.adapter = adapter
+        binding.adapter = adapter
         viewModel.loadCategories()
 
     }
 
     override fun handleUIEvent(it: HomeUIEvent) {
-        TODO("Not yet implemented")
+        when (it) {
+            is HomeUIEvent.OnNoteClicked -> {
+                findNavController().navigate(
+                    HomeFragmentDirections.actionNavigationHomeToNavigationNote(
+                        it.noteUIModel
+                    )
+                )
+            }
+
+            else -> {
+
+            }
+        }
     }
 
     override fun handleUIState(it: HomeUIState) {

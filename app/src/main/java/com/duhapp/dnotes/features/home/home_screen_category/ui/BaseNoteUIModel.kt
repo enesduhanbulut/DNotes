@@ -1,11 +1,14 @@
 package com.duhapp.dnotes.features.home.home_screen_category.ui
 
+import android.os.Parcelable
 import androidx.annotation.ColorRes
 import com.duhapp.dnotes.app.database.NoteEntity
 import com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel
 import com.duhapp.dnotes.features.base.ui.BaseListItem
+import kotlinx.parcelize.Parcelize
 
-abstract class BaseNoteUIModel(
+@Parcelize
+open class BaseNoteUIModel(
     var id: Int,
     val type: NoteType,
     var category: CategoryUIModel,
@@ -16,27 +19,45 @@ abstract class BaseNoteUIModel(
     val isPinned: Boolean,
     val isCompletable: Boolean,
     val isCompleted: Boolean,
-) : Cloneable, BaseListItem {
-    abstract fun newCopy(): BaseNoteUIModel
-    abstract fun toEntity(): NoteEntity
+) : Cloneable, BaseListItem, Parcelable {
+    open fun newCopy(): BaseNoteUIModel {
+        return super.clone() as BaseNoteUIModel
+    }
+
+    open fun toEntity(): NoteEntity {
+        return NoteEntity(
+            id = id,
+            title = title,
+            details = body,
+            categoryId = category.id,
+        )
+    }
 }
 
 sealed class NoteType(
     val id: Int,
-) {
-    object BasicNote : NoteType(0)
-    object ImageNote : NoteType(1)
-    data class SubNote(val list: List<BaseNoteUIModel>) : NoteType(2)
-    data class CheckList(val list: List<CheckListItem>) : NoteType(3)
+) : Parcelable {
+    @Parcelize
+    object BasicNote : NoteType(0), Parcelable
+
+    @Parcelize
+    object ImageNote : NoteType(1), Parcelable
+
+    @Parcelize
+    data class SubNote(val list: List<BaseNoteUIModel>) : NoteType(2), Parcelable
+
+    @Parcelize
+    data class CheckList(val list: List<CheckListItem>) : NoteType(3), Parcelable
 }
 
+@Parcelize
 data class CheckListItem(
     val id: Int,
     val isChecked: Boolean,
     val text: String,
     val subList: List<CheckListItem>,
     @ColorRes val color: Int,
-)
+) : Parcelable
 
 class BasicNoteUIModel(
     id: Int,

@@ -22,49 +22,25 @@ class NoteViewModel @Inject constructor(
 ) : FragmentViewModel<NoteUIEvent, NoteUIState>() {
 
     init {
-        setSuccessState(
-            NoteUIState(
-                baseNoteUIModel = BasicNoteUIModel(
-                    id = -1,
-                    isPinned = false,
-                    isCompleted = false,
-                    isCompletable = false,
-                    title = "",
-                    body = "",
-                    category = CategoryUIModel(
-                        id = -1,
-                        name = "",
-                        emoji = "",
-                        description = "",
-                        color = ColorItemUIModel(
-                            color = NoteColor.BLUE,
-                        )
-                    ),
-                    color = -1,
-                ),
-                editableMode = false,
-            )
-        )
+        setSuccessState(getDefaultNote())
     }
 
     fun switchEditMode() {
-        viewModelScope.launch {
-            setSuccessState(
-                withStateValue { it ->
-                    it.copy(
-                        editableMode = !it.editableMode
-                    ).also {
-                        val noteModel = it.baseNoteUIModel
-                        if (!it.editableMode) {
-                            viewModelScope.launch {
-                                noteModel.id = upsertNote.invoke(noteModel)
-                            }
-                        }
-
-                    }
-
-                })
+        withStateValue {
+            if (it.editableMode) {
+                viewModelScope.launch {
+                    upsertNote.invoke(it.baseNoteUIModel)
+                }
+            }
+            it
         }
+        setSuccessState(
+            withStateValue {
+                it.copy(
+                    editableMode = !it.editableMode
+                )
+            })
+
     }
 
     fun onCategorySelected(category: CategoryUIModel) {
@@ -84,17 +60,51 @@ class NoteViewModel @Inject constructor(
         setEvent(NoteUIEvent.Loading)
     }
 
-    fun initState() {
-        viewModelScope.launch {
-            getDefaultCategory.invoke().let { defaultCategory ->
-                setSuccessState(
-                    withStateValue {
-                        it.baseNoteUIModel.category = defaultCategory
-                        it
-                    }
-                )
+    fun initState(args: NoteFragmentArgs?) {
+        if (args?.NoteItem == null) {
+            viewModelScope.launch {
+                getDefaultCategory.invoke().let { defaultCategory ->
+                    setSuccessState(
+                        withStateValue {
+                            it.baseNoteUIModel.category = defaultCategory
+                            it.editableMode = true
+                            it
+                        }
+                    )
+                }
             }
+        } else {
+            setSuccessState(
+                NoteUIState(
+                    baseNoteUIModel = args.NoteItem,
+                    editableMode = false,
+                )
+            )
         }
+    }
+
+    private fun getDefaultNote(): NoteUIState {
+        return NoteUIState(
+            baseNoteUIModel = BasicNoteUIModel(
+                id = -1,
+                isPinned = false,
+                isCompleted = false,
+                isCompletable = false,
+                title = "",
+                body = "",
+                category = CategoryUIModel(
+                    id = -1,
+                    name = "",
+                    emoji = "",
+                    description = "",
+                    color = ColorItemUIModel(
+                        color = NoteColor.BLUE,
+                    )
+                ),
+                color = -1,
+            ),
+            editableMode = true,
+        )
     }
 }
 
@@ -122,5 +132,5 @@ data class NoteUIState(
         ),
         color = -1,
     ),
-    var editableMode: Boolean = false,
+    var editableMode: Boolean,
 ) : FragmentUIState
