@@ -10,6 +10,10 @@
             type="com.duhapp.dnotes.features.home.NoteItemListAdapter" />
 
         <variable
+            name="homeViewModel"
+            type="com.duhapp.dnotes.features.home.HomeViewModel" />
+
+        <variable
             name="homeCategoryUIModel"
             type="com.duhapp.dnotes.features.home.home_screen_category.ui.HomeCategoryUIModel" />
     </data>
@@ -36,6 +40,7 @@
             android:focusable="true"
             android:textColor="@color/primary_color"
             android:text="@string/View_All"
+            android:onClick="@{() -> homeViewModel.onCategoryViewAllClicked(homeCategoryUIModel)}"
             app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/title" />

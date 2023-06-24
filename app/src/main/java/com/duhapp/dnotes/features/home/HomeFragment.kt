@@ -46,6 +46,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeUIEvent, HomeUIState,
                         )
                     )
                 )
+                binding.homeViewModel = viewModel
                 binding.adapter = NoteItemListAdapter().apply {
                     onItemClickListener = OnItemClickListener { noteUIModel, _ ->
                         viewModel.onNoteClick(noteUIModel)
@@ -75,7 +76,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeUIEvent, HomeUIState,
                     )
                 )
             }
-
+            is HomeUIEvent.OnViewAllClicked -> {
+                findNavController().navigate(
+                    HomeFragmentDirections.actionNavigationHomeToAllNotesFragment(it.homeCategoryUIModel.id)
+                )
+            }
             else -> {
 
             }

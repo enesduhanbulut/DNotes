@@ -47,6 +47,10 @@ class HomeViewModel @Inject constructor(
         setEvent(HomeUIEvent.OnNoteClicked(noteUIModel))
     }
 
+    fun onCategoryViewAllClicked(homeCategoryUIModel: HomeCategoryUIModel) {
+        setEvent(HomeUIEvent.OnViewAllClicked(homeCategoryUIModel))
+    }
+
 }
 
 data class HomeUIState(
@@ -58,4 +62,5 @@ sealed interface HomeUIEvent : FragmentUIEvent {
     object Idle : HomeUIEvent
     object OnCreateNoteClicked : HomeUIEvent
     data class OnNoteClicked(val noteUIModel: BaseNoteUIModel) : HomeUIEvent
+    data class OnViewAllClicked(val homeCategoryUIModel: HomeCategoryUIModel) : HomeUIEvent
 }
