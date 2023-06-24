@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_navigation_home_to_navigation_note"
             app:destination="@id/navigation_note" />
+        <action
+            android:id="@+id/action_navigation_home_to_allNotesFragment"
+            app:destination="@id/allNotesFragment" />
     </fragment>
 
     <fragment
@@ -59,4 +62,16 @@
         android:id="@+id/navigation_select_category"
         android:name="com.duhapp.dnotes.features.select_category.ui.SelectCategoryFragment"
         android:label="SelectCategoryFragment" />
+    <fragment
+        android:id="@+id/allNotesFragment"
+        android:name="com.duhapp.dnotes.features.all_notes.ui.AllNotesFragment"
+        android:label="AllNotesFragment" >
+
+        <argument
+            android:name="categoryId"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_allNotesFragment_to_navigation_note"
+            app:destination="@id/navigation_note" />
+    </fragment>
 </navigation>

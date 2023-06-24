@@ -33,5 +33,8 @@
     <string name="default_category_name" >This category is default category</string>
     <string name="default_category_emoji">😀</string>
     <string name="default_category_description" >You can edit but can\'t delete.</string>
+    <string name="default_title_all_notes">Category</string>
     <string name="An_error_occurred_please_try_again_later">An error occurred. Please try again later</string>
+    <string name="Data_Not_Found">Data can\'t found</string>
+    <string name="Note_Data_Not_Found">There is no suitable note</string>
 </resources>

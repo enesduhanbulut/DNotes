@@ -3,9 +3,9 @@ package com.duhapp.dnotes
 import androidx.annotation.ColorRes
 
 enum class NoteColor(
-    @ColorRes val darkColor: Int,
-    @ColorRes val lightColor: Int,
-    @ColorRes val textColor: Int
+    @ColorRes val darkColor: Int = R.color.note_color_red_dark,
+    @ColorRes val lightColor: Int = R.color.note_color_red_light,
+    @ColorRes val textColor: Int = R.color.white
 ) {
     RED(R.color.note_color_red_dark, R.color.note_color_red_light, R.color.white),
     ORANGE(R.color.note_color_orange_dark, R.color.note_color_orange_light, R.color.black),

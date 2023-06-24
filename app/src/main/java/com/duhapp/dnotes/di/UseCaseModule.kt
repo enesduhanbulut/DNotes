@@ -5,6 +5,7 @@ import com.duhapp.dnotes.features.add_or_update_category.domain.DeleteCategory
 import com.duhapp.dnotes.features.add_or_update_category.domain.FetchHomeData
 import com.duhapp.dnotes.features.add_or_update_category.domain.UpsertCategory
 import com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel
+import com.duhapp.dnotes.features.all_notes.domain.GetNotesByCategoryId
 import com.duhapp.dnotes.features.manage_category.domain.CreateDefaultCategory
 import com.duhapp.dnotes.features.manage_category.domain.GetCategories
 import com.duhapp.dnotes.features.note.data.NoteRepository
@@ -63,5 +64,13 @@ object UseCaseModule {
         categoryUIModel: CategoryUIModel
     ): GetDefaultCategory {
         return GetDefaultCategory(categoryRepository, categoryUIModel)
+    }
+
+    @Provides
+    fun provideGetNotesByCategoryId(
+        noteRepository: NoteRepository,
+        categoryRepository: CategoryRepository
+    ): GetNotesByCategoryId {
+        return GetNotesByCategoryId(noteRepository, categoryRepository)
     }
 }

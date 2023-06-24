@@ -27,9 +27,9 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ManageCategoryFragment :
     BaseFragment<
-        FragmentManageCategoryBinding, ManageCategoryUIEvent,
-        ManageCategoryUIState, ManageCategoryViewModel,
-        >() {
+            FragmentManageCategoryBinding, ManageCategoryUIEvent,
+            ManageCategoryUIState, ManageCategoryViewModel,
+            >() {
     override val layoutId: Int
         get() = R.layout.fragment_manage_category
     override val titleId: Int
