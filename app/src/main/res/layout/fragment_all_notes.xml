@@ -7,7 +7,7 @@
 
         <variable
             name="adapter"
-            type="com.duhapp.dnotes.features.all_notes.NoteItemListAdapter" />
+            type="com.duhapp.dnotes.features.base.ui.BaseListAdapter" />
 
         <variable
             name="viewModel"

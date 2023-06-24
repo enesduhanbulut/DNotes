@@ -5,9 +5,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.duhapp.dnotes.R
 import com.duhapp.dnotes.databinding.FragmentAllNotesBinding
-import com.duhapp.dnotes.features.all_notes.NoteItemListAdapter
+import com.duhapp.dnotes.databinding.LayoutBasicNoteListItemBinding
 import com.duhapp.dnotes.features.base.ui.BaseFragment
 import com.duhapp.dnotes.features.base.ui.BaseListAdapter
+import com.duhapp.dnotes.features.home.home_screen_category.ui.BaseNoteUIModel
+import com.duhapp.dnotes.features.home.home_screen_category.ui.BasicNoteUIModel
 import com.duhapp.dnotes.ui.custom_views.AutoColumnGridLayout
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -18,7 +20,7 @@ class AllNotesFragment :
         get() = R.layout.fragment_all_notes
     override val titleId: Int
         get() = R.string.default_title_all_notes
-    lateinit var adapter: NoteItemListAdapter
+    lateinit var adapter: BaseListAdapter<BaseNoteUIModel, LayoutBasicNoteListItemBinding>
     private val allNotesViewModel: AllNotesViewModel by viewModels()
 
     override fun initView(binding: FragmentAllNotesBinding) {
@@ -27,14 +29,30 @@ class AllNotesFragment :
             allNotesViewModel.initiate(args.categoryId)
         }
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.adapter = NoteItemListAdapter().apply {
-            onItemClickListener = BaseListAdapter.OnItemClickListener { noteUIModel, _ ->
-                viewModel.onNoteClick(noteUIModel)
+        adapter = object : BaseListAdapter<BaseNoteUIModel, LayoutBasicNoteListItemBinding>() {
+            override fun getLayoutId(): Int {
+                return R.layout.layout_basic_note_list_item
+            }
+
+            override fun setUIState(
+                binding: LayoutBasicNoteListItemBinding,
+                item: BaseNoteUIModel
+            ) {
+                binding.item = item as BasicNoteUIModel
             }
         }
+        adapter.onItemClickListener = BaseListAdapter.OnItemClickListener { noteUIModel, _ ->
+            viewModel.onNoteClick(noteUIModel)
+        }
+        binding.adapter = adapter
         val widthOfItem = context?.resources?.getDimension(R.dimen.note_list_item_width)
-        binding.notes.layoutManager = AutoColumnGridLayout(widthOfItem!!.toInt(), requireContext(), 2,GridLayoutManager.VERTICAL, false)
-        adapter = binding.adapter!!
+        binding.notes.layoutManager = AutoColumnGridLayout(
+            widthOfItem!!.toInt(),
+            requireContext(),
+            2,
+            GridLayoutManager.VERTICAL,
+            false
+        )
     }
 
     override fun provideViewModel(): AllNotesViewModel {
@@ -52,6 +70,7 @@ class AllNotesFragment :
                     AllNotesFragmentDirections.actionAllNotesFragmentToNavigationNote(it.noteUIModel)
                 findNavController().navigate(action)
             }
+
             else -> {}
         }
     }
