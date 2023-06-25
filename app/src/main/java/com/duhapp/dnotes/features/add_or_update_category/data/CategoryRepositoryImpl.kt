@@ -1,20 +1,26 @@
 package com.duhapp.dnotes.features.add_or_update_category.data
 
 import com.duhapp.dnotes.NoteColor
+import com.duhapp.dnotes.R
 import com.duhapp.dnotes.app.database.CategoryDao
 import com.duhapp.dnotes.app.database.CategoryEntity
 import com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel
 import com.duhapp.dnotes.features.add_or_update_category.ui.ColorItemUIModel
 import com.duhapp.dnotes.features.base.data.BaseRepository
+import com.duhapp.dnotes.features.base.domain.CustomException
+import com.duhapp.dnotes.features.base.domain.CustomExceptionData
 import kotlinx.coroutines.CoroutineDispatcher
 
 class CategoryRepositoryImpl(
     private val dao: CategoryDao,
     dispatcher: CoroutineDispatcher
 ) : CategoryRepository, BaseRepository(dispatcher) {
+
+    var lastDeletedCategory: CategoryUIModel? = null
     override suspend fun deleteCategory(categoryUIModel: CategoryUIModel) {
         runOnIO {
             dao.deleteCategoryWithId(categoryUIModel.id)
+            lastDeletedCategory = categoryUIModel
         }
     }
 
@@ -44,6 +50,17 @@ class CategoryRepositoryImpl(
         }
     }
 
+    override suspend fun undo(): Boolean {
+        if (lastDeletedCategory == null)
+            throw CustomException.UndoUnavailableException(
+                CustomExceptionData(R.string.undo_unavailable, R.string.undo_unavailable, -1)
+            )
+
+        insert(lastDeletedCategory!!)
+        lastDeletedCategory = null
+        return true
+    }
+
     override suspend fun updateCategory(categoryUIModel: CategoryUIModel) {
         val category = CategoryEntity(
             name = categoryUIModel.name,
@@ -70,6 +87,4 @@ class CategoryRepositoryImpl(
             )
         }
     }
-
-
 }

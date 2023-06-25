@@ -38,4 +38,5 @@
     <string name="An_error_occurred_please_try_again_later">An error occurred. Please try again later</string>
     <string name="Data_Not_Found">Data can\'t found</string>
     <string name="Note_Data_Not_Found">There is no suitable note</string>
+    <string name="undo_unavailable">Undo unavailable</string>
 </resources>

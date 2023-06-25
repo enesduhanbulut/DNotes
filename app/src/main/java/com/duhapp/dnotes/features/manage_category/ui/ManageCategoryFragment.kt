@@ -102,7 +102,7 @@ class ManageCategoryFragment :
                     R.string.Item_deleted_do_you_want_to_undo,
                     Snackbar.LENGTH_LONG,
                 ).setAction(R.string.Undo) { _ ->
-                    viewModel.onUndoDelete(it.category)
+                    viewModel.onUndoDelete()
                 }.show()
             }
             else -> {
