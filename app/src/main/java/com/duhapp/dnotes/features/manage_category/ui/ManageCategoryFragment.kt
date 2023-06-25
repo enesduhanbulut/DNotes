@@ -2,7 +2,6 @@ package com.duhapp.dnotes.features.manage_category.ui
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -80,15 +79,9 @@ class ManageCategoryFragment :
                 requireActivity().theme
             )!!,
             ColorDrawable(Color.RED),
-            { },
-            {
-                Snackbar.make(
-                    binding.root,
-                    R.string.Item_deleted_do_you_want_to_undo,
-                    Snackbar.LENGTH_LONG,
-                ).setAction(R.string.Confirm) {
-                    Toast.makeText(requireContext(), "undo", Toast.LENGTH_SHORT).show()
-                }.show()
+            {},
+            { position ->
+                viewModel.handleDeleteCategory(adapter.items[position])
             },
             SwipeDirection.LEFT,
         )
@@ -100,11 +93,18 @@ class ManageCategoryFragment :
             is ManageCategoryUIEvent.NavigateAddCategory -> {
                 showBottomSheet(CategoryUIModel(), CategoryShowType.Add)
             }
-
             is ManageCategoryUIEvent.OnCategorySelected -> {
                 showBottomSheet(it.category.copy(), CategoryShowType.Edit)
             }
-
+            is ManageCategoryUIEvent.OnCategoryDeleted -> {
+                Snackbar.make(
+                    binding.root,
+                    R.string.Item_deleted_do_you_want_to_undo,
+                    Snackbar.LENGTH_LONG,
+                ).setAction(R.string.Undo) { _ ->
+                    viewModel.onUndoDelete(it.category)
+                }.show()
+            }
             else -> {
             }
         }
