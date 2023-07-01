@@ -78,6 +78,7 @@ class CategoryBottomSheet : BaseBottomSheet<
             is CategoryUIEvent.ShowEmojiDialog -> {
                 emojiPopup = EmojiPopup(
                     requireView(), onEmojiClickListener = {
+                        binding.nameTextInputLayout.requestFocus()
                         categoryBottomSheetViewModel.setEmoji(it.unicode)
                     }, editText = binding.categoryIcon
                 )

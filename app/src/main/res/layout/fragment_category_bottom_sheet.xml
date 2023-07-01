@@ -144,6 +144,8 @@
                 android:id="@+id/positive_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:backgroundTint="@{context.getColor(viewModel.uiState.categoryUIModel.color.color.darkColor)}"
+                app:textColor="@{context.getColor(viewModel.uiState.categoryUIModel.color.color.textColor)}"
                 android:layout_margin="36dp"
                 android:onClickListener="@{() -> viewModel.onPositiveButtonClicked()}"
                 android:text="@{viewModel.uiState.positiveButtonText}"

@@ -53,6 +53,11 @@ class NoteViewModel @Inject constructor(
                 )
             }
         )
+        viewModelScope.launch {
+            upsertNote.invoke(
+                uiState.value!!.baseNoteUIModel
+            )
+        }
     }
 
     fun categorySelectClicked() {
