@@ -30,6 +30,13 @@ class SelectCategoryViewModel @Inject constructor(
     }
 
     fun handleCategorySelect(category: CategoryUIModel) {
+        setSuccessState(
+            withStateValue {
+                it.copy(
+                    selectedCategory = category
+                )
+            }
+        )
         setEvent(SelectCategoryUIEvent.OnCategorySelected(category))
     }
 
