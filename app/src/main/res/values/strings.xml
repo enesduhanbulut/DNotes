@@ -39,4 +39,5 @@
     <string name="Data_Not_Found">Data can\'t found</string>
     <string name="Note_Data_Not_Found">There is no suitable note</string>
     <string name="undo_unavailable">Undo unavailable</string>
+    <string name="Categories">Categories</string>
 </resources>
