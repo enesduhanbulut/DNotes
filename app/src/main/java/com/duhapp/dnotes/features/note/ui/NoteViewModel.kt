@@ -64,12 +64,12 @@ class NoteViewModel @Inject constructor(
         if (args?.NoteItem == null) {
             viewModelScope.launch {
                 getDefaultCategory.invoke().let { defaultCategory ->
+                    val state = getDefaultNote().apply {
+                        this.baseNoteUIModel.category = defaultCategory
+                        this.editableMode = true
+                    }
                     setSuccessState(
-                        withStateValue {
-                            it.baseNoteUIModel.category = defaultCategory
-                            it.editableMode = true
-                            it
-                        }
+                        state
                     )
                 }
             }

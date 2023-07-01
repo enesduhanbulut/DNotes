@@ -14,22 +14,25 @@ import javax.inject.Inject
 class SelectCategoryViewModel @Inject constructor(
     private val getCategories: GetCategories,
 ) : BottomSheetViewModel<SelectCategoryUIEvent, SelectCategoryUIState>() {
-    fun initState() {
+    fun initState(selectedItemModel: CategoryUIModel) {
         viewModelScope.launch {
-            setSuccessState(SelectCategoryUIState(getCategories.invoke()))
+            setSuccessState(SelectCategoryUIState(selectedItemModel, getCategories.invoke()))
         }
     }
 
     fun handleCategorySelect(category: CategoryUIModel) {
         setEvent(SelectCategoryUIEvent.OnCategorySelected(category))
     }
+
 }
 
 sealed interface SelectCategoryUIEvent : BottomSheetEvent {
     object Idle : SelectCategoryUIEvent
+    object Dismiss : SelectCategoryUIEvent
     data class OnCategorySelected(val category: CategoryUIModel) : SelectCategoryUIEvent
 }
 
 data class SelectCategoryUIState(
+    var selectedCategory: CategoryUIModel? = null,
     val categories: List<CategoryUIModel>,
 ) : BottomSheetState

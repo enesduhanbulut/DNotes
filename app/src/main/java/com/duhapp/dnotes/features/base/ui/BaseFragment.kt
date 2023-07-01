@@ -14,7 +14,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.duhapp.dnotes.MainActivity
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 abstract class BaseFragment<
@@ -114,62 +113,5 @@ abstract class BaseFragment<
         mBinding!!.lifecycleOwner = null
         mBinding = null
         super.onDestroyView()
-    }
-
-    fun <T : BottomSheetEvent> showBottomSheet(
-        fragment: BaseBottomSheet<*, *, *, *>,
-        bundle: Bundle? = null,
-        activityViewModel: BottomSheetViewModel<T, *>,
-        collector: (T) -> Unit,
-        unsubscribeEvent: BottomSheetEvent
-    ) {
-        showBottomSheet(fragment, bundle, activityViewModel, null, collector, unsubscribeEvent)
-    }
-
-    fun <T : BottomSheetEvent> showBottomSheet(
-        fragment: BaseBottomSheet<*, *, *, *>,
-        bundle: Bundle? = null,
-        activityViewModel: BottomSheetViewModel<T, *>,
-        singleEventCollector: (T) -> Unit
-    ) {
-        showBottomSheet(
-            fragment,
-            bundle,
-            activityViewModel,
-            singleEventCollector,
-            null, null
-        )
-    }
-
-    private fun <T : BottomSheetEvent> showBottomSheet(
-        fragment: BaseBottomSheet<*, *, *, *>,
-        bundle: Bundle? = null,
-        activityViewModel: BottomSheetViewModel<T, *>,
-        singleEventCollector: ((T) -> Unit)?,
-        collector: ((T) -> Unit)?,
-        unsubscribeEvent: BottomSheetEvent? = null,
-    ) {
-        var job: Job? = null
-        job = lifecycleScope.launch {
-            if (singleEventCollector != null)
-                activityViewModel.uiEvent.collectLatest {
-                    singleEventCollector.invoke(it)
-                    job?.cancel()
-                }
-            else {
-                activityViewModel.uiEvent.collect {
-                    collector?.invoke(it)
-                    if (it.javaClass == unsubscribeEvent?.javaClass) {
-                        job?.cancel()
-                    }
-                }
-            }
-
-        }
-        fragment.arguments = bundle
-        fragment.show(
-            childFragmentManager,
-            fragment.tag,
-        )
     }
 }

@@ -1,5 +1,6 @@
 package com.duhapp.dnotes.features.select_category.ui
 
+import android.os.Bundle
 import androidx.fragment.app.activityViewModels
 import com.duhapp.dnotes.R
 import com.duhapp.dnotes.databinding.CategorySelectListItemBinding
@@ -18,6 +19,15 @@ class SelectCategoryFragment :
     override val fragmentTag = "SelectCategoryFragment"
     private val selectCategoryViewModel: SelectCategoryViewModel by activityViewModels()
     private lateinit var adapter: BaseListAdapter<CategoryUIModel, CategorySelectListItemBinding>
+    private lateinit var selectedItemModel: CategoryUIModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        selectedItemModel =
+            SelectCategoryFragmentArgs.fromBundle(requireArguments()).selectedCategory
+                ?: CategoryUIModel()
+        arguments = null
+    }
 
     override fun initView(binding: FragmentSelectCategoryBinding) {
         observeUIState()
@@ -31,7 +41,6 @@ class SelectCategoryFragment :
                 ),
             ),
         )
-        viewModel.initState()
     }
 
     private fun initAdapter() {
@@ -56,16 +65,14 @@ class SelectCategoryFragment :
     }
 
     override fun setBindingViewModel() {
+        viewModel.initState(selectedItemModel)
         binding.viewModel = viewModel
+        binding.headerVisible = true
         initAdapter()
     }
 
     override fun handleUIEvent(event: SelectCategoryUIEvent) {
         when (event) {
-            is SelectCategoryUIEvent.OnCategorySelected -> {
-                dismiss()
-            }
-
             else -> {}
         }
     }

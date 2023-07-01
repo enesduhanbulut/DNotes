@@ -35,10 +35,6 @@
         android:name="com.duhapp.dnotes.features.note.ui.NoteFragment"
         android:label="@string/Note_Fragment"
         tools:layout="@layout/fragment_note">
-
-        <action
-            android:id="@+id/action_navigation_note_to_selectCategoryFragment"
-            app:destination="@id/navigation_select_category" />
         <argument
             android:name="NoteItem"
             android:defaultValue="@null"
@@ -60,8 +56,15 @@
     </dialog>
     <dialog
         android:id="@+id/navigation_select_category"
+        android:label="SelectCategoryFragment"
         android:name="com.duhapp.dnotes.features.select_category.ui.SelectCategoryFragment"
-        android:label="SelectCategoryFragment" />
+        tools:layout="@layout/fragment_select_category">
+        <argument
+            android:name="selectedCategory"
+            android:defaultValue="@null"
+            app:argType="com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel"
+            app:nullable="true" />
+    </dialog>
     <fragment
         android:id="@+id/allNotesFragment"
         android:name="com.duhapp.dnotes.features.all_notes.ui.AllNotesFragment"

@@ -18,6 +18,7 @@ import com.duhapp.dnotes.features.base.ui.BaseFragment
 import com.duhapp.dnotes.features.base.ui.BaseListAdapter
 import com.duhapp.dnotes.features.base.ui.SwipeDirection
 import com.duhapp.dnotes.features.base.ui.addSwipeListener
+import com.duhapp.dnotes.features.base.ui.showBottomSheet
 import com.duhapp.dnotes.features.generic.ui.SpaceModel
 import com.duhapp.dnotes.features.generic.ui.SpacingItemDecorator
 import com.google.android.material.snackbar.Snackbar
@@ -91,10 +92,10 @@ class ManageCategoryFragment :
     override fun handleUIEvent(it: ManageCategoryUIEvent) {
         when (it) {
             is ManageCategoryUIEvent.NavigateAddCategory -> {
-                showBottomSheet(CategoryUIModel(), CategoryShowType.Add)
+                showCategoryScreen(CategoryUIModel(), CategoryShowType.Add)
             }
             is ManageCategoryUIEvent.OnCategorySelected -> {
-                showBottomSheet(it.category.copy(), CategoryShowType.Edit)
+                showCategoryScreen(it.category.copy(), CategoryShowType.Edit)
             }
             is ManageCategoryUIEvent.OnCategoryDeleted -> {
                 Snackbar.make(
@@ -110,7 +111,7 @@ class ManageCategoryFragment :
         }
     }
 
-    private fun showBottomSheet(categoryUIModel: CategoryUIModel, showType: CategoryShowType) {
+    private fun showCategoryScreen(categoryUIModel: CategoryUIModel, showType: CategoryShowType) {
         showBottomSheet(
             CategoryBottomSheet(),
             activityViewModel = categoryBottomSheetViewModel,
