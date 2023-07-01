@@ -15,8 +15,17 @@ class SelectCategoryViewModel @Inject constructor(
     private val getCategories: GetCategories,
 ) : BottomSheetViewModel<SelectCategoryUIEvent, SelectCategoryUIState>() {
     fun initState(selectedItemModel: CategoryUIModel) {
+        setSuccessState(SelectCategoryUIState(selectedItemModel, emptyList()))
         viewModelScope.launch {
-            setSuccessState(SelectCategoryUIState(selectedItemModel, getCategories.invoke()))
+            val categories = getCategories.invoke()
+            setSuccessState(
+                withStateValue {
+                    val state = it.copy(
+                        categories = categories
+                    )
+                    state
+                }
+            )
         }
     }
 

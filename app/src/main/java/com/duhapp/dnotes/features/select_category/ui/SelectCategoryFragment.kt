@@ -29,6 +29,10 @@ class SelectCategoryFragment :
         arguments = null
     }
 
+    override fun beforeBinding() {
+        viewModel.initState(selectedItemModel)
+    }
+
     override fun initView(binding: FragmentSelectCategoryBinding) {
         observeUIState()
         binding.categories.addItemDecoration(
@@ -65,7 +69,6 @@ class SelectCategoryFragment :
     }
 
     override fun setBindingViewModel() {
-        viewModel.initState(selectedItemModel)
         binding.viewModel = viewModel
         binding.headerVisible = true
         initAdapter()

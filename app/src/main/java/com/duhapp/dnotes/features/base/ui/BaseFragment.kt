@@ -38,9 +38,10 @@ abstract class BaseFragment<
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
+        viewModel = provideViewModel()
+        beforeBinding()
         mBinding = DataBindingUtil.inflate(inflater, layoutId, container, false)
         binding = mBinding!!
-        viewModel = provideViewModel()
         setBindingViewModel()
         mBinding!!.lifecycleOwner = viewLifecycleOwner
         initView(mBinding!!)
@@ -54,6 +55,10 @@ abstract class BaseFragment<
         observeUIEvent()
         observeUIState()
         return mBinding!!.root
+    }
+
+    protected open fun beforeBinding() {
+        // override this method if you want to do something before binding
     }
 
     fun setFabVisibility(visible: Int) {

@@ -26,12 +26,17 @@ abstract class BaseBottomSheet<BUE : BottomSheetEvent, BUS : BottomSheetState, V
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
+        viewModel = provideViewModel()
+        beforeBinding()
         binding = DataBindingUtil.inflate(inflater, layoutId, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
-        viewModel = provideViewModel()
         setBindingViewModel()
         observeUIEvent()
         return binding.root
+    }
+
+    protected open fun beforeBinding() {
+        // override this method if you want to do something before binding
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

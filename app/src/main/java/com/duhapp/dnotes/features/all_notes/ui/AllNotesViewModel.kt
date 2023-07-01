@@ -1,11 +1,8 @@
 package com.duhapp.dnotes.features.all_notes.ui
 
 import androidx.lifecycle.viewModelScope
-import com.duhapp.dnotes.R
 import com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel
 import com.duhapp.dnotes.features.all_notes.domain.GetNotesByCategoryId
-import com.duhapp.dnotes.features.base.domain.CustomException
-import com.duhapp.dnotes.features.base.domain.CustomExceptionData
 import com.duhapp.dnotes.features.base.ui.FragmentUIEvent
 import com.duhapp.dnotes.features.base.ui.FragmentUIState
 import com.duhapp.dnotes.features.base.ui.FragmentViewModel
@@ -28,7 +25,9 @@ class AllNotesViewModel @Inject constructor(
         viewModelScope.launch {
             val notes = getNotesByCategoryId.invoke(categoryId)
             if (notes.isEmpty()) {
-                setFailureState(
+
+                // TODO: fix this
+                /*setFailureState(
                     CustomException.ThereIsNoSuitableVariableException(
                         CustomExceptionData(
                             R.string.Data_Not_Found,
@@ -36,7 +35,7 @@ class AllNotesViewModel @Inject constructor(
                             -1,
                         )
                     )
-                )
+                )*/
             } else {
                 uiState.value?.let {
                     setSuccessState(
