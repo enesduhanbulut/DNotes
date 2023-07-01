@@ -26,44 +26,18 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:background="@color/note_color_red_dark">
 
-            <RelativeLayout
-                android:id="@+id/category"
-                android:layout_width="@dimen/category_list_item_icon_size"
-                android:layout_height="@dimen/category_list_item_icon_size"
-                android:layout_marginVertical="@dimen/small_margin"
-                android:background="@drawable/rounded_alpha_background"
-                android:onClick="@{() -> viewModel.categorySelectClicked()}"
-                app:isLocked="@{viewModel.uiState.editableMode}"
-                app:layout_constraintStart_toStartOf="@id/description"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/category_icon"
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:layout_centerInParent="true"
-                    android:background="@color/transparent"
-                    android:ellipsize="end"
-                    android:gravity="center"
-                    android:maxLines="1"
-                    android:text="@={viewModel.uiState.baseNoteUIModel.category.emoji}"
-                    android:textColor="@color/white"
-                    tools:text="😀" />
-            </RelativeLayout>
 
             <EditText
                 android:id="@+id/title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/small_margin"
                 android:backgroundTint="@color/transparent"
                 android:hint="@string/Title"
                 android:text="@={viewModel.uiState.baseNoteUIModel.title}"
                 app:isLocked="@{viewModel.uiState.editableMode}"
-                app:layout_constraintBottom_toBottomOf="@id/category"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/category"
-                app:layout_constraintTop_toTopOf="@id/category" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
                 android:id="@+id/description"
