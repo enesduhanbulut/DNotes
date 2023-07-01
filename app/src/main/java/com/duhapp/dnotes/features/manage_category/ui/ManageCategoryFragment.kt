@@ -76,7 +76,7 @@ class ManageCategoryFragment :
         binding.categories.addSwipeListener(
             ResourcesCompat.getDrawable(
                 resources,
-                R.drawable.baseline_lightbulb_24,
+                R.drawable.baseline_delete_24,
                 requireActivity().theme
             )!!,
             ColorDrawable(Color.RED),
