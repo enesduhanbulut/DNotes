@@ -16,6 +16,7 @@
     <string name="Add">Add</string>
     <string name="Edit_Category">Edit Category</string>
     <string name="Edit_Category_Message">Please enter new name and icon of category</string>
+    <string name="Undo">Undo</string>
     <string name="Confirm">Confirm</string>
     <string name="Delete">Delete</string>
     <string name="Category_Name">Title</string>
@@ -26,7 +27,7 @@
     <string name="Details">Details</string>
     <string name="Edit">Edit</string>
     <string name="Manage_Category_Fragment">Manage Categories</string>
-    <string name="Item_deleted_do_you_want_to_undo">Item deleted. Do you want to undo</string>
+    <string name="Item_deleted_do_you_want_to_undo">Item deleted. Do you want to undo?</string>
     <string name="Choose_a_color">Choose a background color</string>
     <string name="fill_the_title_and_description_click_on_the_icon_to_change">Fill the title and description. Click on the icon to change it.</string>
     <string name="select_a_category_for_edit">Select A Category For Edit</string>
@@ -37,4 +38,5 @@
     <string name="An_error_occurred_please_try_again_later">An error occurred. Please try again later</string>
     <string name="Data_Not_Found">Data can\'t found</string>
     <string name="Note_Data_Not_Found">There is no suitable note</string>
+    <string name="undo_unavailable">Undo unavailable</string>
 </resources>

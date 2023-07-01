@@ -1,5 +1,7 @@
 package com.duhapp.dnotes.features.manage_category.ui
 
+import android.util.Log
+import android.view.View
 import androidx.lifecycle.viewModelScope
 import com.duhapp.dnotes.features.add_or_update_category.domain.DeleteCategory
 import com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel
@@ -7,6 +9,8 @@ import com.duhapp.dnotes.features.base.ui.FragmentUIEvent
 import com.duhapp.dnotes.features.base.ui.FragmentUIState
 import com.duhapp.dnotes.features.base.ui.FragmentViewModel
 import com.duhapp.dnotes.features.manage_category.domain.GetCategories
+import com.duhapp.dnotes.features.manage_category.domain.InsertCategory
+import com.duhapp.dnotes.features.manage_category.domain.UndoCategory
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,6 +19,7 @@ import javax.inject.Inject
 class ManageCategoryViewModel @Inject constructor(
     private val getCategories: GetCategories,
     private val deleteCategory: DeleteCategory,
+    private val undoCategory: UndoCategory,
 ) : FragmentViewModel<ManageCategoryUIEvent, ManageCategoryUIState>() {
     init {
         setEvent(ManageCategoryUIEvent.Loading)
@@ -41,6 +46,9 @@ class ManageCategoryViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 deleteCategory.invoke(categoryUIModel)
+                setEvent(
+                    ManageCategoryUIEvent.OnCategoryDeleted(categoryUIModel)
+                )
                 loadCategories()
             } catch (exception: Exception) {
                 // TODO: 2021-09-19 handle errors
@@ -57,6 +65,19 @@ class ManageCategoryViewModel @Inject constructor(
     fun onCategoryUpserted() {
         loadCategories()
     }
+
+    fun onUndoDelete() {
+        viewModelScope.launch {
+            try {
+                undoCategory.invoke()
+                loadCategories()
+            } catch (exception: Exception) {
+                // TODO: 2023-06-25 handle errors
+                Log.e("ManageCategoryViewModel", "onUndoDelete: ", exception)
+            }
+        }
+    }
+
 }
 
 data class ManageCategoryUIState(
@@ -67,6 +88,9 @@ data class ManageCategoryUIState(
 sealed interface ManageCategoryUIEvent : FragmentUIEvent {
     object NavigateAddCategory : ManageCategoryUIEvent
     data class OnCategorySelected(
+        val category: CategoryUIModel,
+    ) : ManageCategoryUIEvent
+    data class OnCategoryDeleted(
         val category: CategoryUIModel,
     ) : ManageCategoryUIEvent
 
