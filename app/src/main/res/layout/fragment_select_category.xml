@@ -8,9 +8,7 @@
 
         <import type="android.view.View" />
 
-        <variable
-            name="headerVisible"
-            type="Boolean" />
+        <import type="android.graphics.Color" />
 
         <variable
             name="viewModel"
@@ -26,7 +24,6 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/select_category_header_height"
             android:background="@{context.getColor(viewModel.uiState.selectedCategory.color.color.darkColor)}"
-            android:visibility="@{headerVisible ? View.VISIBLE : View.GONE}"
             app:layout_constraintTop_toTopOf="parent"
             tools:background="@color/primary_color">
 
@@ -72,12 +69,14 @@
 
             <ImageView
                 android:id="@+id/arrow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_margin="@dimen/small_margin"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                android:src="@{viewModel.uiState.isExpanded ? @drawable/baseline_arrow_drop_down_24 : @drawable/baseline_arrow_drop_up_24}"
+                app:tint="@color/white"
                 tools:src="@drawable/baseline_arrow_drop_up_24" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

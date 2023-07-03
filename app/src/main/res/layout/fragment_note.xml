@@ -54,23 +54,31 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <LinearLayout
-            android:id="@+id/bottomSheetCategory"
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="400dp"
-            android:elevation="4dp"
-            android:minHeight="@dimen/select_category_header_height"
-            app:behavior_hideable="false"
-            app:behavior_peekHeight="@dimen/select_category_header_height"
-            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+            android:layout_gravity="bottom"
             app:layout_constraintTop_toBottomOf="@id/noteContainer">
 
-            <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/bottomSheetContainer"
+            <LinearLayout
+                android:id="@+id/bottomSheetCategory"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:layout="@layout/fragment_select_category" />
-        </LinearLayout>
+                android:elevation="4dp"
+                android:minHeight="@dimen/select_category_header_height"
+                app:behavior_hideable="false"
+                app:behavior_peekHeight="@dimen/select_category_header_height"
+                app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+                <androidx.fragment.app.FragmentContainerView
+                    android:id="@+id/bottomSheetContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:layout="@layout/fragment_select_category" />
+            </LinearLayout>
+
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/edit"

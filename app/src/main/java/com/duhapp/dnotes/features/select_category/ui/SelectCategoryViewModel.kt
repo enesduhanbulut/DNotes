@@ -40,6 +40,26 @@ class SelectCategoryViewModel @Inject constructor(
         setEvent(SelectCategoryUIEvent.OnCategorySelected(category))
     }
 
+    fun onExpand() {
+        setSuccessState(
+            withStateValue {
+                it.copy(
+                    isExpanded = true
+                )
+            }
+        )
+    }
+
+    fun onCollapse() {
+        setSuccessState(
+            withStateValue {
+                it.copy(
+                    isExpanded = false
+                )
+            }
+        )
+    }
+
 }
 
 sealed interface SelectCategoryUIEvent : BottomSheetEvent {
@@ -51,4 +71,5 @@ sealed interface SelectCategoryUIEvent : BottomSheetEvent {
 data class SelectCategoryUIState(
     var selectedCategory: CategoryUIModel? = null,
     val categories: List<CategoryUIModel>,
+    var isExpanded: Boolean = false,
 ) : BottomSheetState

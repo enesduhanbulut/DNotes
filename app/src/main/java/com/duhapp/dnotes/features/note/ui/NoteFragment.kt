@@ -1,5 +1,6 @@
 package com.duhapp.dnotes.features.note.ui
 
+import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.duhapp.dnotes.R
@@ -10,6 +11,7 @@ import com.duhapp.dnotes.features.select_category.ui.SelectCategoryFragment
 import com.duhapp.dnotes.features.select_category.ui.SelectCategoryFragmentArgs
 import com.duhapp.dnotes.features.select_category.ui.SelectCategoryUIEvent
 import com.duhapp.dnotes.features.select_category.ui.SelectCategoryViewModel
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -26,6 +28,36 @@ class NoteFragment :
     private val categoryViewModel: SelectCategoryViewModel by activityViewModels()
     override fun initView(binding: FragmentNoteBinding) {
         viewModel.initState(NoteFragmentArgs.fromBundle(requireArguments()))
+        initBottomSheet()
+    }
+
+    private fun initBottomSheet() {
+        with(binding.bottomSheetCategory) {
+            val bottomSheetBehavior = BottomSheetBehavior.from(this)
+            val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
+
+                override fun onStateChanged(bottomSheet: View, newState: Int) {
+                    if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                        categoryViewModel.onCollapse()
+                    }
+                    if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                        categoryViewModel.onExpand()
+                    }
+                }
+
+                override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                    // Do something for slide offset.
+                }
+            }
+            bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
+            setOnClickListener {
+                if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_COLLAPSED) {
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                } else if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                }
+            }
+        }
     }
 
     override fun provideViewModel(): NoteViewModel = noteViewModel

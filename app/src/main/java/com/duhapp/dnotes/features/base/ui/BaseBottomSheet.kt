@@ -27,7 +27,7 @@ abstract class BaseBottomSheet<BUE : BottomSheetEvent, BUS : BottomSheetState, V
         savedInstanceState: Bundle?,
     ): View {
         viewModel = provideViewModel()
-        beforeBinding()
+        handleArgs(requireArguments())
         binding = DataBindingUtil.inflate(inflater, layoutId, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         setBindingViewModel()
@@ -35,7 +35,7 @@ abstract class BaseBottomSheet<BUE : BottomSheetEvent, BUS : BottomSheetState, V
         return binding.root
     }
 
-    protected open fun beforeBinding() {
+    protected open fun handleArgs(args: Bundle) {
         // override this method if you want to do something before binding
     }
 
