@@ -93,6 +93,11 @@ class NoteFragment :
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        viewModel.save()
+    }
+
     override fun handleUIEvent(it: NoteUIEvent) {
         when (it) {
             else -> {}

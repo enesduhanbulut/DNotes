@@ -1,7 +1,9 @@
 package com.duhapp.dnotes.features.base.ui
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.PopupMenu
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.DiffUtil
@@ -55,12 +57,32 @@ abstract class BaseListAdapter<M : BaseListItem, DB : ViewDataBinding> :
         onBindViewHolder(holder, item)
     }
 
+    open fun initializeMenu(binding: DB): MenuContainer? {
+        return null
+    }
+
     override fun getItemCount(): Int {
         return itemList.size
     }
 
     inner class BaseViewHolder(private val binding: DB) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: M) {
+            val menuContainer = initializeMenu(binding)
+            if (menuContainer != null) {
+                val view = binding.root.findViewById<View>(menuContainer.viewId)
+                view.setOnClickListener {
+                    with(
+                        PopupMenu(
+                            binding.root.context,
+                            binding.root
+                        )
+                    ) {
+                        setOnMenuItemClickListener(menuContainer.menuItemClickListener)
+                        inflate(menuContainer.menu)
+                        show()
+                    }
+                }
+            }
             setUIState(binding, item)
         }
     }
@@ -103,3 +125,9 @@ abstract class BaseListAdapter<M : BaseListItem, DB : ViewDataBinding> :
         }
     }
 }
+
+data class MenuContainer(
+    val viewId: Int,
+    val menu: Int,
+    val menuItemClickListener: PopupMenu.OnMenuItemClickListener
+)

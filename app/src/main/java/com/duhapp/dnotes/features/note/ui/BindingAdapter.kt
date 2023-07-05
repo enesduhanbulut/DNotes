@@ -10,18 +10,18 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 @BindingAdapter("lockIcon")
 fun lockIcon(view: ImageButton, editableModeEnabled: Boolean) {
     if (!editableModeEnabled) {
-        view.setImageResource(R.drawable.edit)
+        view.setImageResource(R.drawable.baseline_edit_24)
     } else {
-        view.setImageResource(R.drawable.save)
+        view.setImageResource(R.drawable.baseline_edit_off_24)
     }
 }
 
 @BindingAdapter("lockIcon")
 fun lockIcon(view: FloatingActionButton, editableModeEnabled: Boolean) {
     if (!editableModeEnabled) {
-        view.setImageResource(R.drawable.edit)
+        view.setImageResource(R.drawable.baseline_edit_24)
     } else {
-        view.setImageResource(R.drawable.save)
+        view.setImageResource(R.drawable.baseline_edit_off_24)
     }
 }
 

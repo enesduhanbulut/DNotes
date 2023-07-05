@@ -67,6 +67,7 @@
     </dialog>
     <fragment
         android:id="@+id/allNotesFragment"
+        tools:layout="@layout/fragment_all_notes"
         android:name="com.duhapp.dnotes.features.all_notes.ui.AllNotesFragment"
         android:label="AllNotesFragment" >
 

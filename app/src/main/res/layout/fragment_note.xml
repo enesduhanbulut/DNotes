@@ -29,10 +29,12 @@
 
             <EditText
                 android:id="@+id/title"
+                style="@style/text_lg_bold"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/transparent"
                 android:hint="@string/Title"
+                android:maxLines="1"
                 android:text="@={viewModel.uiState.baseNoteUIModel.title}"
                 app:isLocked="@{viewModel.uiState.editableMode}"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -79,20 +81,6 @@
 
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/edit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom | end"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="64dp"
-            android:onClickListener="@{() -> viewModel.switchEditMode()}"
-            app:layout_constraintBottom_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:lockIcon="@{viewModel.uiState.editableMode}"
-            app:srcCompat="@drawable/edit" />
-
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

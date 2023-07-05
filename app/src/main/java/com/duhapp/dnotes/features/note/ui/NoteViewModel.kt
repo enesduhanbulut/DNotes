@@ -25,22 +25,13 @@ class NoteViewModel @Inject constructor(
         setSuccessState(getDefaultNote())
     }
 
-    fun switchEditMode() {
+    fun save() {
         withStateValue {
-            if (it.editableMode) {
-                viewModelScope.launch {
-                    upsertNote.invoke(it.baseNoteUIModel)
-                }
+            viewModelScope.launch {
+                upsertNote.invoke(it.baseNoteUIModel)
             }
             it
         }
-        setSuccessState(
-            withStateValue {
-                it.copy(
-                    editableMode = !it.editableMode
-                )
-            })
-
     }
 
     fun onCategorySelected(category: CategoryUIModel) {
@@ -82,7 +73,7 @@ class NoteViewModel @Inject constructor(
             setSuccessState(
                 NoteUIState(
                     baseNoteUIModel = args.NoteItem,
-                    editableMode = false,
+                    editableMode = true,
                 )
             )
         }
@@ -137,5 +128,5 @@ data class NoteUIState(
         ),
         color = -1,
     ),
-    var editableMode: Boolean,
+    var editableMode: Boolean = true,
 ) : FragmentUIState

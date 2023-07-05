@@ -8,6 +8,10 @@
         <variable
             name="item"
             type="com.duhapp.dnotes.features.home.home_screen_category.ui.BasicNoteUIModel" />
+
+        <variable
+            name="onLongClickListener"
+            type="android.view.View.OnLongClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
