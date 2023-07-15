@@ -25,6 +25,6 @@ object DomainModule {
 
     @Provides
     fun provideNoteRepository(noteDao: NoteDao): NoteRepository {
-        return NoteRepositoryImpl(noteDao)
+        return NoteRepositoryImpl(noteDao, Dispatchers.IO)
     }
 }

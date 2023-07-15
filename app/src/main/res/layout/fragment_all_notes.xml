@@ -66,6 +66,16 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Title" />
 
+            <ImageView
+                android:id="@+id/select_action_menu"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="@dimen/_12dp"
+                android:src="@drawable/item_menu_trigger"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:visibility="@{viewModel.uiState.selectable}"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -80,6 +90,47 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/select_category_header"
             tools:listitem="@layout/layout_basic_note_list_item" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="@dimen/xl_margin"
+            android:layout_marginHorizontal="@dimen/xl_margin"
+            android:orientation="horizontal"
+            android:gravity="center"
+            app:visibility="@{viewModel.uiState.selectable}"
+            android:background="@color/design_default_color_on_primary">
+            <androidx.constraintlayout.utils.widget.ImageFilterButton
+                android:id="@+id/delete_notes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/delete_48"
+                android:layout_marginHorizontal="@dimen/_12dp"
+                android:background="@color/transparent"
+                android:onClick="@{() -> viewModel.deleteSelectedNotes()}"
+                />
+
+            <androidx.constraintlayout.utils.widget.ImageFilterButton
+                android:id="@+id/move_notes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/move_48"
+                android:layout_marginHorizontal="@dimen/_12dp"
+                android:background="@color/transparent"
+                android:onClick="@{() -> viewModel.moveSelectedNotes()}"/>
+
+            <androidx.constraintlayout.utils.widget.ImageFilterButton
+                android:id="@+id/cancel_selection"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/cancel_48"
+                android:layout_marginHorizontal="@dimen/_12dp"
+                android:background="@color/transparent"
+                android:onClick="@{() -> viewModel.cancelSelectionMode()}"/>
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
