@@ -19,6 +19,8 @@ open class BaseNoteUIModel(
     val isPinned: Boolean,
     val isCompletable: Boolean,
     val isCompleted: Boolean,
+    var isSelected: Boolean = false,
+    var isSelectable: Boolean = false,
 ) : Cloneable, BaseListItem, Parcelable {
     open fun newCopy(): BaseNoteUIModel {
         return super.clone() as BaseNoteUIModel
@@ -68,6 +70,8 @@ class BasicNoteUIModel(
     title: String,
     body: String,
     @ColorRes color: Int,
+    isSelected: Boolean = false,
+    isSelectable: Boolean = false,
 ) : BaseNoteUIModel(
     id = id,
     type = NoteType.BasicNote,
@@ -79,6 +83,8 @@ class BasicNoteUIModel(
     body = body,
     image = "",
     color = color,
+    isSelected = isSelected,
+    isSelectable = isSelectable,
 ) {
     override fun toEntity() = NoteEntity(
         id = id,
@@ -102,6 +108,8 @@ class ImageNoteUIModel(
     body: String,
     image: String,
     @ColorRes color: Int,
+    isSelected: Boolean = false,
+    isSelectable: Boolean = false,
 ) : BaseNoteUIModel(
     id = id,
     type = NoteType.BasicNote,
@@ -113,6 +121,8 @@ class ImageNoteUIModel(
     body = body,
     image = image,
     color = color,
+    isSelected = isSelected,
+    isSelectable = isSelectable,
 ) {
     override fun toEntity() = NoteEntity(
         id = id,

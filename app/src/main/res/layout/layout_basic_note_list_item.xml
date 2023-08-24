@@ -10,8 +10,8 @@
             type="com.duhapp.dnotes.features.home.home_screen_category.ui.BasicNoteUIModel" />
 
         <variable
-            name="onLongClickListener"
-            type="android.view.View.OnLongClickListener" />
+            name="hasSelectMode"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -35,20 +35,32 @@
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/title"
                     style="@style/text_base_m"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_margin="12dp"
+                    android:layout_margin="@dimen/_12dp"
                     android:text="@{item.title}"
                     android:textColor="@color/black"
+                    app:layout_constraintEnd_toStartOf="@id/select_action_menu"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="Title" />
+
+                <ImageView
+                    android:id="@+id/select_action_menu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_12dp"
+                    android:src="@drawable/item_menu_trigger"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:visibility="@{hasSelectMode &amp;&amp; !item.selectable}" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/body"
                     style="@style/text_xs_medium"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="12dp"
+                    android:layout_margin="@dimen/_12dp"
                     android:text="@{item.body}"
                     android:textColor="@color/black"
                     app:layout_constraintTop_toBottomOf="@id/title"
@@ -77,7 +89,7 @@
                         style="@style/text_xs_medium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="12dp"
+                        android:layout_margin="@dimen/_12dp"
                         android:text="@{item.category.name}"
                         android:textColor="@color/white"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -85,13 +97,21 @@
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text="Category" />
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
 
+                    <CheckBox
+                        android:id="@+id/isSelected"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="false"
+                        app:isSelected="@{item.selected}"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:visibility="@{item.selectable}" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </com.google.android.material.card.MaterialCardView>
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

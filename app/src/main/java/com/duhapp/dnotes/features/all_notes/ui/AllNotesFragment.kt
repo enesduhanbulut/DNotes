@@ -1,5 +1,6 @@
 package com.duhapp.dnotes.features.all_notes.ui
 
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -9,15 +10,20 @@ import com.duhapp.dnotes.databinding.LayoutBasicNoteListItemBinding
 import com.duhapp.dnotes.features.base.ui.BaseFragment
 import com.duhapp.dnotes.features.base.ui.BaseListAdapter
 import com.duhapp.dnotes.features.base.ui.MenuContainer
+import com.duhapp.dnotes.features.base.ui.showBottomSheet
 import com.duhapp.dnotes.features.generic.ui.SpaceModel
 import com.duhapp.dnotes.features.generic.ui.SpacingItemDecorator
 import com.duhapp.dnotes.features.home.home_screen_category.ui.BaseNoteUIModel
 import com.duhapp.dnotes.features.home.home_screen_category.ui.BasicNoteUIModel
+import com.duhapp.dnotes.features.select_category.ui.SelectCategoryFragment
+import com.duhapp.dnotes.features.select_category.ui.SelectCategoryFragmentArgs
+import com.duhapp.dnotes.features.select_category.ui.SelectCategoryUIEvent
+import com.duhapp.dnotes.features.select_category.ui.SelectCategoryViewModel
 import com.duhapp.dnotes.ui.custom_views.AutoColumnGridLayout
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AllNotesFragment :
+class AllNotesFragment:
     BaseFragment<FragmentAllNotesBinding, AllNotesEvent, AllNotesState, AllNotesViewModel>() {
     override val layoutId: Int
         get() = R.layout.fragment_all_notes
@@ -25,7 +31,8 @@ class AllNotesFragment :
         get() = R.string.default_title_all_notes
     lateinit var adapter: BaseListAdapter<BaseNoteUIModel, LayoutBasicNoteListItemBinding>
     private val allNotesViewModel: AllNotesViewModel by viewModels()
-
+    private val selectCategoryViewModel: SelectCategoryViewModel by activityViewModels()
+    private lateinit var menuContainer: MenuContainer
     override fun initView(binding: FragmentAllNotesBinding) {
         arguments?.let {
             val args = AllNotesFragmentArgs.fromBundle(it)
@@ -33,6 +40,26 @@ class AllNotesFragment :
         }
         initAdapter()
         initRecyclerView()
+        menuContainer = MenuContainer(
+            binding.selectActionMenu.id,
+            R.menu.note_item_general_menu,
+            menuItemClickListener = {
+                when(it.itemId) {
+                    R.id.delete_notes -> {
+                        viewModel.deleteSelectedNotes()
+                        true
+                    }
+                    R.id.move_notes -> {
+                        viewModel.moveSelectedNotes()
+                        true
+                    }
+                    else -> {
+                        false
+                    }
+                }
+            }
+        )
+        menuContainer?.defineMenu(binding.root)
     }
 
     private fun initRecyclerView() {
@@ -66,16 +93,48 @@ class AllNotesFragment :
                 binding: LayoutBasicNoteListItemBinding,
                 item: BaseNoteUIModel
             ) {
-                binding.item = item as BasicNoteUIModel
+                binding.item = (item as BasicNoteUIModel)
+                binding.hasSelectMode = true
             }
 
-            override fun initializeMenu(binding: LayoutBasicNoteListItemBinding): MenuContainer? {
-                return null
-            }
+            override fun initializeMenu(binding: LayoutBasicNoteListItemBinding): MenuContainer {
+                return MenuContainer(
+                    binding.selectActionMenu.id,
+                    R.menu.single_note_item_menu
+                ) {
+                    when (it.itemId) {
+                        R.id.delete_note -> {
+                            viewModel.onDeleteNoteClick(binding.item as BaseNoteUIModel)
+                            true
+                        }
 
+                        R.id.edit_note -> {
+                            viewModel.onEditNoteClick(binding.item as BaseNoteUIModel)
+                            true
+                        }
+
+                        R.id.select_note -> {
+                            viewModel.enableSelectionModeAndSelectANote(binding.item as BaseNoteUIModel)
+                            true
+                        }
+
+                        R.id.move_note -> {
+                            viewModel.onMoveNoteClick(binding.item as BaseNoteUIModel)
+                            true
+                        }
+
+                        else -> {
+                            false
+                        }
+                    }
+                }
+            }
         }
         adapter.onItemClickListener = BaseListAdapter.OnItemClickListener { noteUIModel, _ ->
             viewModel.onNoteClick(noteUIModel)
+        }
+        adapter.onItemLongClickListener = BaseListAdapter.OnItemLongClickListener { noteUIModel, _ ->
+            viewModel.enableSelectionModeAndSelectANote(noteUIModel)
         }
         binding.adapter = adapter
     }
@@ -90,21 +149,37 @@ class AllNotesFragment :
 
     override fun handleUIEvent(it: AllNotesEvent) {
         when (it) {
-            is AllNotesEvent.OnNoteClicked -> {
+            is AllNotesEvent.OnEditNoteEvent -> {
                 val action =
                     AllNotesFragmentDirections.actionAllNotesFragmentToNavigationNote(it.noteUIModel)
                 findNavController().navigate(action)
             }
-
+            is AllNotesEvent.OnMoveAnotherCategoryEvent -> {
+                val fragment = SelectCategoryFragment()
+                showBottomSheet(
+                    fragment = fragment,
+                    SelectCategoryFragmentArgs(viewModel.uiState.value!!.category).toBundle(),
+                    selectCategoryViewModel
+                ){ uiEvent ->
+                    when(uiEvent){
+                        is SelectCategoryUIEvent.OnCategorySelected -> {
+                            viewModel.onMoveActionTriggered(it.noteUIModel, uiEvent.category)
+                        }
+                        else -> {}
+                    }
+                }
+            }
             else -> {}
         }
     }
 
     override fun handleUIState(it: AllNotesState) {
         super.handleUIState(it)
-        if (it.notes.isEmpty()) {
-            return
-        }
         adapter.setItems(it.notes)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        menuContainer.destroyMenu()
     }
 }

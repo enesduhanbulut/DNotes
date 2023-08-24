@@ -28,7 +28,11 @@ class NoteViewModel @Inject constructor(
     fun save() {
         withStateValue {
             viewModelScope.launch {
-                upsertNote.invoke(it.baseNoteUIModel)
+                setSuccessState(
+                    it.copy(
+                        baseNoteUIModel = upsertNote.invoke(it.baseNoteUIModel)
+                    )
+                )
             }
             it
         }
@@ -45,15 +49,15 @@ class NoteViewModel @Inject constructor(
             }
         )
         viewModelScope.launch {
-            upsertNote.invoke(
+            val noteModel = upsertNote.invoke(
                 uiState.value!!.baseNoteUIModel
             )
+            setSuccessState(
+                uiState.value!!.copy(
+                    baseNoteUIModel = noteModel
+                )
+            )
         }
-    }
-
-    fun categorySelectClicked() {
-        setEvent(NoteUIEvent.NavigateSelectCategory)
-        setEvent(NoteUIEvent.Loading)
     }
 
     fun initState(args: NoteFragmentArgs?) {

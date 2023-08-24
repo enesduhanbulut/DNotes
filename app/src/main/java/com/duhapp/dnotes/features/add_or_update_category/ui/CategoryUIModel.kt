@@ -8,7 +8,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class CategoryUIModel(
-    val id: Int = -1,
+    var id: Int = -1,
     var name: String = "",
     var emoji: String = "",
     var description: String = "",

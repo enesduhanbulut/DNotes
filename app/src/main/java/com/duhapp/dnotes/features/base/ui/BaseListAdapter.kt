@@ -1,9 +1,7 @@
 package com.duhapp.dnotes.features.base.ui
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.PopupMenu
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.DiffUtil
@@ -16,6 +14,7 @@ abstract class BaseListAdapter<M : BaseListItem, DB : ViewDataBinding> :
     val items: List<M>
         get() = itemList
     var onItemClickListener: OnItemClickListener<M>? = null
+    var onItemLongClickListener: OnItemLongClickListener<M>? = null
 
     abstract fun getLayoutId(): Int
     abstract fun setUIState(binding: DB, item: M)
@@ -49,6 +48,13 @@ abstract class BaseListAdapter<M : BaseListItem, DB : ViewDataBinding> :
                 onItemClickListener?.onItemClick(itemList[position], position)
             }
         }
+        binding.root.setOnLongClickListener {
+            val position = viewHolder.adapterPosition
+            if (position != RecyclerView.NO_POSITION) {
+                onItemLongClickListener?.onItemLongClick(itemList[position], position)
+            }
+            true
+        }
         return viewHolder
     }
 
@@ -67,28 +73,17 @@ abstract class BaseListAdapter<M : BaseListItem, DB : ViewDataBinding> :
 
     inner class BaseViewHolder(private val binding: DB) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: M) {
-            val menuContainer = initializeMenu(binding)
-            if (menuContainer != null) {
-                val view = binding.root.findViewById<View>(menuContainer.viewId)
-                view.setOnClickListener {
-                    with(
-                        PopupMenu(
-                            binding.root.context,
-                            binding.root
-                        )
-                    ) {
-                        setOnMenuItemClickListener(menuContainer.menuItemClickListener)
-                        inflate(menuContainer.menu)
-                        show()
-                    }
-                }
-            }
+            initializeMenu(binding)?.defineMenu(binding.root)
             setUIState(binding, item)
         }
     }
 
     fun interface OnItemClickListener<T> {
         fun onItemClick(item: T, position: Int)
+    }
+
+    fun interface OnItemLongClickListener<T> {
+        fun onItemLongClick(item: T, position: Int)
     }
 
     private class DiffCallback<T>(private val oldList: List<T>, private val newList: List<T>) :
@@ -125,9 +120,3 @@ abstract class BaseListAdapter<M : BaseListItem, DB : ViewDataBinding> :
         }
     }
 }
-
-data class MenuContainer(
-    val viewId: Int,
-    val menu: Int,
-    val menuItemClickListener: PopupMenu.OnMenuItemClickListener
-)

@@ -6,12 +6,13 @@ import com.duhapp.dnotes.features.note.data.NoteRepository
 class UpsertNote(
     private val noteRepository: NoteRepository,
 ) {
-    suspend operator fun invoke(noteModel: BaseNoteUIModel): Int =
+    suspend operator fun invoke(noteModel: BaseNoteUIModel): BaseNoteUIModel =
         if (noteModel.id == -1) {
             noteModel.id = 0
-            noteRepository.insert(noteModel)
+            noteModel.id = noteRepository.insert(noteModel)
+            noteModel
         } else {
             noteRepository.update(noteModel)
-            noteModel.id
+            noteModel
         }
 }
