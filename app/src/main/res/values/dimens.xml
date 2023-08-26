@@ -20,4 +20,9 @@
     <dimen name="select_category_header_height">64dp</dimen>
     <dimen name="select_category_item_height">78dp</dimen>
     <dimen name="_12dp">12dp</dimen>
+    <dimen name="little_border_width">1dp</dimen>
+    <dimen name="little_medium_border_width">3dp</dimen>
+    <dimen name="_1dp">1dp</dimen>
+    <dimen name="_3dp">3dp</dimen>
+    <dimen name="default_radius">5dp</dimen>
 </resources>
