@@ -1,12 +1,15 @@
 package com.duhapp.dnotes.features.add_or_update_category.ui
 
 import android.os.Parcelable
+import android.util.Log
 import android.view.View
 import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
 import com.duhapp.dnotes.NoteColor
 import com.duhapp.dnotes.R
 import com.duhapp.dnotes.features.add_or_update_category.domain.UpsertCategory
+import com.duhapp.dnotes.features.base.domain.CustomException
+import com.duhapp.dnotes.features.base.domain.CustomExceptionData
 import com.duhapp.dnotes.features.base.ui.BottomSheetEvent
 import com.duhapp.dnotes.features.base.ui.BottomSheetState
 import com.duhapp.dnotes.features.base.ui.BottomSheetViewModel
@@ -20,10 +23,32 @@ class CategoryBottomSheetViewModel @Inject constructor(
     private val upsertCategory: UpsertCategory
 ) :
     BottomSheetViewModel<CategoryUIEvent, CategoryBottomSheetUIState>() {
+    val TAG = "CategoryBottomSheetViewModel"
     fun onPositiveButtonClicked() {
         withStateValue {
             viewModelScope.launch {
-                upsertCategory.invoke(it.categoryUIModel)
+                try {
+                    upsertCategory.invoke(it.categoryUIModel)
+                } catch (e: Exception) {
+                    setSuccessState(
+                        it.copy(
+                            error = when (e) {
+                                is CustomException -> e.message
+                                else -> {
+                                    val errorMessage = e.message ?: "Unknown Error"
+                                    Log.e(TAG, errorMessage, e)
+                                    CustomException.UnknownException(
+                                        CustomExceptionData(
+                                            title = R.string.Unknown_Error,
+                                            message = R.string.Unknown_Error_Message,
+                                            -1,
+                                        )
+                                    )
+                                }
+                            } as CustomException?
+                        )
+                    )
+                }
             }
             it
         }
@@ -89,6 +114,7 @@ data class CategoryBottomSheetUIState(
     var colors: List<ColorItemUIModel>,
     val categoryUIModel: CategoryUIModel,
     val categoryShowType: CategoryShowType,
+    val error: CustomException? = null
 ) : BottomSheetState {
     @StringRes
     var title: Int = 0

@@ -42,4 +42,9 @@
     <string name="Categories">Categories</string>
     <string name="Select">Select</string>
     <string name="Move">Move</string>
+    <string name="Category_Name_Cannot_Be_Empty">Category name can\'t be empty</string>
+    <string name="Invalid_Input">Invalid Input</string>
+    <string name="Note_Title_Cannot_Be_Empty">Note title can\'t be empty</string>
+    <string name="Unknown_Error">Unknown Error</string>
+    <string name="Unknown_Error_Message">Unknown error please try retry</string>
 </resources>
