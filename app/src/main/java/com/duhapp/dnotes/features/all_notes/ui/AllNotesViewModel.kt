@@ -135,6 +135,9 @@ class AllNotesViewModel @Inject constructor(
                             emptyList()
                         })
                     )
+                    if (notes.isEmpty()) {
+                        setEvent(AllNotesEvent.NavigateToHome)
+                    }
                 }
             }
         }
@@ -184,6 +187,7 @@ sealed interface AllNotesEvent : FragmentUIEvent {
     data class OnEditNoteEvent(val noteUIModel: BaseNoteUIModel) : AllNotesEvent
     data class OnMoveAnotherCategoryEvent(val noteUIModel: MutableList<BaseNoteUIModel>) :
         AllNotesEvent
+    object NavigateToHome : AllNotesEvent
 }
 
 data class AllNotesState(

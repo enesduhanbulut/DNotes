@@ -16,7 +16,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="@dimen/note_list_item_width"
-        android:layout_height="@dimen/note_list_item_height">
+        android:layout_height="@dimen/note_list_item_height"
+        app:border="@{item.selected &amp;&amp; item.selectable}">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card"
@@ -74,16 +75,6 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     tools:background="@color/note_color_red_dark">
 
-                    <!--            <com.google.android.material.imageview.ShapeableImageView
-                                    android:id="@+id/category_icon"
-                                    android:layout_width="@dimen/list_item_category_icon_size"
-                                    android:layout_height="@dimen/list_item_category_icon_size"
-                                    android:adjustViewBounds="true"
-                                    android:src="@{item.tag.icon}"
-                                    app:layout_constraintBottom_toBottomOf="parent"
-                                    app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintTop_toTopOf="parent"
-                                    tools:src="@drawable/baseline_lightbulb_24" />-->
 
                     <com.google.android.material.textview.MaterialTextView
                         style="@style/text_xs_medium"
@@ -96,17 +87,6 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text="Category" />
-
-
-                    <CheckBox
-                        android:id="@+id/isSelected"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:clickable="false"
-                        app:isSelected="@{item.selected}"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:visibility="@{item.selectable}" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

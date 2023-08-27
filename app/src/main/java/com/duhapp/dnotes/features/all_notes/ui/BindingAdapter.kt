@@ -3,6 +3,7 @@ package com.duhapp.dnotes.features.all_notes.ui
 import android.view.View
 import android.widget.CheckBox
 import androidx.databinding.BindingAdapter
+import com.duhapp.dnotes.R
 
 @BindingAdapter("visibility")
 fun setVisibility(view: View, selectable: Boolean) {
@@ -13,7 +14,13 @@ fun setVisibility(view: View, selectable: Boolean) {
     }
 }
 
-@BindingAdapter("isSelected")
-fun setSelected(view: CheckBox, isSelected: Boolean) {
-    view.isChecked = isSelected
+@BindingAdapter("border")
+fun setBorder(view: View, selectable: Boolean) {
+    view.setBackgroundResource(
+        if (selectable)
+            R.drawable.note_item_selected_border
+        else
+            R.drawable.note_item_unselected_border
+    )
 }
+

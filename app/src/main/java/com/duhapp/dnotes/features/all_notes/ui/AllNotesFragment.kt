@@ -59,7 +59,7 @@ class AllNotesFragment:
                 }
             }
         )
-        menuContainer?.defineMenu(binding.root)
+        menuContainer.defineMenu(binding.root)
     }
 
     private fun initRecyclerView() {
@@ -164,10 +164,15 @@ class AllNotesFragment:
                     when(uiEvent){
                         is SelectCategoryUIEvent.OnCategorySelected -> {
                             viewModel.onMoveActionTriggered(it.noteUIModel, uiEvent.category)
+                            uiEvent.category
+                            fragment.dismiss()
                         }
                         else -> {}
                     }
                 }
+            }
+            is AllNotesEvent.NavigateToHome -> {
+                findNavController().popBackStack()
             }
             else -> {}
         }

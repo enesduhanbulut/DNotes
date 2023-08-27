@@ -15,6 +15,7 @@ data class MenuContainer(
             with(
                 popupMenu
             ) {
+                menu.clear()
                 setOnMenuItemClickListener(this@MenuContainer.menuItemClickListener)
                 inflate(this@MenuContainer.menu)
                 show()
@@ -23,6 +24,7 @@ data class MenuContainer(
     }
 
     fun destroyMenu() {
+        popupMenu.menu.clear()
         popupMenu.dismiss()
         triggerView.setOnClickListener(null)
     }
