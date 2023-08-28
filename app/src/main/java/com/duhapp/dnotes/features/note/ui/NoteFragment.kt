@@ -1,5 +1,6 @@
 package com.duhapp.dnotes.features.note.ui
 
+import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -18,21 +19,26 @@ import dagger.hilt.android.AndroidEntryPoint
 class NoteFragment :
     BaseFragment<FragmentNoteBinding, NoteUIEvent, NoteUIState, NoteViewModel>() {
     private var isCategoryShown = false
-    override val layoutId: Int
-        get() = R.layout.fragment_note
-
-    override val titleId: Int
-        get() = R.string.Note_Fragment
-
-    private val noteViewModel: NoteViewModel by viewModels()
+    override val layoutId = R.layout.fragment_note
+    override val titleId = R.string.Note_Fragment
+    override val viewModel: NoteViewModel by viewModels()
+    override val fragmentTag = "NoteFragment"
     private val categoryViewModel: SelectCategoryViewModel by activityViewModels()
     override fun initView(binding: FragmentNoteBinding) {
         viewModel.initState(NoteFragmentArgs.fromBundle(requireArguments()))
         initBottomSheet()
     }
 
+    override fun setBindingViewModel() {
+        mBinding!!.viewModel = viewModel
+    }
+
+    override fun handleArgs(args: Bundle) {
+        viewModel.initState(NoteFragmentArgs.fromBundle(args))
+    }
+
     private fun initBottomSheet() {
-        with(binding.bottomSheetCategory) {
+        with(mBinding!!.bottomSheetCategory) {
             val bottomSheetBehavior = BottomSheetBehavior.from(this)
             val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
 
@@ -60,11 +66,6 @@ class NoteFragment :
         }
     }
 
-    override fun provideViewModel(): NoteViewModel = noteViewModel
-
-    override fun setBindingViewModel() {
-        binding.viewModel = viewModel
-    }
 
     private fun handleBottomSheetEvent(event: SelectCategoryUIEvent) {
         when (event) {
@@ -77,11 +78,10 @@ class NoteFragment :
     }
 
     override fun handleUIState(it: NoteUIState) {
-        super.handleUIState(it)
         if (!isCategoryShown && it.baseNoteUIModel.category.id != -1) {
             isCategoryShown = true
             showSnippedBottomSheet(
-                binding.bottomSheetContainer.id,
+                mBinding!!.bottomSheetContainer.id,
                 SelectCategoryFragment::class.java,
                 SelectCategoryFragmentArgs(it.baseNoteUIModel.category).toBundle(),
                 activityViewModel = categoryViewModel,

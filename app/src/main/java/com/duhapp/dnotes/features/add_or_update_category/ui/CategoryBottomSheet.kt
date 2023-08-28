@@ -1,10 +1,11 @@
 package com.duhapp.dnotes.features.add_or_update_category.ui
 
+import android.os.Bundle
 import androidx.fragment.app.activityViewModels
+import com.duhan.satelliteinfo.features.base.presentation.BaseBottomSheet
 import com.duhapp.dnotes.R
 import com.duhapp.dnotes.databinding.FragmentCategoryBottomSheetBinding
 import com.duhapp.dnotes.databinding.LayoutColorSelectorItemBinding
-import com.duhapp.dnotes.features.base.ui.BaseBottomSheet
 import com.duhapp.dnotes.features.base.ui.BaseListAdapter
 import com.duhapp.dnotes.features.generic.ui.SpaceModel
 import com.duhapp.dnotes.features.generic.ui.SpacingItemDecorator
@@ -13,16 +14,15 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class CategoryBottomSheet : BaseBottomSheet<
+        FragmentCategoryBottomSheetBinding,
         CategoryUIEvent,
         CategoryBottomSheetUIState,
-        CategoryBottomSheetViewModel,
-        FragmentCategoryBottomSheetBinding>() {
+        CategoryBottomSheetViewModel>() {
     private lateinit var emojiPopup: EmojiPopup
-    override val layoutId: Int
-        get() = R.layout.fragment_category_bottom_sheet
-    override val fragmentTag: String
-        get() = "CategoryBottomSheet"
-    private val categoryBottomSheetViewModel: CategoryBottomSheetViewModel by activityViewModels()
+    override val layoutId = R.layout.fragment_category_bottom_sheet
+    override val titleId = R.string.Add_Category
+    override val fragmentTag = "CategoryBottomSheet"
+    override val viewModel: CategoryBottomSheetViewModel by activityViewModels()
     private lateinit var adapter: BaseListAdapter<ColorItemUIModel, LayoutColorSelectorItemBinding>
 
     override fun initView(binding: FragmentCategoryBottomSheetBinding) {
@@ -49,20 +49,26 @@ class CategoryBottomSheet : BaseBottomSheet<
 
         }
         adapter.onItemClickListener = onClickListener
-        binding.colorSelector.addItemDecoration(
+        mBinding!!.colorSelector.addItemDecoration(
             SpacingItemDecorator(
                 SpaceModel(rightSpace = 32)
             ),
         )
-        binding.adapter = adapter
-    }
-
-    override fun provideViewModel(): CategoryBottomSheetViewModel {
-        return categoryBottomSheetViewModel
+        mBinding!!.adapter = adapter
     }
 
     override fun setBindingViewModel() {
-        binding.viewModel = viewModel
+        mBinding!!.viewModel = viewModel
+    }
+
+    override fun handleArgs(args: Bundle) {
+        CategoryBottomSheetArgs.fromBundle(args).let {
+            viewModel.setViewWithBundle(it.uiModel.copy(), it.categoryShowType)
+        }
+    }
+
+    override fun handleUIState(it: CategoryBottomSheetUIState) {
+
     }
 
     override fun handleUIEvent(it: CategoryUIEvent) {
@@ -78,9 +84,9 @@ class CategoryBottomSheet : BaseBottomSheet<
             is CategoryUIEvent.ShowEmojiDialog -> {
                 emojiPopup = EmojiPopup(
                     requireView(), onEmojiClickListener = {
-                        binding.nameTextInputLayout.requestFocus()
-                        categoryBottomSheetViewModel.setEmoji(it.unicode)
-                    }, editText = binding.categoryIcon
+                        mBinding!!.nameTextInputLayout.requestFocus()
+                        viewModel.setEmoji(it.unicode)
+                    }, editText = mBinding!!.categoryIcon
                 )
                 emojiPopup.toggle()
             }
@@ -99,7 +105,7 @@ class CategoryBottomSheet : BaseBottomSheet<
 
     override fun dismiss() {
         super.dismiss()
-        categoryBottomSheetViewModel.onDismissed()
+        viewModel.onDismissed()
     }
 
 }

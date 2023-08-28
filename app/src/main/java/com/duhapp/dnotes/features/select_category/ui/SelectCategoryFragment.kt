@@ -2,11 +2,11 @@ package com.duhapp.dnotes.features.select_category.ui
 
 import android.os.Bundle
 import androidx.fragment.app.activityViewModels
+import com.duhan.satelliteinfo.features.base.presentation.BaseBottomSheet
 import com.duhapp.dnotes.R
 import com.duhapp.dnotes.databinding.CategorySelectListItemBinding
 import com.duhapp.dnotes.databinding.FragmentSelectCategoryBinding
 import com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel
-import com.duhapp.dnotes.features.base.ui.BaseBottomSheet
 import com.duhapp.dnotes.features.base.ui.BaseListAdapter
 import com.duhapp.dnotes.features.generic.ui.SpaceModel
 import com.duhapp.dnotes.features.generic.ui.SpacingItemDecorator
@@ -14,10 +14,11 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SelectCategoryFragment :
-    BaseBottomSheet<SelectCategoryUIEvent, SelectCategoryUIState, SelectCategoryViewModel, FragmentSelectCategoryBinding>() {
+    BaseBottomSheet<FragmentSelectCategoryBinding, SelectCategoryUIEvent, SelectCategoryUIState, SelectCategoryViewModel>() {
     override val layoutId = R.layout.fragment_select_category
+    override val titleId = R.string.Select_Category
     override val fragmentTag = "SelectCategoryFragment"
-    private val selectCategoryViewModel: SelectCategoryViewModel by activityViewModels()
+    override val viewModel: SelectCategoryViewModel by activityViewModels()
     private lateinit var adapter: BaseListAdapter<CategoryUIModel, CategorySelectListItemBinding>
 
     override fun handleArgs(args: Bundle) {
@@ -28,7 +29,6 @@ class SelectCategoryFragment :
     }
 
     override fun initView(binding: FragmentSelectCategoryBinding) {
-        observeUIState()
         binding.categories.addItemDecoration(
             SpacingItemDecorator(
                 SpaceModel(
@@ -55,15 +55,11 @@ class SelectCategoryFragment :
             BaseListAdapter.OnItemClickListener { categoryUIModel, _ ->
                 viewModel.handleCategorySelect(categoryUIModel)
             }
-        binding.categories.adapter = adapter
-    }
-
-    override fun provideViewModel(): SelectCategoryViewModel {
-        return selectCategoryViewModel
+        mBinding!!.categories.adapter = adapter
     }
 
     override fun setBindingViewModel() {
-        binding.viewModel = viewModel
+        mBinding!!.viewModel = viewModel
         initAdapter()
     }
 
@@ -74,7 +70,6 @@ class SelectCategoryFragment :
     }
 
     override fun handleUIState(it: SelectCategoryUIState) {
-        super.handleUIState(it)
         adapter.setItems(it.categories)
     }
 }
