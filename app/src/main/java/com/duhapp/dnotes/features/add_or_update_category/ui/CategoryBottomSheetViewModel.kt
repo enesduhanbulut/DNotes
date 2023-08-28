@@ -7,6 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.duhapp.dnotes.NoteColor
 import com.duhapp.dnotes.R
 import com.duhapp.dnotes.features.add_or_update_category.domain.UpsertCategory
+import com.duhapp.dnotes.features.add_or_update_category.domain.isEmoji
+import com.duhapp.dnotes.features.base.domain.CustomException
+import com.duhapp.dnotes.features.base.domain.asCustomException
 import com.duhapp.dnotes.features.base.ui.BottomSheetEvent
 import com.duhapp.dnotes.features.base.ui.BottomSheetState
 import com.duhapp.dnotes.features.base.ui.BottomSheetViewModel
@@ -21,18 +24,31 @@ class CategoryBottomSheetViewModel @Inject constructor(
 ) :
     BottomSheetViewModel<CategoryUIEvent, CategoryBottomSheetUIState>() {
     fun onPositiveButtonClicked() {
-        withStateValue {
-            viewModelScope.launch {
-                upsertCategory.invoke(it.categoryUIModel)
+        setState(
+            withStateValue {
+                var state = it
+                if (it.isSuccess()) {
+                    viewModelScope.launch {
+                        try {
+                            upsertCategory.invoke(it.getSuccessCategory()!!)
+                            setEvent(CategoryUIEvent.Upserted)
+                        } catch (e: Exception) {
+                            state = CategoryBottomSheetUIState.Error(
+                                e.asCustomException(
+                                    message = R.string.Save_Category_Failed
+                                )
+                            )
+                        }
+                    }
+                }
+                state
             }
-            it
-        }
-        setEvent(CategoryUIEvent.Upserted)
+        )
     }
 
     fun setViewWithBundle(categoryUIState: CategoryUIModel, categoryShowType: CategoryShowType) {
-        setSuccessState(
-            CategoryBottomSheetUIState(
+        setState(
+            CategoryBottomSheetUIState.Success(
                 NoteColor.values().toList().map {
                     ColorItemUIModel(
                         isSelected = it == categoryUIState.color.color,
@@ -47,12 +63,15 @@ class CategoryBottomSheetViewModel @Inject constructor(
         setEvent(CategoryUIEvent.ShowEmojiDialog)
     }
 
+
     fun setEmoji(emoji: String) {
         setEvent(CategoryUIEvent.DismissedEmojiDialog)
-        setSuccessState(
+        setState(
             withStateValue {
                 it.apply {
-                    it.categoryUIModel.emoji = emoji
+                    if (it.isSuccess()) {
+                        it.getSuccessCategory()?.emoji = emoji
+                    }
                 }
             }
         )
@@ -63,65 +82,117 @@ class CategoryBottomSheetViewModel @Inject constructor(
     }
 
     fun onColorSelected(itemUIModel: ColorItemUIModel) {
-        val list = uiState.value?.colors?.subList(0, uiState.value?.colors!!.size)
-        list?.forEach {
+        val list = uiState.value?.getSuccessColors()
+        list?.map {
             it.isSelected = it.color == itemUIModel.color
         }
-        setSuccessState(
+        setState(
             withStateValue {
-                it.apply {
-                    it.colors = emptyList()
-                    it.categoryUIModel.color = itemUIModel.apply {
-                        isSelected = true
-                    }
-                }
-            }
-        )
-        setSuccessState(
-            withStateValue {
-                it.apply { it.colors = list!! }
+                return@withStateValue if (!it.isSuccess())
+                    it
+                else
+                    CategoryBottomSheetUIState.Success(
+                        colors = list!!,
+                        categoryUIModel = it.getSuccessCategory()!!.copy(
+                            color = itemUIModel.apply {
+                                isSelected = true
+                            }
+                        ),
+                        it.getSuccessCategoryShowType()!!
+                    )
             }
         )
     }
+
+
 }
 
-data class CategoryBottomSheetUIState(
-    var colors: List<ColorItemUIModel>,
-    val categoryUIModel: CategoryUIModel,
-    val categoryShowType: CategoryShowType,
-) : BottomSheetState {
-    @StringRes
-    var title: Int = 0
+sealed interface CategoryBottomSheetUIState : BottomSheetState {
+    data class Success(
+        var colors: List<ColorItemUIModel>,
+        var categoryUIModel: CategoryUIModel,
+        val categoryShowType: CategoryShowType,
+    ) : CategoryBottomSheetUIState {
+        @StringRes
+        var title: Int = 0
 
-    @StringRes
-    var message: Int = 0
+        @StringRes
+        var message: Int = 0
 
-    @StringRes
-    var positiveButtonText: Int = 0
+        @StringRes
+        var positiveButtonText: Int = 0
 
-    @StringRes
-    var negativeButtonText: Int = 0
-    var negativeButtonVisibility = View.VISIBLE
+        @StringRes
+        var negativeButtonText: Int = 0
+        var negativeButtonVisibility = View.VISIBLE
 
-    init {
-        when (categoryShowType) {
-            CategoryShowType.Add -> {
-                title = R.string.New_Category
-                message = R.string.New_Category_Message
-                positiveButtonText = R.string.Add
-                negativeButtonText = R.string.blank
-                negativeButtonVisibility = View.GONE
-            }
+        init {
+            when (categoryShowType) {
+                CategoryShowType.Add -> {
+                    title = R.string.New_Category
+                    message = R.string.New_Category_Message
+                    positiveButtonText = R.string.Add
+                    negativeButtonText = R.string.blank
+                    negativeButtonVisibility = View.GONE
+                }
 
-            CategoryShowType.Edit -> {
-                title = R.string.Edit_Category
-                message = R.string.Edit_Category_Message
-                positiveButtonText = R.string.Confirm
-                negativeButtonText = R.string.Delete
+                CategoryShowType.Edit -> {
+                    title = R.string.Edit_Category
+                    message = R.string.Edit_Category_Message
+                    positiveButtonText = R.string.Confirm
+                    negativeButtonText = R.string.Delete
+                }
             }
         }
     }
 
+    data class Error(
+        val customException: CustomException
+    ) : CategoryBottomSheetUIState
+
+    fun isSuccess(): Boolean = this is Success
+
+    fun isError(): Boolean = this is Error
+
+    fun getSuccessColors(): List<ColorItemUIModel>? {
+        return if (isSuccess()) {
+            (this as Success).colors
+        } else {
+            null
+        }
+    }
+
+    fun getSuccessCategory(): CategoryUIModel? {
+        return if (isSuccess()) {
+            (this as Success).categoryUIModel
+        } else {
+            null
+        }
+    }
+
+    fun getSuccessCategoryShowType(): CategoryShowType? {
+        return if (isSuccess()) {
+            (this as Success).categoryShowType
+        } else {
+            null
+        }
+    }
+
+    fun getErrorCustomException(): CustomException? {
+        return if (isError()) {
+            (this as Error).customException
+        } else {
+            null
+        }
+    }
+
+    fun getSuccessPositiveButtonText(): Int? {
+        return if (isSuccess()) {
+            (this as Success).positiveButtonText
+        } else {
+            null
+        }
+    }
 }
 
 sealed interface CategoryUIEvent : BottomSheetEvent {

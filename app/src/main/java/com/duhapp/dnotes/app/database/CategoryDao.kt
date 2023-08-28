@@ -3,7 +3,6 @@ package com.duhapp.dnotes.app.database
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
@@ -14,7 +13,7 @@ interface CategoryDao {
     fun getAll(): Flow<List<CategoryEntity>>
 
     @Insert
-    suspend fun insert(categoryEntity: CategoryEntity)
+    suspend fun insert(categoryEntity: CategoryEntity): Long
 
     @Update
     suspend fun update(categoryEntity: CategoryEntity)

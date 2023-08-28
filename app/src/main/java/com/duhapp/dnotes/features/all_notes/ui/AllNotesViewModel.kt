@@ -1,10 +1,15 @@
 package com.duhapp.dnotes.features.all_notes.ui
 
 import androidx.lifecycle.viewModelScope
+import com.duhapp.dnotes.R
 import com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel
 import com.duhapp.dnotes.features.all_notes.domain.DeleteNote
 import com.duhapp.dnotes.features.all_notes.domain.GetNotesByCategoryId
 import com.duhapp.dnotes.features.all_notes.domain.UpdateNotes
+import com.duhapp.dnotes.features.base.domain.CustomException
+import com.duhapp.dnotes.features.base.domain.CustomExceptionCode
+import com.duhapp.dnotes.features.base.domain.CustomExceptionData
+import com.duhapp.dnotes.features.base.domain.asCustomException
 import com.duhapp.dnotes.features.base.ui.FragmentUIEvent
 import com.duhapp.dnotes.features.base.ui.FragmentUIState
 import com.duhapp.dnotes.features.base.ui.FragmentViewModel
@@ -21,50 +26,64 @@ class AllNotesViewModel @Inject constructor(
     private val updateNotes: UpdateNotes,
 ) : FragmentViewModel<AllNotesEvent, AllNotesState>() {
     fun initiate(categoryId: Int) {
-        setSuccessState(
-            AllNotesState(
+        setState(
+            AllNotesState.Success(
                 category = defaultCategoryModel, notes = emptyList()
             )
         )
         viewModelScope.launch {
-            val notes = getNotesByCategoryId.invoke(categoryId)
-            if (notes.isEmpty()) {
-
-                // TODO: fix this
-                /*setFailureState(
-                    CustomException.ThereIsNoSuitableVariableException(
-                        CustomExceptionData(
-                            R.string.Data_Not_Found,
-                            R.string.Note_Data_Not_Found,
-                            -1,
+            try {
+                val notesById = getNotesByCategoryId.invoke(categoryId)
+                if (notesById.isEmpty()) {
+                    setState(
+                        AllNotesState.Error(
+                            CustomException.ThereIsNoSuitableVariableException(
+                                CustomExceptionData(
+                                    R.string.Error_There_Is_No_Suitable_Variable,
+                                    R.string.Notes_Could_Not_Be_Found_By_Category,
+                                    CustomExceptionCode.THERE_IS_NO_SUITABLE_VARIABLE_EXCEPTION.code
+                                )
+                            )
                         )
                     )
-                )*/
-            } else {
-                uiState.value?.let {
-                    setSuccessState(
-                        it.copy(
-                            category = notes.first().category, notes = notes
+                    setEvent(AllNotesEvent.NavigateToHome)
+                } else {
+                    setState(
+                        AllNotesState.Success(
+                            category = notesById.first().category, notes = notesById
                         )
                     )
                 }
+            } catch (e: Exception) {
+                setState(
+                    AllNotesState.Error(
+                        e.asCustomException(
+                            message = R.string.Notes_Could_Not_Be_Found_By_Category
+                        )
+                    )
+                )
             }
         }
     }
 
     fun onNoteClick(noteUIModel: BaseNoteUIModel) {
         val state = uiState.value ?: return
-        if (state.isSelectable) {
-            val arrangedNoteList = state.notes.map {
+        val isSelectable = state.getSuccessIsSelectable() ?: return
+        val notes = state.getSuccessNotes() ?: return
+        val category = state.getSuccessCategory() ?: return
+        if (isSelectable) {
+            val arrangedNoteList = notes.map {
                 if (it.id == noteUIModel.id) {
                     it.newCopy().apply {
                         isSelected = !noteUIModel.isSelected
                     }
                 } else it
             }
-            setSuccessState(
-                state.copy(
-                    notes = arrangedNoteList
+            setState(
+                AllNotesState.Success(
+                    category = category,
+                    notes = arrangedNoteList,
+                    isSelectable = true
                 )
             )
         } else {
@@ -76,20 +95,28 @@ class AllNotesViewModel @Inject constructor(
 
     fun deleteSelectedNotes() {
         val state = uiState.value ?: return
-        val selectedNotes = state.notes.filter {
-            it.isSelected
-        }
+        if (!state.isSuccess()) return
+        val selectedNotes = state.getSuccessSelectedNotes()!!
+        val category = state.getSuccessCategory()!!
         viewModelScope.launch {
-            deleteNote.invoke(selectedNotes)
-
-            getNotesByCategoryId.invoke(state.category.id).let { notes ->
-                uiState.value?.let {
-                    setSuccessState(
-                        it.copy(category = uiState.value!!.category, notes = notes.ifEmpty {
-                            emptyList()
-                        })
+            try {
+                deleteNote.invoke(selectedNotes)
+                val notes = getNotesByCategoryId.invoke(category.id)
+                setState(
+                    AllNotesState.Success(
+                        category = category,
+                        notes = notes,
+                        isSelectable = false
                     )
-                }
+                )
+            } catch (e: Exception) {
+                setState(
+                    AllNotesState.Error(
+                        customException = e.asCustomException(
+                            message = R.string.Selected_Notes_Could_Not_Be_Deleted
+                        )
+                    )
+                )
             }
             clearSelection()
         }
@@ -97,18 +124,33 @@ class AllNotesViewModel @Inject constructor(
 
 
     fun onDeleteNoteClick(noteItem: BaseNoteUIModel) {
-        viewModelScope.launch {
-            deleteNote.invoke(listOf(noteItem))
-            getNotesByCategoryId.invoke(uiState.value!!.category.id).let { notes ->
-                uiState.value?.let {
-                    setSuccessState(
-                        it.copy(category = uiState.value!!.category, notes = notes.ifEmpty {
-                            emptyList()
-                        })
-                    )
+        setState(
+            withStateValue { state ->
+                var stateVal = state
+                viewModelScope.launch {
+                    try {
+                        deleteNote.invoke(listOf(noteItem))
+                        if (!stateVal.isSuccess()) {
+                            stateVal = state
+                            return@launch
+                        }
+                        val notes = getNotesByCategoryId.invoke(stateVal.getSuccessCategory()!!.id)
+                        stateVal = AllNotesState.Success(
+                            category = stateVal.getSuccessCategory()!!,
+                            notes = notes
+                        )
+                    } catch (e: Exception) {
+                        stateVal = AllNotesState.Error(
+                            customException = e.asCustomException(
+                                message = R.string.Note_Could_Not_Be_Updated
+                            )
+                        )
+                    }
+
                 }
+                stateVal
             }
-        }
+        )
     }
 
     fun onEditNoteClick(baseNoteUIModel: BaseNoteUIModel) = setEvent(
@@ -123,36 +165,54 @@ class AllNotesViewModel @Inject constructor(
         noteUIModel: MutableList<BaseNoteUIModel>,
         category: CategoryUIModel
     ) {
+        noteUIModel.forEach {
+            it.category = category
+        }
         viewModelScope.launch {
-            noteUIModel.forEach {
-                it.category = category
-            }
             updateNotes.invoke(noteUIModel)
-            getNotesByCategoryId.invoke(uiState.value!!.category.id).let { notes ->
-                uiState.value?.let {
-                    setSuccessState(
-                        it.copy(category = uiState.value!!.category, notes = notes.ifEmpty {
-                            emptyList()
-                        })
+            val state = uiState.value ?: return@launch
+            if (!state.isSuccess()) return@launch
+            try {
+                val notes = getNotesByCategoryId.invoke(state.getSuccessCategory()!!.id)
+                setState(
+                    AllNotesState.Success(
+                        category = state.getSuccessCategory()!!,
+                        notes = notes,
+                        isSelectable = false
                     )
-                    if (notes.isEmpty()) {
-                        setEvent(AllNotesEvent.NavigateToHome)
-                    }
-                }
+                )
+                if (notes.isEmpty()) setEvent(AllNotesEvent.NavigateToHome)
+            } catch (e: Exception) {
+                setState(
+                    AllNotesState.Error(
+                        customException = e.asCustomException(
+                            message = R.string.Note_Could_Not_Be_Updated
+                        )
+                    )
+                )
             }
         }
     }
 
     fun enableSelectionModeAndSelectANote(noteUIModel: BaseNoteUIModel) {
         val state = uiState.value ?: return
-        setSuccessState(state.copy(isSelectable = true, notes = state.notes.map {
-            it.newCopy().apply {
+        if (!state.isSuccess()) return
+
+        val notes = state.getSuccessNotes()!!.map { note ->
+            note.newCopy().apply {
+                isSelectable = true
                 if (this.id == noteUIModel.id) {
                     isSelected = true
                 }
-                isSelectable = true
             }
-        }))
+        }
+        setState(
+            AllNotesState.Success(
+                category = state.getSuccessCategory()!!,
+                notes = notes,
+                isSelectable = true
+            )
+        )
     }
 
     fun cancelSelectionMode() {
@@ -162,9 +222,11 @@ class AllNotesViewModel @Inject constructor(
 
     fun moveSelectedNotes() {
         val state = uiState.value ?: return
-        val selectedNotes = state.notes.filter {
+
+        val selectedNotes = state.getSuccessNotes()?.filter {
             it.isSelected
-        }
+        } ?: return
+
         setEvent(
             AllNotesEvent.OnMoveAnotherCategoryEvent(selectedNotes.toMutableList())
         )
@@ -173,12 +235,20 @@ class AllNotesViewModel @Inject constructor(
 
     private fun clearSelection() {
         val state = uiState.value ?: return
-        setSuccessState(state.copy(isSelectable = false, notes = state.notes.map {
+        if (!state.isSuccess()) return
+        val noteList = state.getSuccessNotes()!!.map {
             it.newCopy().apply {
-                isSelected = false
                 isSelectable = false
+                isSelected = false
             }
-        }))
+        }
+        setState(
+            AllNotesState.Success(
+                category = state.getSuccessCategory()!!,
+                notes = noteList,
+                isSelectable = false
+            )
+        )
     }
 }
 
@@ -187,11 +257,46 @@ sealed interface AllNotesEvent : FragmentUIEvent {
     data class OnEditNoteEvent(val noteUIModel: BaseNoteUIModel) : AllNotesEvent
     data class OnMoveAnotherCategoryEvent(val noteUIModel: MutableList<BaseNoteUIModel>) :
         AllNotesEvent
+
     object NavigateToHome : AllNotesEvent
 }
 
-data class AllNotesState(
-    val category: CategoryUIModel,
-    val notes: List<BaseNoteUIModel>,
-    val isSelectable: Boolean = false,
-) : FragmentUIState
+sealed interface AllNotesState : FragmentUIState {
+    data class Success(
+        val category: CategoryUIModel,
+        val notes: List<BaseNoteUIModel>,
+        val isSelectable: Boolean = false,
+    ) : AllNotesState
+
+    data class Error(
+        val customException: CustomException
+    ) : AllNotesState
+
+    fun isSuccess() = this is Success
+
+    fun isError() = this is Error
+
+    fun getSuccessCategory() = (this as? Success)?.category
+
+    fun getSuccessNotes() = (this as? Success)?.notes
+
+    fun getSuccessIsSelectable() = (this as? Success)?.isSelectable
+
+    fun getSuccessSelectedNotes() = (this as? Success)?.notes?.filter {
+        it.isSelected
+    }
+
+    fun getSuccessSelectedNote() = (this as? Success)?.notes?.firstOrNull {
+        it.isSelected
+    }
+
+    fun getSuccessUnSelectedNotes() = (this as? Success)?.notes?.filter {
+        !it.isSelected
+    }
+
+    fun getSuccessUnSelectedNote() = (this as? Success)?.notes?.firstOrNull {
+        !it.isSelected
+    }
+
+    fun getException() = (this as? Error)?.customException
+}

@@ -8,16 +8,18 @@ import com.duhapp.dnotes.databinding.FragmentSelectCategoryBinding
 import com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel
 import com.duhapp.dnotes.features.base.ui.BaseBottomSheet
 import com.duhapp.dnotes.features.base.ui.BaseListAdapter
+import com.duhapp.dnotes.features.base.ui.setup
 import com.duhapp.dnotes.features.generic.ui.SpaceModel
-import com.duhapp.dnotes.features.generic.ui.SpacingItemDecorator
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class SelectCategoryFragment :
-    BaseBottomSheet<SelectCategoryUIEvent, SelectCategoryUIState, SelectCategoryViewModel, FragmentSelectCategoryBinding>() {
+    BaseBottomSheet<FragmentSelectCategoryBinding, SelectCategoryUIEvent, SelectCategoryUIState, SelectCategoryViewModel>() {
     override val layoutId = R.layout.fragment_select_category
+    override val titleId = R.string.Select_Category
     override val fragmentTag = "SelectCategoryFragment"
-    private val selectCategoryViewModel: SelectCategoryViewModel by activityViewModels()
+    override val viewModel: SelectCategoryViewModel by activityViewModels()
     private lateinit var adapter: BaseListAdapter<CategoryUIModel, CategorySelectListItemBinding>
 
     override fun handleArgs(args: Bundle) {
@@ -28,15 +30,11 @@ class SelectCategoryFragment :
     }
 
     override fun initView(binding: FragmentSelectCategoryBinding) {
-        observeUIState()
-        binding.categories.addItemDecoration(
-            SpacingItemDecorator(
-                SpaceModel(
-                    16,
-                    16,
-                    16,
-                    16,
-                ),
+        initAdapter()
+        binding.categories.setup(
+            adapter = adapter,
+            spaceModel = SpaceModel(
+                resources.getDimensionPixelSize(R.dimen.tiny_margin),
             ),
         )
     }
@@ -55,26 +53,23 @@ class SelectCategoryFragment :
             BaseListAdapter.OnItemClickListener { categoryUIModel, _ ->
                 viewModel.handleCategorySelect(categoryUIModel)
             }
-        binding.categories.adapter = adapter
-    }
-
-    override fun provideViewModel(): SelectCategoryViewModel {
-        return selectCategoryViewModel
+        mBinding!!.categories.adapter = adapter
     }
 
     override fun setBindingViewModel() {
-        binding.viewModel = viewModel
-        initAdapter()
+        mBinding!!.viewModel = viewModel
     }
 
     override fun handleUIEvent(event: SelectCategoryUIEvent) {
-        when (event) {
-            else -> {}
-        }
+        Timber.d("Any event not handled yet")
     }
 
     override fun handleUIState(it: SelectCategoryUIState) {
-        super.handleUIState(it)
-        adapter.setItems(it.categories)
+        adapter.setItems(it.getSuccessCategories() ?: emptyList())
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        adapter.onItemClickListener = null
     }
 }

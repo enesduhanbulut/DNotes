@@ -1,7 +1,6 @@
 package com.duhapp.dnotes.features.all_notes.ui
 
 import android.view.View
-import android.widget.CheckBox
 import androidx.databinding.BindingAdapter
 import com.duhapp.dnotes.R
 

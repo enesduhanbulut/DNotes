@@ -22,11 +22,27 @@ abstract class BaseViewModel<UE : BaseUIEvent, US : BaseUIState> : ViewModel() {
         mutableUIEvent.emit(event)
     }
 
-    fun setSuccessState(state: US) {
+    fun setState(state: US) {
         if (mutableUIState.value == state) {
             mutableUIState.value = null
         }
         mutableUIState.update { state }
+    }
+
+    fun setTemporaryState(state: US, oldState: US, delay: Long) {
+        mutableUIState.update { state }
+        viewModelScope.launch {
+            kotlinx.coroutines.delay(delay)
+            mutableUIState.update { oldState }
+        }
+    }
+
+    fun setStateAndRunMethodAfterDelay(state: US, delay: Long, block: () -> Unit) {
+        mutableUIState.update { state }
+        viewModelScope.launch {
+            kotlinx.coroutines.delay(delay)
+            block()
+        }
     }
 
     protected fun withStateValue(block: (US) -> US): US {

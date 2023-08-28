@@ -1,39 +1,50 @@
 package com.duhapp.dnotes.features.add_or_update_category.ui
 
+import android.os.Bundle
 import androidx.fragment.app.activityViewModels
 import com.duhapp.dnotes.R
 import com.duhapp.dnotes.databinding.FragmentCategoryBottomSheetBinding
 import com.duhapp.dnotes.databinding.LayoutColorSelectorItemBinding
+import com.duhapp.dnotes.features.add_or_update_category.domain.isEmoji
 import com.duhapp.dnotes.features.base.ui.BaseBottomSheet
 import com.duhapp.dnotes.features.base.ui.BaseListAdapter
 import com.duhapp.dnotes.features.generic.ui.SpaceModel
 import com.duhapp.dnotes.features.generic.ui.SpacingItemDecorator
+import com.google.android.material.snackbar.Snackbar
+import com.vanniktech.emoji.EmojiManager
 import com.vanniktech.emoji.EmojiPopup
+import com.vanniktech.emoji.EmojiProvider
+import com.vanniktech.emoji.EmojiRange
+import com.vanniktech.emoji.google.GoogleEmojiProvider
+import com.vanniktech.emoji.recent.NoRecentEmoji
+import com.vanniktech.emoji.search.NoSearchEmoji
+import com.vanniktech.emoji.variant.NoVariantEmoji
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
+import java.util.regex.Pattern
 
 @AndroidEntryPoint
 class CategoryBottomSheet : BaseBottomSheet<
+        FragmentCategoryBottomSheetBinding,
         CategoryUIEvent,
         CategoryBottomSheetUIState,
-        CategoryBottomSheetViewModel,
-        FragmentCategoryBottomSheetBinding>() {
-    private lateinit var emojiPopup: EmojiPopup
-    override val layoutId: Int
-        get() = R.layout.fragment_category_bottom_sheet
-    override val fragmentTag: String
-        get() = "CategoryBottomSheet"
-    private val categoryBottomSheetViewModel: CategoryBottomSheetViewModel by activityViewModels()
+        CategoryBottomSheetViewModel>() {
+    var emojiPopup: EmojiPopup? = null
+    override val layoutId = R.layout.fragment_category_bottom_sheet
+    override val titleId = R.string.Add_Category
+    override val fragmentTag = "CategoryBottomSheet"
+    override val viewModel: CategoryBottomSheetViewModel by activityViewModels()
     private lateinit var adapter: BaseListAdapter<ColorItemUIModel, LayoutColorSelectorItemBinding>
-
+    private val tag = "CategoryBottomSheet"
     override fun initView(binding: FragmentCategoryBottomSheetBinding) {
-        arguments.let { it ->
-            CategoryBottomSheetArgs.fromBundle(it!!).let {
-                viewModel.setViewWithBundle(it.uiModel.copy(), it.categoryShowType)
+        arguments.let { bundle ->
+            CategoryBottomSheetArgs.fromBundle(bundle!!).let { args ->
+                viewModel.setViewWithBundle(args.uiModel.copy(), args.categoryShowType)
             }
         }
 
         val onClickListener =
-            BaseListAdapter.OnItemClickListener<ColorItemUIModel> { item, position ->
+            BaseListAdapter.OnItemClickListener<ColorItemUIModel> { item, _ ->
                 viewModel.onColorSelected(item)
             }
         adapter = object :
@@ -49,20 +60,34 @@ class CategoryBottomSheet : BaseBottomSheet<
 
         }
         adapter.onItemClickListener = onClickListener
-        binding.colorSelector.addItemDecoration(
+        mBinding!!.colorSelector.addItemDecoration(
             SpacingItemDecorator(
                 SpaceModel(rightSpace = 32)
             ),
         )
-        binding.adapter = adapter
-    }
-
-    override fun provideViewModel(): CategoryBottomSheetViewModel {
-        return categoryBottomSheetViewModel
+        mBinding!!.adapter = adapter
     }
 
     override fun setBindingViewModel() {
-        binding.viewModel = viewModel
+        mBinding!!.viewModel = viewModel
+    }
+
+    override fun handleArgs(args: Bundle) {
+        CategoryBottomSheetArgs.fromBundle(args).let {
+            viewModel.setViewWithBundle(it.uiModel.copy(), it.categoryShowType)
+        }
+    }
+
+    override fun handleUIState(it: CategoryBottomSheetUIState) {
+        when(it) {
+            is CategoryBottomSheetUIState.Error -> {
+                Snackbar.make(requireView(), it.getErrorCustomException()?.data?.message ?: R.string.Unknown_Error_Message, Snackbar.LENGTH_LONG).show()
+            }
+
+            else -> {
+                Timber.d(tag, "Unhandled state: $it")
+            }
+        }
     }
 
     override fun handleUIEvent(it: CategoryUIEvent) {
@@ -70,36 +95,63 @@ class CategoryBottomSheet : BaseBottomSheet<
             is CategoryUIEvent.Canceled, CategoryUIEvent.Upserted -> {
                 dismiss()
             }
-
             is CategoryUIEvent.ColorSelected -> {
-
+                Timber.d(tag, "ColorSelected: $it")
             }
-
             is CategoryUIEvent.ShowEmojiDialog -> {
-                emojiPopup = EmojiPopup(
-                    requireView(), onEmojiClickListener = {
-                        binding.nameTextInputLayout.requestFocus()
-                        categoryBottomSheetViewModel.setEmoji(it.unicode)
-                    }, editText = binding.categoryIcon
-                )
-                emojiPopup.toggle()
+                if (emojiPopup == null) {
+                    emojiPopup = EmojiPopup(
+                        requireView(),
+                        searchEmoji = NoSearchEmoji,
+                        variantEmoji = NoVariantEmoji,
+                        onEmojiClickListener = {
+                            mBinding!!.nameTextInputLayout.requestFocus()
+                            if (it.isEmoji())
+                                viewModel.setEmoji(it.unicode)
+                            else {
+                                viewModel.setEmoji("")
+                                Snackbar.make(
+                                    requireView(),
+                                    R.string.Emoji_Is_Not_Valid,
+                                    Snackbar.LENGTH_LONG
+                                ).show()
+                            }
+                        }, editText = mBinding!!.categoryIcon
+                    )
+                }
+                if (emojiPopup!!.isShowing) {
+                    emojiPopup!!.dismiss()
+                    emojiPopup = null
+                    mBinding!!.nameTextInputLayout.requestFocus()
+                } else {
+                    emojiPopup!!.toggle()
+                }
             }
 
             is CategoryUIEvent.DismissedEmojiDialog -> {
                 emojiPopup.let {
-                    if (it.isShowing) {
-                        it.dismiss()
-                    }
+                    it?.dismiss()
+                    emojiPopup = null
                 }
             }
 
-            else -> {}
+            else -> {
+                Timber.d(tag, "Unhandled event: $it")
+            }
         }
     }
 
     override fun dismiss() {
         super.dismiss()
-        categoryBottomSheetViewModel.onDismissed()
+        viewModel.onDismissed()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        adapter.onItemClickListener = null
+        emojiPopup.let {
+            it?.dismiss()
+            emojiPopup = null
+        }
+    }
 }

@@ -12,8 +12,11 @@
         <variable
             name="viewModel"
             type="com.duhapp.dnotes.features.add_or_update_category.ui.CategoryBottomSheetViewModel" />
+        <import type="android.text.InputType" />
 
         <import type="android.view.View" />
+        <import type="kotlin.collections.EmptyList"    />
+        <import type="com.duhapp.dnotes.R" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -25,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:backgroundTint="@{context.getColor(viewModel.uiState.categoryUIModel.color.color.lightColor)}"
+            android:backgroundTint="@{viewModel.uiState.isSuccess() ? context.getColor(viewModel.uiState.getSuccessCategory().color.color.lightColor) : context.getColor(R.color.light_primary)}"
             tools:background="@color/white">
 
             <com.google.android.material.textview.MaterialTextView
@@ -44,21 +47,22 @@
                 android:layout_margin="@dimen/small_margin"
                 android:background="@drawable/rounded_alpha_background"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/fields_title">
+                app:layout_constraintTop_toBottomOf="@id/fields_title"
+                android:onClickListener="@{() -> viewModel.onEmojiClicked()}">
 
                 <EditText
                     android:id="@+id/category_icon"
                     android:layout_width="22dp"
                     android:layout_height="22dp"
                     android:layout_centerInParent="true"
-                    android:background="@color/transparent"
                     android:clickable="false"
+                    android:focusable="false"
+                    android:background="@color/transparent"
                     android:cursorVisible="false"
                     android:ellipsize="end"
-                    android:focusable="false"
                     android:gravity="center"
                     android:maxLines="1"
-                    android:text="@={viewModel.uiState.categoryUIModel.emoji}"
+                    android:text="@={viewModel.uiState.getSuccessCategory().emoji}"
                     android:textColor="@color/white"
                     tools:text="😀" />
 
@@ -78,7 +82,7 @@
                 android:layout_marginHorizontal="@dimen/small_margin"
                 android:hint="@string/Category_Name"
                 android:inputType="text"
-                android:text="@={viewModel.uiState.categoryUIModel.name}"
+                android:text="@={viewModel.uiState.getSuccessCategory().name}"
                 android:textColor="@color/black"
                 android:textColorHint="@color/black"
                 android:textSize="12sp"
@@ -96,7 +100,7 @@
                 android:autofillHints=""
                 android:hint="@string/Category_Description"
                 android:inputType="text"
-                android:text="@={viewModel.uiState.categoryUIModel.description}"
+                android:text="@={viewModel.uiState.getSuccessCategory().description}"
                 android:textColor="@color/black"
                 android:textColorHint="@color/black"
                 android:textSize="12sp"
@@ -134,7 +138,7 @@
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/color_selector_title"
-                app:submitList="@{viewModel.uiState.colors}"
+                app:submitList="@{viewModel.uiState.getSuccessColors() != null ? viewModel.uiState.getSuccessColors() : EmptyList.INSTANCE }"
                 tools:itemCount="10"
                 tools:listitem="@layout/layout_color_selector_item"
                 tools:orientation="horizontal" />
@@ -144,11 +148,11 @@
                 android:id="@+id/positive_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@{context.getColor(viewModel.uiState.categoryUIModel.color.color.darkColor)}"
-                app:textColor="@{context.getColor(viewModel.uiState.categoryUIModel.color.color.textColor)}"
+                android:backgroundTint="@{viewModel.uiState.getSuccessCategory() != null ? context.getColor(viewModel.uiState.getSuccessCategory().color.color.darkColor) : context.getColor(R.color.dark_primary) }"
+                app:textColor="@{viewModel.uiState.getSuccessCategory() != null ? context.getColor(viewModel.uiState.getSuccessCategory().color.color.textColor) : context.getColor(R.color.light_primary)}"
                 android:layout_margin="36dp"
                 android:onClickListener="@{() -> viewModel.onPositiveButtonClicked()}"
-                android:text="@{viewModel.uiState.positiveButtonText}"
+                android:text="@{viewModel.uiState.getSuccessPositiveButtonText() != null ? viewModel.uiState.getSuccessPositiveButtonText() : R.string.Confirm}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

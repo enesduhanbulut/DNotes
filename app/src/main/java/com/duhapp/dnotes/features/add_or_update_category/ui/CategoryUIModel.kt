@@ -19,8 +19,8 @@ data class CategoryUIModel(
 ) : Parcelable, BaseListItem {
     fun toEntity() = CategoryEntity(
         name = name,
-        emoji = emoji,
         message = description,
+        emoji = emoji,
         colorId = color.color.ordinal,
         isDefault = isDefault
     )

@@ -28,11 +28,6 @@ abstract class BaseListAdapter<M : BaseListItem, DB : ViewDataBinding> :
     }
 
     fun setItems(items: List<M>) {
-        // TODO: Use DiffUtil to calculate the difference between the old and new list
-
-        /*val diffResult = DiffUtil.calculateDiff(DiffCallback(itemList, items.toList()))
-        diffResult.dispatchUpdatesTo(this)
-        */
         notifyDataSetChanged()
         itemList = items.toList()
     }
@@ -43,13 +38,13 @@ abstract class BaseListAdapter<M : BaseListItem, DB : ViewDataBinding> :
         )
         val viewHolder = onCreateViewHolder(binding as DB)
         binding.root.setOnClickListener {
-            val position = viewHolder.adapterPosition
+            val position = viewHolder.bindingAdapterPosition
             if (position != RecyclerView.NO_POSITION) {
                 onItemClickListener?.onItemClick(itemList[position], position)
             }
         }
         binding.root.setOnLongClickListener {
-            val position = viewHolder.adapterPosition
+            val position = viewHolder.bindingAdapterPosition
             if (position != RecyclerView.NO_POSITION) {
                 onItemLongClickListener?.onItemLongClick(itemList[position], position)
             }

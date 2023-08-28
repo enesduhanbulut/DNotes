@@ -1,5 +1,6 @@
 package com.duhapp.dnotes.features.generic.ui
 
+import android.os.Bundle
 import androidx.fragment.app.viewModels
 import com.duhapp.dnotes.R
 import com.duhapp.dnotes.databinding.FragmentShowMessageBottomSheetBinding
@@ -9,21 +10,25 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 open class ShowMessageBottomSheet :
-    BaseBottomSheet<ShowMessageUIEvent, ShowMessageBottomSheetUIState,
-            ShowMessageBottomSheetViewModel, FragmentShowMessageBottomSheetBinding>() {
-    private val showMessageBottomSheetViewModel: ShowMessageBottomSheetViewModel by viewModels()
-    override val layoutId: Int
-        get() = R.layout.fragment_show_message_bottom_sheet
-    override val fragmentTag: String
-        get() = "MessageBottomSheet"
+    BaseBottomSheet<FragmentShowMessageBottomSheetBinding,
+            ShowMessageUIEvent, ShowMessageBottomSheetUIState,
+            ShowMessageBottomSheetViewModel>() {
+    override val viewModel: ShowMessageBottomSheetViewModel by viewModels()
+    override val layoutId = R.layout.fragment_show_message_bottom_sheet
+    override val titleId = R.string.New_Category_Message
+    override val fragmentTag = "MessageBottomSheet"
 
-
-    override fun provideViewModel(): ShowMessageBottomSheetViewModel {
-        return showMessageBottomSheetViewModel
-    }
 
     override fun setBindingViewModel() {
-        binding.viewModel = viewModel
+        mBinding!!.viewModel = viewModel
+    }
+
+    override fun handleArgs(args: Bundle) {
+        TODO("Not yet implemented")
+    }
+
+    override fun handleUIState(it: ShowMessageBottomSheetUIState) {
+        TODO("Not yet implemented")
     }
 
     override fun handleUIEvent(it: ShowMessageUIEvent) {

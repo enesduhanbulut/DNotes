@@ -9,7 +9,6 @@ import com.duhapp.dnotes.features.note.data.NoteRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Singleton
@@ -19,8 +18,8 @@ import javax.inject.Singleton
 object DomainModule {
     @Provides
     @Singleton
-    fun provideCategoryRepository(categoryDao: CategoryDao): CategoryRepository {
-        return CategoryRepositoryImpl(categoryDao, Dispatchers.IO)
+    fun provideCategoryRepository(categoryDao: CategoryDao, noteDao: NoteDao): CategoryRepository {
+        return CategoryRepositoryImpl(categoryDao, noteDao, Dispatchers.IO)
     }
 
     @Provides

@@ -2,10 +2,31 @@ package com.duhapp.dnotes.features.home.home_screen_category.ui
 
 import android.os.Parcelable
 import androidx.annotation.ColorRes
+import com.duhapp.dnotes.NoteColor
 import com.duhapp.dnotes.app.database.NoteEntity
 import com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel
+import com.duhapp.dnotes.features.add_or_update_category.ui.ColorItemUIModel
 import com.duhapp.dnotes.features.base.ui.BaseListItem
 import kotlinx.parcelize.Parcelize
+
+val DEFAULT_NOTE_MODEL: BaseNoteUIModel = BasicNoteUIModel(
+    id = -1,
+    isPinned = false,
+    isCompleted = false,
+    isCompletable = false,
+    title = "",
+    body = "",
+    category = CategoryUIModel(
+        id = -1,
+        name = "",
+        emoji = "",
+        description = "",
+        color = ColorItemUIModel(
+            color = NoteColor.BLUE,
+        )
+    ),
+    color = -1,
+)
 
 @Parcelize
 open class BaseNoteUIModel(
@@ -14,11 +35,11 @@ open class BaseNoteUIModel(
     var category: CategoryUIModel,
     var title: String,
     var body: String,
-    @ColorRes val color: Int,
-    val image: String,
-    val isPinned: Boolean,
-    val isCompletable: Boolean,
-    val isCompleted: Boolean,
+    @ColorRes var color: Int,
+    var image: String,
+    var isPinned: Boolean,
+    var isCompletable: Boolean,
+    var isCompleted: Boolean,
     var isSelected: Boolean = false,
     var isSelectable: Boolean = false,
 ) : Cloneable, BaseListItem, Parcelable {
@@ -95,6 +116,10 @@ class BasicNoteUIModel(
 
     override fun newCopy(): BasicNoteUIModel {
         return super.clone() as BasicNoteUIModel
+    }
+
+    override fun toString(): String {
+        return "BasicNoteUIModel(id=$id, type=$type, category=$category, title='$title', body='$body', color=$color, image='$image', isPinned=$isPinned, isCompletable=$isCompletable, isCompleted=$isCompleted, isSelected=$isSelected, isSelectable=$isSelectable)"
     }
 }
 

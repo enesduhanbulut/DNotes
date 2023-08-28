@@ -1,7 +1,11 @@
 package com.duhapp.dnotes.features.home
 
 import androidx.lifecycle.viewModelScope
+import com.duhapp.dnotes.R
 import com.duhapp.dnotes.features.add_or_update_category.domain.FetchHomeData
+import com.duhapp.dnotes.features.base.domain.CustomException
+import com.duhapp.dnotes.features.base.domain.CustomExceptionCode
+import com.duhapp.dnotes.features.base.domain.CustomExceptionData
 import com.duhapp.dnotes.features.base.ui.FragmentUIEvent
 import com.duhapp.dnotes.features.base.ui.FragmentUIState
 import com.duhapp.dnotes.features.base.ui.FragmentViewModel
@@ -17,28 +21,35 @@ class HomeViewModel @Inject constructor(
 ) : FragmentViewModel<HomeUIEvent, HomeUIState>() {
 
     init {
-        setSuccessState(HomeUIState(emptyList()))
+        setState(
+            HomeUIState.Success(
+                mutableListOf()
+            )
+        )
     }
 
     fun loadCategories() {
         viewModelScope.launch {
-            fetchHomeData.invoke().let {
-                if (it.isNotEmpty()) {
-                    setSuccessState(
-                        HomeUIState(
-                            categories = it,
-                            errorMessage = "",
+            fetchHomeData.invoke().let { categories ->
+                if (categories.isEmpty()) {
+                    setState(
+                        HomeUIState.Error(
+                            CustomException.ThereIsNoSuitableVariableException(
+                                CustomExceptionData(
+                                    title = R.string.Data_Not_Found,
+                                    message = R.string.Note_Data_Not_Found,
+                                    code = CustomExceptionCode.THERE_IS_NO_SUITABLE_VARIABLE_EXCEPTION.code,
+                                )
+                            )
                         )
                     )
                 } else {
-                    setSuccessState(
-                        HomeUIState(
-                            emptyList(),
-                            errorMessage = "No notes found",
+                    setState(
+                        HomeUIState.Success(
+                            categories as MutableList<HomeCategoryUIModel>
                         )
                     )
                 }
-
             }
         }
     }
@@ -53,10 +64,23 @@ class HomeViewModel @Inject constructor(
 
 }
 
-data class HomeUIState(
-    val categories: List<HomeCategoryUIModel>,
-    val errorMessage: String = "",
-) : FragmentUIState
+sealed interface HomeUIState : FragmentUIState {
+    data class Success(
+        var categories: MutableList<HomeCategoryUIModel> = mutableListOf(),
+    ) : HomeUIState
+
+    data class Error(
+        var customException: CustomException
+    ) : HomeUIState
+
+    fun isSuccess() = this is Success
+
+    fun isError() = this is Error
+
+    fun getException() = if (isError()) (this as Error).customException else null
+
+    fun getSuccessCategories() = if (isSuccess()) (this as Success).categories else null
+}
 
 sealed interface HomeUIEvent : FragmentUIEvent {
     object Idle : HomeUIEvent

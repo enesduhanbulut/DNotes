@@ -4,39 +4,23 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.lifecycleScope
 import com.duhapp.dnotes.R
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 
-abstract class BaseBottomSheet<BUE : BottomSheetEvent, BUS : BottomSheetState, VM : BottomSheetViewModel<BUE, BUS>, DB : ViewDataBinding> :
-    BottomSheetDialogFragment() {
-    abstract val layoutId: Int
-    abstract val fragmentTag: String
-    protected lateinit var binding: DB
-    protected lateinit var viewModel: VM
-    protected var observeJobs: MutableList<Job> = mutableListOf()
-
+abstract class BaseBottomSheet<DB : ViewDataBinding, BUE : BottomSheetEvent, BUS : BottomSheetState, VM : BottomSheetViewModel<BUE, BUS>> :
+    BottomSheetDialogFragment(), FragmentInitializer<DB, BUE, BUS, VM> {
+    override var observeJobs: MutableList<Job> = mutableListOf()
+    override var mBinding: DB? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        viewModel = provideViewModel()
-        handleArgs(requireArguments())
-        binding = DataBindingUtil.inflate(inflater, layoutId, container, false)
-        binding.lifecycleOwner = viewLifecycleOwner
-        setBindingViewModel()
-        observeUIEvent()
-        return binding.root
-    }
-
-    protected open fun handleArgs(args: Bundle) {
-        // override this method if you want to do something before binding
+        mBinding = onOnCreateViewTask(viewLifecycleOwner, arguments, inflater, container)
+        return mBinding!!.root
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,40 +28,8 @@ abstract class BaseBottomSheet<BUE : BottomSheetEvent, BUS : BottomSheetState, V
         setStyle(DialogFragment.STYLE_NORMAL, R.style.DialogStyle)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initView(binding)
+    override fun onDetach() {
+        super.onDetach()
+        onDeAttachTask()
     }
-
-    private fun observeUIEvent() {
-        observeJobs.add(
-            viewLifecycleOwner.lifecycleScope.launch {
-                viewModel.uiEvent.collect {
-                    if (it != null) {
-                        handleUIEvent(it)
-                    }
-                }
-            },
-        )
-    }
-
-    fun observeUIState() {
-        observeJobs.add(
-            lifecycleScope.launch {
-                viewModel.uiState.collect {
-                    if (it != null)
-                        handleUIState(it)
-                }
-            },
-        )
-    }
-
-    open fun handleUIState(it: BUS) {
-        // no-op
-    }
-
-    abstract fun initView(binding: DB)
-    abstract fun provideViewModel(): VM
-    abstract fun setBindingViewModel()
-    abstract fun handleUIEvent(it: BUE)
 }

@@ -1,5 +1,6 @@
 package com.duhapp.dnotes.features.home
 
+import android.os.Bundle
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.duhapp.dnotes.R
@@ -8,29 +9,29 @@ import com.duhapp.dnotes.databinding.LayoutHomeCategoryBinding
 import com.duhapp.dnotes.features.base.ui.BaseFragment
 import com.duhapp.dnotes.features.base.ui.BaseListAdapter
 import com.duhapp.dnotes.features.base.ui.BaseListAdapter.OnItemClickListener
-import com.duhapp.dnotes.features.generic.ui.ShowMessageBottomSheetViewModel
 import com.duhapp.dnotes.features.generic.ui.SpaceModel
 import com.duhapp.dnotes.features.generic.ui.SpacingItemDecorator
 import com.duhapp.dnotes.features.home.home_screen_category.ui.HomeCategoryUIModel
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding, HomeUIEvent, HomeUIState, HomeViewModel>() {
 
-    private val homeViewModel: HomeViewModel by viewModels()
-    private val showMessageBottomSheetViewModel: ShowMessageBottomSheetViewModel by viewModels()
     private lateinit var adapter: BaseListAdapter<HomeCategoryUIModel, LayoutHomeCategoryBinding>
     override val layoutId: Int
         get() = R.layout.fragment_home
     override val titleId: Int
         get() = R.string.title_home
-
-    override fun provideViewModel(): HomeViewModel {
-        return homeViewModel
-    }
+    override val viewModel: HomeViewModel by viewModels()
+    override val fragmentTag = "HomeFragment"
 
     override fun setBindingViewModel() {
-        binding.viewModel = viewModel
+        mBinding?.viewModel = viewModel
+    }
+
+    override fun handleArgs(args: Bundle) {
+        TODO("Not yet implemented")
     }
 
     override fun initView(binding: FragmentHomeBinding) {
@@ -76,18 +77,25 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeUIEvent, HomeUIState,
                     )
                 )
             }
+
             is HomeUIEvent.OnViewAllClicked -> {
                 findNavController().navigate(
                     HomeFragmentDirections.actionNavigationHomeToAllNotesFragment(it.homeCategoryUIModel.id)
                 )
             }
-            else -> {
 
+            else -> {
+                Timber.d(fragmentTag, "Unhandled UI Event $it")
             }
         }
     }
 
     override fun handleUIState(it: HomeUIState) {
-        adapter.setItems(it.categories)
+        adapter.setItems(it.getSuccessCategories() ?: emptyList())
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        mBinding?.categories?.adapter = null
     }
 }

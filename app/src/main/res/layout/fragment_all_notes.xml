@@ -12,6 +12,9 @@
         <variable
             name="viewModel"
             type="com.duhapp.dnotes.features.all_notes.ui.AllNotesViewModel" />
+
+        <import type="android.view.View" />
+        <import type="com.duhapp.dnotes.R" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,119 +22,133 @@
         android:layout_height="match_parent"
         tools:context=".features.all_notes.ui.AllNotesFragment">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/select_category_header"
+        <com.duhapp.dnotes.ui.custom_views.ErrorItemLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/select_category_header_height"
-            android:background="@{context.getColor(viewModel.uiState.category.color.color.darkColor)}"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:background="@color/primary_color">
+            android:layout_height="match_parent"
+            android:visibility="@{viewModel.uiState.isError() ? View.VISIBLE : View.GONE }"
+            app:setErrorContent="@{viewModel.uiState.exception}" />
 
-            <RelativeLayout
-                android:id="@+id/category_icon_card"
-                android:layout_width="@dimen/category_list_item_icon_size"
-                android:layout_height="@dimen/category_list_item_icon_size"
-                android:layout_margin="@dimen/small_margin"
-                android:background="@drawable/rounded_alpha_background"
-                android:backgroundTintMode="src_in"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/all_notes_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="@{viewModel.uiState.isSuccess() ? View.VISIBLE : View.GONE }">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/select_category_header"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/select_category_header_height"
+                android:background="@{viewModel.uiState.isSuccess() ? context.getColor(viewModel.uiState.getSuccessCategory().color.color.darkColor) : context.getColor(R.color.primary_color)}"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:background="@color/primary_color">
+
+                <RelativeLayout
+                    android:id="@+id/category_icon_card"
+                    android:layout_width="@dimen/category_list_item_icon_size"
+                    android:layout_height="@dimen/category_list_item_icon_size"
+                    android:layout_margin="@dimen/small_margin"
+                    android:background="@drawable/rounded_alpha_background"
+                    android:backgroundTintMode="src_in"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/category_icon"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_centerInParent="true"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="@{viewModel.uiState.getSuccessCategory().emoji}"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        tools:text="😀" />
+                </RelativeLayout>
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/category_icon"
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:layout_centerInParent="true"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:text="@{viewModel.uiState.category.emoji}"
+                    android:id="@+id/title"
+                    style="@style/text_sm_bold"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/small_margin"
+                    android:layout_marginVertical="@dimen/small_margin"
+                    android:gravity="start"
+                    android:text="@{viewModel.uiState.getSuccessCategory().name}"
                     android:textColor="@color/white"
-                    android:textSize="16sp"
-                    tools:text="😀" />
-            </RelativeLayout>
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/category_icon_card"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Title" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/title"
-                style="@style/text_sm_bold"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                <ImageView
+                    android:id="@+id/select_action_menu"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_margin="@dimen/_12dp"
+                    android:src="@drawable/item_menu_trigger"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:visibility="@{viewModel.uiState.getSuccessIsSelectable()}" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/notes"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
                 android:layout_marginHorizontal="@dimen/small_margin"
-                android:layout_marginVertical="@dimen/small_margin"
-                android:gravity="start"
-                android:text="@{viewModel.uiState.category.name}"
-                android:textColor="@color/white"
+                android:layout_marginTop="@dimen/small_margin"
+                android:adapter="@{adapter}"
+                android:clipToPadding="false"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/category_icon_card"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="Title" />
+                app:layout_constraintTop_toBottomOf="@id/select_category_header"
+                tools:listitem="@layout/layout_basic_note_list_item" />
 
-            <ImageView
-                android:id="@+id/select_action_menu"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_margin="@dimen/_12dp"
-                android:src="@drawable/item_menu_trigger"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/xl_margin"
+                android:layout_marginBottom="@dimen/xl_margin"
+                android:background="@drawable/note_item_selectable_navigation"
+                android:gravity="center"
+                android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:visibility="@{viewModel.uiState.selectable}"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:visibility="@{viewModel.uiState.getSuccessIsSelectable()}">
+
+                <androidx.constraintlayout.utils.widget.ImageFilterButton
+                    android:id="@+id/delete_notes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_12dp"
+                    android:background="@color/transparent"
+                    android:onClick="@{() -> viewModel.deleteSelectedNotes()}"
+                    android:src="@drawable/delete_48" />
+
+                <androidx.constraintlayout.utils.widget.ImageFilterButton
+                    android:id="@+id/move_notes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_12dp"
+                    android:background="@color/transparent"
+                    android:onClick="@{() -> viewModel.moveSelectedNotes()}"
+                    android:src="@drawable/move_48" />
+
+                <androidx.constraintlayout.utils.widget.ImageFilterButton
+                    android:id="@+id/cancel_selection"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_12dp"
+                    android:background="@color/transparent"
+                    android:onClick="@{() -> viewModel.cancelSelectionMode()}"
+                    android:src="@drawable/cancel_48" />
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/notes"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginHorizontal="@dimen/small_margin"
-            android:layout_marginTop="@dimen/small_margin"
-            android:adapter="@{adapter}"
-            android:clipToPadding="false"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/select_category_header"
-            tools:listitem="@layout/layout_basic_note_list_item" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginBottom="@dimen/xl_margin"
-            android:layout_marginHorizontal="@dimen/xl_margin"
-            android:orientation="horizontal"
-            android:gravity="center"
-            app:visibility="@{viewModel.uiState.selectable}"
-            android:background="@drawable/note_item_selectable_navigation">
-
-            <androidx.constraintlayout.utils.widget.ImageFilterButton
-                android:id="@+id/delete_notes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/delete_48"
-                android:layout_marginHorizontal="@dimen/_12dp"
-                android:background="@color/transparent"
-                android:onClick="@{() -> viewModel.deleteSelectedNotes()}"
-                />
-
-            <androidx.constraintlayout.utils.widget.ImageFilterButton
-                android:id="@+id/move_notes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/move_48"
-                android:layout_marginHorizontal="@dimen/_12dp"
-                android:background="@color/transparent"
-                android:onClick="@{() -> viewModel.moveSelectedNotes()}"/>
-
-            <androidx.constraintlayout.utils.widget.ImageFilterButton
-                android:id="@+id/cancel_selection"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/cancel_48"
-                android:layout_marginHorizontal="@dimen/_12dp"
-                android:background="@color/transparent"
-                android:onClick="@{() -> viewModel.cancelSelectionMode()}"/>
-        </LinearLayout>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 </layout>

@@ -48,6 +48,9 @@
             android:defaultValue="@null"
             app:argType="com.duhapp.dnotes.features.home.home_screen_category.ui.BaseNoteUIModel"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_navigation_note_to_errorDialog"
+            app:destination="@id/errorDialog" />
     </fragment>
 
     <dialog
@@ -90,4 +93,12 @@
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out" />
     </fragment>
+    <dialog
+        android:id="@+id/errorDialog"
+        android:name="com.duhapp.dnotes.ui.custom_views.ErrorDialog"
+        android:label="ErrorDialog" >
+        <argument
+            android:name="dialogState"
+            app:argType="com.duhapp.dnotes.features.base.ui.DialogFragmentState" />
+    </dialog>
 </navigation>

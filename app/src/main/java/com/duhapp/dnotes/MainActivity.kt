@@ -5,6 +5,7 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -69,7 +70,7 @@ class MainActivity : AppCompatActivity() {
         binding.fab.visibility = visibility
     }
 
-    fun setAppBarVisibility(visibility: Int) {
+    private fun setAppBarVisibility(visibility: Int) {
         binding.toolbar.visibility = visibility
     }
 

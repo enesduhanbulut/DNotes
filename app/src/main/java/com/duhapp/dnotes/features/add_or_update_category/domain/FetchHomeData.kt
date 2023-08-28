@@ -17,7 +17,7 @@ class FetchHomeData(
                     HomeCategoryUIModel(
                         id = category.id,
                         title = category.name,
-                        noteList = noteRepository.getNoteByCategory(category)
+                        noteList = notes
                     )
                 )
             }

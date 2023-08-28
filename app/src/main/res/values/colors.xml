@@ -55,4 +55,5 @@
     <color name="note_color_orange_light">#FFE0B2</color>
     <color name="bottom_nav_bar">#FFFFFFFF</color>
     <color name="bottom_nav_bar_unselected">#827D89</color>
+    <color name="rc_divider_gray">#FF808080</color>
 </resources>

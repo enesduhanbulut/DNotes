@@ -1,18 +1,19 @@
 package com.duhapp.dnotes.features.manage_category.ui
 
-import android.util.Log
-import android.view.View
 import androidx.lifecycle.viewModelScope
+import com.duhapp.dnotes.R
 import com.duhapp.dnotes.features.add_or_update_category.domain.DeleteCategory
 import com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel
+import com.duhapp.dnotes.features.base.domain.CustomException
+import com.duhapp.dnotes.features.base.domain.asCustomException
 import com.duhapp.dnotes.features.base.ui.FragmentUIEvent
 import com.duhapp.dnotes.features.base.ui.FragmentUIState
 import com.duhapp.dnotes.features.base.ui.FragmentViewModel
 import com.duhapp.dnotes.features.manage_category.domain.GetCategories
-import com.duhapp.dnotes.features.manage_category.domain.InsertCategory
 import com.duhapp.dnotes.features.manage_category.domain.UndoCategory
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,14 +24,28 @@ class ManageCategoryViewModel @Inject constructor(
 ) : FragmentViewModel<ManageCategoryUIEvent, ManageCategoryUIState>() {
     init {
         setEvent(ManageCategoryUIEvent.Loading)
-        setSuccessState(ManageCategoryUIState(emptyList()))
+        setState(ManageCategoryUIState.Success(emptyList()))
         loadCategories()
     }
 
     private fun loadCategories() {
         viewModelScope.launch {
-            val list = getCategories.invoke()
-            setSuccessState(ManageCategoryUIState(list))
+            try {
+                val list = getCategories.invoke()
+                setState(ManageCategoryUIState.Success(list))
+            } catch (exception: Exception) {
+                Timber.e("ManageCategoryViewModel", "loadCategories: ", exception)
+                setStateAndRunMethodAfterDelay(
+                    ManageCategoryUIState.Error(
+                        exception.asCustomException(
+                            message = R.string.Error_While_Fetching_Category,
+                        )
+                    ),
+                    1000
+                ) {
+                    loadCategories()
+                }
+            }
         }
     }
 
@@ -51,13 +66,17 @@ class ManageCategoryViewModel @Inject constructor(
                 )
                 loadCategories()
             } catch (exception: Exception) {
-                // TODO: 2021-09-19 handle errors
-                setSuccessState(
-                    withStateValue {
-                        it.apply {
-                            it.errorMessage = exception.message ?: ""
-                        }
-                    })
+                Timber.e("ManageCategoryViewModel", "handleDeleteCategory: ", exception)
+                setStateAndRunMethodAfterDelay(
+                    ManageCategoryUIState.Error(
+                        exception.asCustomException(
+                            message = R.string.Error_While_Deleting_Category,
+                        )
+                    ),
+                    1000
+                ) {
+                    loadCategories()
+                }
             }
         }
     }
@@ -72,18 +91,37 @@ class ManageCategoryViewModel @Inject constructor(
                 undoCategory.invoke()
                 loadCategories()
             } catch (exception: Exception) {
-                // TODO: 2023-06-25 handle errors
-                Log.e("ManageCategoryViewModel", "onUndoDelete: ", exception)
+                Timber.e("ManageCategoryViewModel", "onUndoDelete: ", exception)
+                setStateAndRunMethodAfterDelay(
+                    ManageCategoryUIState.Error(
+                        exception.asCustomException(
+                            message = R.string.Error_While_Undoing_Category_Deletion,
+                        )
+                    ),
+                    1000
+                ) {
+                    loadCategories()
+                }
             }
         }
     }
 
 }
 
-data class ManageCategoryUIState(
-    var categoryList: List<CategoryUIModel>,
-    var errorMessage: String? = "",
-) : FragmentUIState
+sealed interface ManageCategoryUIState: FragmentUIState {
+    data class Success(
+        val categoryList: List<CategoryUIModel> = emptyList(),
+    ) : ManageCategoryUIState
+
+    data class Error(
+        val customException: CustomException,
+    ) : ManageCategoryUIState
+
+    fun isSuccess(): Boolean = this is Success
+    fun isError(): Boolean = this is Error
+    fun getSuccessCategoryList(): List<CategoryUIModel>? = if (this is Success) categoryList else null
+    fun getErrorCustomException(): CustomException? = if (this is Error) customException else null
+}
 
 sealed interface ManageCategoryUIEvent : FragmentUIEvent {
     object NavigateAddCategory : ManageCategoryUIEvent

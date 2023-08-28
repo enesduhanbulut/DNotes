@@ -66,8 +66,79 @@ private fun <T : BottomSheetEvent, BS : BaseBottomSheet<*, *, *, *>> BaseFragmen
                 }
             }
         }
-
     }
+    parentFragmentManager.beginTransaction().add(
+        containerId,
+        fragment,
+        bundle,
+        "bottomSheet"
+    ).commit()
+}
+
+
+fun <BOE : BottomSheetEvent, BOS: BottomSheetState, BS : BaseBottomSheet<*, *, *, *>> BaseFragment<*, *, *, *>.showSnippedBottomSheet(
+    containerId: Int,
+    fragment: Class<BS>,
+    bundle: Bundle? = null,
+    activityViewModel: BottomSheetViewModel<BOE, BOS>,
+    eventCollector: ((BOE) -> Unit),
+    unsubscribeEvent: BottomSheetEvent,
+    stateCollector: ((BOS) -> Unit),
+    unsubscribeState: BOS? = null,
+) {
+    showSnippedBottomSheet(
+        containerId,
+        fragment,
+        bundle,
+        activityViewModel,
+        null,
+        eventCollector,
+        unsubscribeEvent,
+        stateCollector,
+        unsubscribeState
+    )
+}
+
+private fun <BOE: BottomSheetEvent, BOS: BottomSheetState, BS: BaseBottomSheet<*,*,*,*>> BaseFragment<*,*,*,*>.showSnippedBottomSheet(
+    containerId: Int,
+    fragment: Class<BS>,
+    bundle: Bundle? = null,
+    activityViewModel: BottomSheetViewModel<BOE, BOS>,
+    singleEventCollector: ((BOE) -> Unit)?,
+    eventCollector: ((BOE) -> Unit)?,
+    unsubscribeEvent: BottomSheetEvent? = null,
+    stateCollector: ((BOS) -> Unit)?,
+    unsubscribeState: BottomSheetState? = null,
+) {
+    var job1: Job? = null
+    job1 = lifecycleScope.launch {
+        if (stateCollector != null)
+            activityViewModel.uiState.collect {
+                it?.let {
+                    stateCollector.invoke(it)
+                    if (it.javaClass == unsubscribeState?.javaClass) {
+                        job1?.cancel()
+                    }
+                }
+            }
+    }
+    var job2: Job? = null
+    job2 = lifecycleScope.launch {
+        if (singleEventCollector != null)
+            activityViewModel.uiEvent.collectLatest {
+                singleEventCollector.invoke(it)
+                job2?.cancel()
+            }
+        else {
+            activityViewModel.uiEvent.collect {
+                eventCollector?.invoke(it)
+                if (it.javaClass == unsubscribeEvent?.javaClass) {
+                    job2?.cancel()
+                }
+            }
+        }
+    }
+
     parentFragmentManager.beginTransaction().add(
         containerId,
         fragment,

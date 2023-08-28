@@ -2,6 +2,7 @@ package com.duhapp.dnotes.features.manage_category.ui
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Bundle
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -23,6 +24,7 @@ import com.duhapp.dnotes.features.generic.ui.SpaceModel
 import com.duhapp.dnotes.features.generic.ui.SpacingItemDecorator
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class ManageCategoryFragment :
@@ -34,9 +36,10 @@ class ManageCategoryFragment :
         get() = R.layout.fragment_manage_category
     override val titleId: Int
         get() = R.string.Select_Category
+    override val viewModel: ManageCategoryViewModel by viewModels()
+    override val fragmentTag = "ManageCategoryFragment"
 
     private lateinit var adapter: BaseListAdapter<CategoryUIModel, CategoryListItemBinding>
-    private val manageCategoryViewModel: ManageCategoryViewModel by viewModels()
     private val categoryBottomSheetViewModel: CategoryBottomSheetViewModel by activityViewModels()
     override fun initView(binding: FragmentManageCategoryBinding) {
         binding.categories.addItemDecoration(
@@ -48,13 +51,13 @@ class ManageCategoryFragment :
         )
     }
 
-    override fun provideViewModel(): ManageCategoryViewModel {
-        return manageCategoryViewModel
+    override fun setBindingViewModel() {
+        mBinding?.viewModel = viewModel
+        initAdapter()
     }
 
-    override fun setBindingViewModel() {
-        binding.viewModel = viewModel
-        initAdapter()
+    override fun handleArgs(args: Bundle) {
+        TODO("Not yet implemented")
     }
 
     private fun initAdapter() {
@@ -73,7 +76,7 @@ class ManageCategoryFragment :
         adapter.onItemClickListener =
             BaseListAdapter.OnItemClickListener(viewModel::handleCategorySelect)
         // TODO There is a warning at resources.getDrawable, Use ResourcesCompat.getDrawable()
-        binding.categories.addSwipeListener(
+        mBinding!!.categories.addSwipeListener(
             ResourcesCompat.getDrawable(
                 resources,
                 R.drawable.baseline_delete_24,
@@ -86,7 +89,7 @@ class ManageCategoryFragment :
             },
             SwipeDirection.LEFT,
         )
-        binding.categories.adapter = adapter
+        mBinding!!.categories.adapter = adapter
     }
 
     override fun handleUIEvent(it: ManageCategoryUIEvent) {
@@ -94,19 +97,23 @@ class ManageCategoryFragment :
             is ManageCategoryUIEvent.NavigateAddCategory -> {
                 showCategoryScreen(CategoryUIModel(), CategoryShowType.Add)
             }
+
             is ManageCategoryUIEvent.OnCategorySelected -> {
                 showCategoryScreen(it.category.copy(), CategoryShowType.Edit)
             }
+
             is ManageCategoryUIEvent.OnCategoryDeleted -> {
                 Snackbar.make(
-                    binding.root,
+                    mBinding!!.root,
                     R.string.Item_deleted_do_you_want_to_undo,
                     Snackbar.LENGTH_LONG,
                 ).setAction(R.string.Undo) { _ ->
                     viewModel.onUndoDelete()
                 }.show()
             }
+
             else -> {
+                Timber.d(fragmentTag,"Unhandled event $it")
             }
         }
     }
@@ -131,15 +138,15 @@ class ManageCategoryFragment :
             }
 
             else -> {
+                Timber.d(fragmentTag,"Unhandled event $it")
             }
         }
     }
 
     override fun handleUIState(it: ManageCategoryUIState) {
-        super.handleUIState(it)
-        if (it.categoryList.isEmpty()) {
+        if (it.isError() || it.getSuccessCategoryList()!!.isEmpty()) {
             return
         }
-        adapter.setItems(it.categoryList)
+        adapter.setItems(it.getSuccessCategoryList()!!)
     }
 }

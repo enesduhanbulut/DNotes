@@ -10,87 +10,97 @@
 
         <import type="android.graphics.Color" />
 
+        <import type="com.duhapp.dnotes.R" />
+
         <variable
             name="viewModel"
             type="com.duhapp.dnotes.features.select_category.ui.SelectCategoryViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/parent_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
+        android:layout_height="match_parent">
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/select_category_header"
+            android:id="@+id/content_layout"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/select_category_header_height"
-            android:background="@{context.getColor(viewModel.uiState.selectedCategory.color.color.darkColor)}"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:background="@color/primary_color">
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <RelativeLayout
-                android:id="@+id/category_icon_card"
-                android:layout_width="@dimen/category_list_item_icon_size"
-                android:layout_height="@dimen/category_list_item_icon_size"
-                android:layout_margin="@dimen/small_margin"
-                android:background="@drawable/rounded_alpha_background"
-                android:backgroundTintMode="src_in"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/select_category_header"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/select_category_header_height"
+                android:background="@{viewModel.uiState.isSuccess() ? context.getColor(viewModel.uiState.getSuccessSelectedCategory().color.color.darkColor) : @color/note_color_blue_dark}"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:background="@color/primary_color">
+
+                <RelativeLayout
+                    android:id="@+id/category_icon_card"
+                    android:layout_width="@dimen/category_list_item_icon_size"
+                    android:layout_height="@dimen/category_list_item_icon_size"
+                    android:layout_margin="@dimen/small_margin"
+                    android:background="@drawable/rounded_alpha_background"
+                    android:backgroundTintMode="src_in"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/category_icon"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_centerInParent="true"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="@{viewModel.uiState.isSuccess() ? viewModel.uiState.getSuccessSelectedCategory().emoji : ``}"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        tools:text="😀" />
+                </RelativeLayout>
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/category_icon"
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:layout_centerInParent="true"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:text="@{viewModel.uiState.selectedCategory.emoji}"
+                    android:id="@+id/title"
+                    style="@style/text_sm_bold"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/small_margin"
+                    android:layout_marginVertical="@dimen/small_margin"
+                    android:gravity="start"
+                    android:text="@{viewModel.uiState.isSuccess() ? viewModel.uiState.getSuccessSelectedCategory().name : ``}"
                     android:textColor="@color/white"
-                    android:textSize="16sp"
-                    tools:text="😀" />
-            </RelativeLayout>
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/arrow"
+                    app:layout_constraintStart_toEndOf="@id/category_icon_card"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Title" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/title"
-                style="@style/text_sm_bold"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/small_margin"
-                android:layout_marginVertical="@dimen/small_margin"
-                android:gravity="start"
-                android:text="@{viewModel.uiState.selectedCategory.name}"
-                android:textColor="@color/white"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/arrow"
-                app:layout_constraintStart_toEndOf="@id/category_icon_card"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="Title" />
+                <ImageView
+                    android:id="@+id/arrow"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_margin="@dimen/small_margin"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:src="@{viewModel.uiState.getSuccessIsExpanded() ? @drawable/baseline_arrow_drop_down_24 : @drawable/baseline_arrow_drop_up_24}"
+                    app:tint="@color/white"
+                    tools:src="@drawable/baseline_arrow_drop_up_24" />
 
-            <ImageView
-                android:id="@+id/arrow"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_margin="@dimen/small_margin"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:src="@{viewModel.uiState.isExpanded ? @drawable/baseline_arrow_drop_down_24 : @drawable/baseline_arrow_drop_up_24}"
-                app:tint="@color/white"
-                tools:src="@drawable/baseline_arrow_drop_up_24" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/categories"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:paddingBottom="@dimen/select_category_item_height"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintTop_toBottomOf="@id/select_category_header"
+                tools:itemCount="5"
+                tools:listitem="@layout/category_select_list_item" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/categories"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:paddingBottom="@dimen/select_category_item_height"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintTop_toBottomOf="@id/select_category_header"
-            tools:itemCount="5"
-            tools:listitem="@layout/category_select_list_item" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>
