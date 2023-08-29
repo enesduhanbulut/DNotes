@@ -10,6 +10,7 @@ import com.duhapp.dnotes.R
 import com.duhapp.dnotes.features.add_or_update_category.domain.UpsertCategory
 import com.duhapp.dnotes.features.base.domain.CustomException
 import com.duhapp.dnotes.features.base.domain.CustomExceptionData
+import com.duhapp.dnotes.features.base.domain.asCustomException
 import com.duhapp.dnotes.features.base.ui.BottomSheetEvent
 import com.duhapp.dnotes.features.base.ui.BottomSheetState
 import com.duhapp.dnotes.features.base.ui.BottomSheetViewModel
@@ -32,20 +33,7 @@ class CategoryBottomSheetViewModel @Inject constructor(
                 } catch (e: Exception) {
                     setSuccessState(
                         it.copy(
-                            error = when (e) {
-                                is CustomException -> e.message
-                                else -> {
-                                    val errorMessage = e.message ?: "Unknown Error"
-                                    Log.e(TAG, errorMessage, e)
-                                    CustomException.UnknownException(
-                                        CustomExceptionData(
-                                            title = R.string.Unknown_Error,
-                                            message = R.string.Unknown_Error_Message,
-                                            -1,
-                                        )
-                                    )
-                                }
-                            } as CustomException?
+                            error = e.asCustomException()
                         )
                     )
                 }

@@ -47,4 +47,5 @@
     <string name="Note_Title_Cannot_Be_Empty">Note title can\'t be empty</string>
     <string name="Unknown_Error">Unknown Error</string>
     <string name="Unknown_Error_Message">Unknown error please try retry</string>
+    <string name="Note_Cnnot_Be_Saved">Note cannot be saved</string>
 </resources>

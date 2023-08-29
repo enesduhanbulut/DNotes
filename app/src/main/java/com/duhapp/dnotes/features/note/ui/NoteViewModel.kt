@@ -8,6 +8,7 @@ import com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel
 import com.duhapp.dnotes.features.add_or_update_category.ui.ColorItemUIModel
 import com.duhapp.dnotes.features.base.domain.CustomException
 import com.duhapp.dnotes.features.base.domain.CustomExceptionData
+import com.duhapp.dnotes.features.base.domain.asCustomException
 import com.duhapp.dnotes.features.base.ui.FragmentUIEvent
 import com.duhapp.dnotes.features.base.ui.FragmentUIState
 import com.duhapp.dnotes.features.base.ui.FragmentViewModel
@@ -42,20 +43,9 @@ class NoteViewModel @Inject constructor(
                 } catch (e: Exception) {
                     setSuccessState(
                         it.copy(
-                            error = when (e) {
-                                is CustomException -> e.message
-                                else -> {
-                                    val errorMessage = e.message ?: "Unknown Error"
-                                    Log.e(TAG, errorMessage, e)
-                                    CustomException.UnknownException(
-                                        CustomExceptionData(
-                                            title = R.string.Unknown_Error,
-                                            message = R.string.Unknown_Error_Message,
-                                            -1,
-                                        )
-                                    )
-                                }
-                            } as CustomException?
+                            error = e.asCustomException(
+                                message = R.string.Note_Cnnot_Be_Saved
+                            )
                         )
                     )
                 }
@@ -87,20 +77,9 @@ class NoteViewModel @Inject constructor(
             } catch (e: Exception) {
                 setSuccessState(
                     uiState.value!!.copy(
-                        error = when (e) {
-                            is CustomException -> e.message
-                            else -> {
-                                val errorMessage = e.message ?: "Unknown Error"
-                                Log.e(TAG, errorMessage, e)
-                                CustomException.UnknownException(
-                                    CustomExceptionData(
-                                        title = R.string.Unknown_Error,
-                                        message = R.string.Unknown_Error_Message,
-                                        -1,
-                                    )
-                                )
-                            }
-                        } as CustomException?
+                        error = e.asCustomException(
+                            message = R.string.Note_Cnnot_Be_Saved
+                        )
                     )
                 )
             }
