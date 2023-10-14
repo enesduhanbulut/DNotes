@@ -2,6 +2,7 @@ package com.duhapp.dnotes.features.select_category.ui
 
 import android.os.Bundle
 import androidx.fragment.app.activityViewModels
+import androidx.webkit.internal.ApiFeature
 import com.duhapp.dnotes.R
 import com.duhapp.dnotes.databinding.CategorySelectListItemBinding
 import com.duhapp.dnotes.databinding.FragmentSelectCategoryBinding
@@ -67,14 +68,12 @@ class SelectCategoryFragment :
         initAdapter()
     }
 
-    override fun handleUIEvent(event: SelectCategoryUIEvent) {
-        when (event) {
-            else -> {}
-        }
-    }
+    override fun handleUIEvent(event: SelectCategoryUIEvent) {}
 
     override fun handleUIState(it: SelectCategoryUIState) {
         super.handleUIState(it)
-        adapter.setItems(it.categories)
+        SelectCategoryUIStateFunctions.getSuccessStateData(it)?.let {
+            adapter.setItems(it.categories)
+        } ?: adapter.setItems(emptyList())
     }
 }

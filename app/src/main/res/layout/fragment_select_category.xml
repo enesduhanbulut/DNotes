@@ -9,6 +9,7 @@
         <import type="android.view.View" />
 
         <import type="android.graphics.Color" />
+        <import type="com.duhapp.dnotes.R" />
 
         <variable
             name="viewModel"
@@ -23,10 +24,12 @@
             android:id="@+id/select_category_header"
             android:layout_width="match_parent"
             android:layout_height="@dimen/select_category_header_height"
-            android:background="@{context.getColor(viewModel.uiState.selectedCategory.color.color.darkColor)}"
             app:layout_constraintTop_toTopOf="parent"
             tools:background="@color/primary_color">
+<!--
+   android:background="@{context.getColor(SelectCategoryUIStateFunctionsKt.getSuccessStateData(((SelectCategoryUIState) viewModel.uiState)).selectedCategory.color.color.darkColor ?? R.color.note_color_red_dark)}"
 
+-->
             <RelativeLayout
                 android:id="@+id/category_icon_card"
                 android:layout_width="@dimen/category_list_item_icon_size"
@@ -45,10 +48,12 @@
                     android:layout_centerInParent="true"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:text="@{viewModel.uiState.selectedCategory.emoji}"
                     android:textColor="@color/white"
                     android:textSize="16sp"
                     tools:text="😀" />
+          <!--
+                    android:text="@{SelectCategoryUIStateFunctionsKt.getSuccessStateData(((SelectCategoryUIState) viewModel.uiState)).selectedCategory.emoji ?? ``}"
+            -->
             </RelativeLayout>
 
             <com.google.android.material.textview.MaterialTextView
@@ -59,14 +64,15 @@
                 android:layout_marginHorizontal="@dimen/small_margin"
                 android:layout_marginVertical="@dimen/small_margin"
                 android:gravity="start"
-                android:text="@{viewModel.uiState.selectedCategory.name}"
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/arrow"
                 app:layout_constraintStart_toEndOf="@id/category_icon_card"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Title" />
-
+<!--
+     android:text="@{SelectCategoryUIStateFunctionsKt.getSuccessStateData(((SelectCategoryUIState) viewModel.uiState)).selectedCategory.name}"
+-->
             <ImageView
                 android:id="@+id/arrow"
                 android:layout_width="32dp"
@@ -75,10 +81,11 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:src="@{viewModel.uiState.isExpanded ? @drawable/baseline_arrow_drop_down_24 : @drawable/baseline_arrow_drop_up_24}"
                 app:tint="@color/white"
                 tools:src="@drawable/baseline_arrow_drop_up_24" />
-
+<!--
+    android:src="@{SelectCategoryUIStateFunctionsKt.getSuccessStateData(((SelectCategoryUIState) viewModel.uiState)).isExpanded ? @drawable/baseline_arrow_drop_down_24 : @drawable/baseline_arrow_drop_up_24}"
+-->
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 

@@ -33,7 +33,7 @@ class CategoryBottomSheet : BaseBottomSheet<
         }
 
         val onClickListener =
-            BaseListAdapter.OnItemClickListener<ColorItemUIModel> { item, position ->
+            BaseListAdapter.OnItemClickListener<ColorItemUIModel> { item, _ ->
                 viewModel.onColorSelected(item)
             }
         adapter = object :

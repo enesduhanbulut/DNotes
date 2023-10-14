@@ -4,12 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="com.duhapp.dnotes.R"/>
+        <import type="com.duhapp.dnotes.features.note.ui.NoteUIState"/>
 
         <variable
             name="viewModel"
             type="com.duhapp.dnotes.features.note.ui.NoteViewModel" />
+        <import type="com.duhapp.dnotes.features.note.ui.NoteUIStateFunctions" />
     </data>
-
+<!--
+        -->
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -19,13 +23,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="fill"
-            android:background="@{context.getColor(viewModel.uiState.baseNoteUIModel.category.color.color.lightColor)}"
             android:paddingHorizontal="24dp"
             android:paddingTop="32dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:background="@color/note_color_red_dark">
-
+            tools:background="@color/note_color_red_dark"
+            app:setBackgroundAsCategoryLightColor="@{viewModel.uiState}">
+<!--
+        android:background="@{context.getColor(((NoteUIState) viewModel.uiState).getSuccessStateData().baseNoteUIModel.category.color.color.lightColor ?? R.color.note_color_red_light)}"
+-->
 
             <EditText
                 android:id="@+id/title"
@@ -35,12 +41,14 @@
                 android:backgroundTint="@color/transparent"
                 android:hint="@string/Title"
                 android:maxLines="1"
-                android:text="@={viewModel.uiState.baseNoteUIModel.title}"
-                app:isLocked="@{viewModel.uiState.editableMode}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+<!--
+ android:text="@{NoteUIStateFunctionsKt.getSuccessStateData(((NoteUIState) viewModel.uiState)).baseNoteUIModel.title ?? ``}"
+                app:isLocked="@{NoteUIStateFunctionsKt.getSuccessStateData(((NoteUIState) viewModel.uiState)).editableMode ?? false}"
 
+-->
             <EditText
                 android:id="@+id/description"
                 android:layout_width="match_parent"
@@ -48,14 +56,14 @@
                 android:layout_marginTop="24dp"
                 android:backgroundTint="@color/transparent"
                 android:hint="@string/Details"
-                android:text="@={viewModel.uiState.baseNoteUIModel.body}"
-                app:isLocked="@{viewModel.uiState.editableMode}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
+        <!--    android:text="@={NoteUIStateFunctionsKt.getSuccessStateData(((NoteUIState) viewModel.uiState)).baseNoteUIModel.body ?? ``}"
+                        app:isLocked="@{NoteUIStateFunctionsKt.getSuccessStateData(((NoteUIState) viewModel.uiState)).editableMode ?? false}"
+                    -->
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="400dp"

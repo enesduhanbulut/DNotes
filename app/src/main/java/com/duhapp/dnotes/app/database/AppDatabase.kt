@@ -3,7 +3,7 @@ package com.duhapp.dnotes.app.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 
-@Database(entities = [CategoryEntity::class, NoteEntity::class], version = 1)
+@Database(entities = [CategoryEntity::class, NoteEntity::class], version = 1, exportSchema = true)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
 
