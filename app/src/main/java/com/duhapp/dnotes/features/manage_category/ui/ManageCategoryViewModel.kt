@@ -2,6 +2,7 @@ package com.duhapp.dnotes.features.manage_category.ui
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
+import com.ahk.annotation.GenerateSealedGetters
 import com.duhapp.dnotes.features.add_or_update_category.domain.DeleteCategory
 import com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel
 import com.duhapp.dnotes.features.base.ui.FragmentUIEvent
@@ -21,14 +22,14 @@ class ManageCategoryViewModel @Inject constructor(
 ) : FragmentViewModel<ManageCategoryUIEvent, ManageCategoryUIState>() {
     init {
         setEvent(ManageCategoryUIEvent.Loading)
-        setSuccessState(ManageCategoryUIState(emptyList()))
+        setSuccessState(ManageCategoryUIState.Success(emptyList()))
         loadCategories()
     }
 
     private fun loadCategories() {
         viewModelScope.launch {
             val list = getCategories.invoke()
-            setSuccessState(ManageCategoryUIState(list))
+            setSuccessState(ManageCategoryUIState.Success(list))
         }
     }
 
@@ -53,7 +54,6 @@ class ManageCategoryViewModel @Inject constructor(
                 setSuccessState(
                     withStateValue {
                         it.apply {
-                            it.errorMessage = exception.message ?: ""
                         }
                     })
             }
@@ -78,16 +78,19 @@ class ManageCategoryViewModel @Inject constructor(
 
 }
 
-data class ManageCategoryUIState(
-    var categoryList: List<CategoryUIModel>,
-    var errorMessage: String? = "",
-) : FragmentUIState
+@GenerateSealedGetters
+sealed interface ManageCategoryUIState : FragmentUIState {
+    data class Success(
+        var categoryList: List<CategoryUIModel>
+    ) : ManageCategoryUIState
+}
 
 sealed interface ManageCategoryUIEvent : FragmentUIEvent {
     object NavigateAddCategory : ManageCategoryUIEvent
     data class OnCategorySelected(
         val category: CategoryUIModel,
     ) : ManageCategoryUIEvent
+
     data class OnCategoryDeleted(
         val category: CategoryUIModel,
     ) : ManageCategoryUIEvent

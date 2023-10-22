@@ -10,7 +10,6 @@
         <variable
             name="viewModel"
             type="com.duhapp.dnotes.features.note.ui.NoteViewModel" />
-        <import type="com.duhapp.dnotes.features.note.ui.NoteUIStateFunctions" />
     </data>
 <!--
         -->
@@ -27,11 +26,10 @@
             android:paddingTop="32dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:background="@color/note_color_red_dark"
-            app:setBackgroundAsCategoryLightColor="@{viewModel.uiState}">
-<!--
-        android:background="@{context.getColor(((NoteUIState) viewModel.uiState).getSuccessStateData().baseNoteUIModel.category.color.color.lightColor ?? R.color.note_color_red_light)}"
--->
+            tools:background="@color/note_color_red_dark">
+            <!--
+                    android:background="@{context.getColor(((NoteUIState) viewModel.uiState).getSuccessStateData().baseNoteUIModel.category.color.color.lightColor ?? R.color.note_color_red_light)}"
+            -->
 
             <EditText
                 android:id="@+id/title"

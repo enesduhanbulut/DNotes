@@ -3,11 +3,9 @@ package com.duhapp.dnotes.features.note.ui
 import androidx.lifecycle.viewModelScope
 import com.ahk.annotation.GenerateSealedGetters
 import com.duhapp.dnotes.NoteColor
-import com.duhapp.dnotes.R
 import com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel
 import com.duhapp.dnotes.features.add_or_update_category.ui.ColorItemUIModel
 import com.duhapp.dnotes.features.base.domain.CustomException
-import com.duhapp.dnotes.features.base.domain.asCustomException
 import com.duhapp.dnotes.features.base.ui.FragmentUIEvent
 import com.duhapp.dnotes.features.base.ui.FragmentUIState
 import com.duhapp.dnotes.features.base.ui.FragmentViewModel
@@ -38,48 +36,11 @@ class NoteViewModel @Inject constructor(
     }
 
     fun save() {
-        NoteUIStateFunctions.getSuccessStateData(uiState.value)?.let {
-            viewModelScope.launch {
-                try {
-                    val baseNoteUIModel = upsertNote.invoke(it.baseNoteUIModel)
-                    setSuccessState(
-                        NoteUIState.Success(
-                            SuccessStateData(
-                                baseNoteUIModel = baseNoteUIModel,
-                                editableMode = true,
-                            )
-                        )
-                    )
-                } catch (e: Exception) {
-                    e.asCustomException(
-                        message = R.string.Note_Cannot_Be_Saved
-                    )
-                }
-            }
-        } ?: { uiState }
+
     }
 
     fun onCategorySelected(category: CategoryUIModel) {
-        NoteUIStateFunctions.getSuccessStateData(uiState.value)?.let { noteModel ->
-            noteModel.baseNoteUIModel.category = category
-            viewModelScope.launch {
-                try {
-                    val note = upsertNote.invoke(noteModel.baseNoteUIModel)
-                    setSuccessState(
-                        NoteUIState.Success(
-                            SuccessStateData(
-                                baseNoteUIModel = note,
-                                editableMode = true,
-                            )
-                        )
-                    )
-                } catch (e: Exception) {
-                    e.asCustomException(
-                        message = R.string.Note_Cannot_Be_Saved
-                    )
-                }
-            }
-        } ?: { uiState }
+
     }
 
     fun initState(args: NoteFragmentArgs?) {

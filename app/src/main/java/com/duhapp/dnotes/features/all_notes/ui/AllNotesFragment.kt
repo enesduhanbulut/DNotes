@@ -59,7 +59,7 @@ class AllNotesFragment:
                 }
             }
         )
-        menuContainer?.defineMenu(binding.root)
+        menuContainer.defineMenu(binding.root)
     }
 
     private fun initRecyclerView() {
@@ -158,7 +158,7 @@ class AllNotesFragment:
                 val fragment = SelectCategoryFragment()
                 showBottomSheet(
                     fragment = fragment,
-                    SelectCategoryFragmentArgs(viewModel.uiState.value!!.category).toBundle(),
+                    SelectCategoryFragmentArgs(viewModel.uiState.value.newCopy().).toBundle(),
                     selectCategoryViewModel
                 ){ uiEvent ->
                     when(uiEvent){

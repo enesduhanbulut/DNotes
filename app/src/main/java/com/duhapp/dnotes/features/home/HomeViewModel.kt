@@ -1,6 +1,7 @@
 package com.duhapp.dnotes.features.home
 
 import androidx.lifecycle.viewModelScope
+import com.ahk.annotation.GenerateSealedGetters
 import com.duhapp.dnotes.features.add_or_update_category.domain.FetchHomeData
 import com.duhapp.dnotes.features.base.ui.FragmentUIEvent
 import com.duhapp.dnotes.features.base.ui.FragmentUIState
@@ -53,10 +54,12 @@ class HomeViewModel @Inject constructor(
 
 }
 
-data class HomeUIState(
-    val categories: List<HomeCategoryUIModel>,
-    val errorMessage: String = "",
-) : FragmentUIState
+@GenerateSealedGetters
+sealed interface HomeUIState : FragmentUIState {
+    data class Success(
+        val categories: List<HomeCategoryUIModel>
+    ) : HomeUIState
+}
 
 sealed interface HomeUIEvent : FragmentUIEvent {
     object Idle : HomeUIEvent

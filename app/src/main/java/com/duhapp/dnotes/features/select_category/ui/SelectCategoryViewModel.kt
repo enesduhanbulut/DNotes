@@ -51,52 +51,15 @@ class SelectCategoryViewModel @Inject constructor(
     }
 
     fun handleCategorySelect(category: CategoryUIModel) {
-        setSuccessState(
-            withStateValue { uiState ->
-                SelectCategoryUIStateFunctions.getSuccessStateData(uiState)?.let {
-                    SelectCategoryUIState.Success(
-                        SuccessStateData(
-                            selectedCategory = category,
-                            categories = it.categories,
-                            isExpanded = it.isExpanded,
-                        )
-                    )
-                } ?: uiState
-            }
-        )
         setEvent(SelectCategoryUIEvent.OnCategorySelected(category))
     }
 
     fun onExpand() {
-        withStateValue { uiState ->
-            val state = SelectCategoryUIStateFunctions.getSuccessStateData(uiState)?.let {
-                SelectCategoryUIState.Success(
-                    SuccessStateData(
-                        selectedCategory = it.selectedCategory,
-                        categories = it.categories,
-                        isExpanded = true,
-                    )
-                )
-            } ?: uiState
-            setSuccessState(state)
-            state
-        }
+
     }
 
     fun onCollapse() {
-        withStateValue { uiState ->
-            val state = SelectCategoryUIStateFunctions.getSuccessStateData(uiState)?.let {
-                SelectCategoryUIState.Success(
-                    SuccessStateData(
-                        selectedCategory = it.selectedCategory,
-                        categories = it.categories,
-                        isExpanded = false,
-                    )
-                )
-            } ?: uiState
-            setSuccessState(state)
-            state
-        }
+
     }
 
 }

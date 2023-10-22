@@ -3,7 +3,6 @@ package com.duhapp.dnotes.features.note.ui
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.RelativeLayout
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.BindingAdapter
 import com.duhapp.dnotes.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -40,12 +39,4 @@ fun setEditable(view: EditText, editableModeEnabled: Boolean) {
 @BindingAdapter("isLocked")
 fun setClickable(view: RelativeLayout, editableModeEnabled: Boolean) {
     view.isClickable = editableModeEnabled
-}
-
-@BindingAdapter("setBackgroundAsCategoryLightColor")
-fun setBackgroundAsCategoryLightColor(view: ConstraintLayout, uiState: NoteUIState) {
-    view.setBackgroundColor(
-        NoteUIStateFunctions.getSuccessStateData(uiState)?.baseNoteUIModel?.category?.color?.color?.lightColor ?:
-        run { R.color.note_color_red_light }
-    )
 }
