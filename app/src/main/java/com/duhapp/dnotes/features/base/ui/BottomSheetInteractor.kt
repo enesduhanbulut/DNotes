@@ -6,11 +6,11 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-fun <T : BottomSheetEvent, BS : BaseBottomSheet<*, *, *, *>> BaseFragment<*, *, *, *>.showSnippedBottomSheet(
+fun <T : BottomSheetEvent, BS : BaseBottomSheet<*, *, *, *, *>> BaseFragment<*, *, *, *, *>.showSnippedBottomSheet(
     containerId: Int,
     fragment: Class<BS>,
     bundle: Bundle? = null,
-    activityViewModel: BottomSheetViewModel<T, *>,
+    activityViewModel: BottomSheetViewModel<T, *, *>,
     collector: (T) -> Unit,
     unsubscribeEvent: BottomSheetEvent
 ) {
@@ -25,11 +25,11 @@ fun <T : BottomSheetEvent, BS : BaseBottomSheet<*, *, *, *>> BaseFragment<*, *, 
     )
 }
 
-fun <T : BottomSheetEvent, BS : BaseBottomSheet<*, *, *, *>> BaseFragment<*, *, *, *>.showSnippedBottomSheet(
+fun <T : BottomSheetEvent, BS : BaseBottomSheet<*, *, *, *, *>> BaseFragment<*, *, *, *, *>.showSnippedBottomSheet(
     containerId: Int,
     fragment: Class<BS>,
     bundle: Bundle? = null,
-    activityViewModel: BottomSheetViewModel<T, *>,
+    activityViewModel: BottomSheetViewModel<T, *, *>,
     singleEventCollector: (T) -> Unit
 ) {
     showSnippedBottomSheet(
@@ -42,11 +42,11 @@ fun <T : BottomSheetEvent, BS : BaseBottomSheet<*, *, *, *>> BaseFragment<*, *, 
     )
 }
 
-private fun <T : BottomSheetEvent, BS : BaseBottomSheet<*, *, *, *>> BaseFragment<*, *, *, *>.showSnippedBottomSheet(
+private fun <T : BottomSheetEvent, BS : BaseBottomSheet<*, *, *, *, *>> BaseFragment<*, *, *, *, *>.showSnippedBottomSheet(
     containerId: Int,
     fragment: Class<BS>,
     bundle: Bundle? = null,
-    activityViewModel: BottomSheetViewModel<T, *>,
+    activityViewModel: BottomSheetViewModel<T, *, *>,
     singleEventCollector: ((T) -> Unit)?,
     collector: ((T) -> Unit)?,
     unsubscribeEvent: BottomSheetEvent? = null,
@@ -76,20 +76,20 @@ private fun <T : BottomSheetEvent, BS : BaseBottomSheet<*, *, *, *>> BaseFragmen
     ).commit()
 }
 
-fun <T : BottomSheetEvent> BaseFragment<*, *, *, *>.showBottomSheet(
-    fragment: BaseBottomSheet<*, *, *, *>,
+fun <T : BottomSheetEvent> BaseFragment<*, *, *, *, *>.showBottomSheet(
+    fragment: BaseBottomSheet<*, *, *, *, *>,
     bundle: Bundle? = null,
-    activityViewModel: BottomSheetViewModel<T, *>,
+    activityViewModel: BottomSheetViewModel<T, *, *>,
     collector: (T) -> Unit,
     unsubscribeEvent: BottomSheetEvent
 ) {
     showBottomSheet(fragment, bundle, activityViewModel, null, collector, unsubscribeEvent)
 }
 
-fun <T : BottomSheetEvent> BaseFragment<*, *, *, *>.showBottomSheet(
-    fragment: BaseBottomSheet<*, *, *, *>,
+fun <T : BottomSheetEvent> BaseFragment<*, *, *, *, *>.showBottomSheet(
+    fragment: BaseBottomSheet<*, *, *, *, *>,
     bundle: Bundle? = null,
-    activityViewModel: BottomSheetViewModel<T, *>,
+    activityViewModel: BottomSheetViewModel<T, *, *>,
     singleEventCollector: (T) -> Unit
 ) {
     showBottomSheet(
@@ -101,10 +101,10 @@ fun <T : BottomSheetEvent> BaseFragment<*, *, *, *>.showBottomSheet(
     )
 }
 
-private fun <T : BottomSheetEvent> BaseFragment<*, *, *, *>.showBottomSheet(
-    fragment: BaseBottomSheet<*, *, *, *>,
+private fun <T : BottomSheetEvent> BaseFragment<*, *, *, *, *>.showBottomSheet(
+    fragment: BaseBottomSheet<*, *, *, *, *>,
     bundle: Bundle? = null,
-    activityViewModel: BottomSheetViewModel<T, *>,
+    activityViewModel: BottomSheetViewModel<T, *, *>,
     singleEventCollector: ((T) -> Unit)?,
     collector: ((T) -> Unit)?,
     unsubscribeEvent: BottomSheetEvent? = null,

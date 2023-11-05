@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:adapter="@{adapter}"
-            app:submitList="@{viewModel.uiState.categories}"
+            app:submitList="@{viewModel.functions.getSuccessCategories(viewModel.uiState)}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

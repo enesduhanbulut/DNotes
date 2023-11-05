@@ -29,6 +29,7 @@ class ManageCategoryFragment :
     BaseFragment<
             FragmentManageCategoryBinding, ManageCategoryUIEvent,
             ManageCategoryUIState, ManageCategoryViewModel,
+            ManageCategoryUIStateFunctions,
             >() {
     override val layoutId: Int
         get() = R.layout.fragment_manage_category
@@ -137,9 +138,10 @@ class ManageCategoryFragment :
 
     override fun handleUIState(it: ManageCategoryUIState) {
         super.handleUIState(it)
-        if (it.categoryList.isEmpty()) {
+        val categoryList = functions.getSuccessCategoryList(it)
+        if (categoryList == null || categoryList.isEmpty()) {
             return
         }
-        adapter.setItems(it.categoryList)
+        adapter.setItems(categoryList)
     }
 }

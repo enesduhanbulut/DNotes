@@ -20,9 +20,9 @@ class AllNotesViewModel @Inject constructor(
     private val defaultCategoryModel: CategoryUIModel,
     private val deleteNote: DeleteNote,
     private val updateNotes: UpdateNotes,
-) : FragmentViewModel<AllNotesEvent, AllNotesState>() {
+) : FragmentViewModel<AllNotesEvent, AllNotesState, AllNotesStateFunctions>() {
     fun initiate(categoryId: Int) {
-        setSuccessState(
+        setState(
             AllNotesState.Success(
                 category = defaultCategoryModel, notes = emptyList()
             )

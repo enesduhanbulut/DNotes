@@ -9,7 +9,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 open class ShowMessageBottomSheet :
-    BaseBottomSheet<ShowMessageUIEvent, ShowMessageBottomSheetUIState,
+    BaseBottomSheet<ShowMessageUIEvent, ShowMessageBottomSheetUIState, ShowMessageBottomSheetUIStateFunctions,
             ShowMessageBottomSheetViewModel, FragmentShowMessageBottomSheetBinding>() {
     private val showMessageBottomSheetViewModel: ShowMessageBottomSheetViewModel by viewModels()
     override val layoutId: Int

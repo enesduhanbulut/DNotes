@@ -19,17 +19,17 @@ class ManageCategoryViewModel @Inject constructor(
     private val getCategories: GetCategories,
     private val deleteCategory: DeleteCategory,
     private val undoCategory: UndoCategory,
-) : FragmentViewModel<ManageCategoryUIEvent, ManageCategoryUIState>() {
+) : FragmentViewModel<ManageCategoryUIEvent, ManageCategoryUIState, ManageCategoryUIStateFunctions>() {
     init {
         setEvent(ManageCategoryUIEvent.Loading)
-        setSuccessState(ManageCategoryUIState.Success(emptyList()))
+        setState(ManageCategoryUIState.Success(emptyList()))
         loadCategories()
     }
 
     private fun loadCategories() {
         viewModelScope.launch {
             val list = getCategories.invoke()
-            setSuccessState(ManageCategoryUIState.Success(list))
+            setState(ManageCategoryUIState.Success(list))
         }
     }
 
@@ -51,11 +51,12 @@ class ManageCategoryViewModel @Inject constructor(
                 loadCategories()
             } catch (exception: Exception) {
                 // TODO: 2021-09-19 handle errors
-                setSuccessState(
+                setState(
                     withStateValue {
                         it.apply {
                         }
-                    })
+                    }
+                )
             }
         }
     }

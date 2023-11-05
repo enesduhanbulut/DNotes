@@ -15,7 +15,7 @@ import com.duhapp.dnotes.features.home.home_screen_category.ui.HomeCategoryUIMod
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class HomeFragment : BaseFragment<FragmentHomeBinding, HomeUIEvent, HomeUIState, HomeViewModel>() {
+class HomeFragment : BaseFragment<FragmentHomeBinding, HomeUIEvent, HomeUIState, HomeViewModel, HomeUIStateFunctions>() {
 
     private val homeViewModel: HomeViewModel by viewModels()
     private val showMessageBottomSheetViewModel: ShowMessageBottomSheetViewModel by viewModels()
@@ -88,6 +88,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeUIEvent, HomeUIState,
     }
 
     override fun handleUIState(it: HomeUIState) {
-        adapter.setItems(it.categories)
+        adapter.setItems(functions.getSuccessCategories(it))
     }
 }

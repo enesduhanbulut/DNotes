@@ -1,6 +1,7 @@
 package com.duhapp.dnotes.features.generic.ui
 
 import android.os.Parcelable
+import com.ahk.annotation.GenerateSealedGetters
 import com.duhapp.dnotes.features.base.ui.BottomSheetEvent
 import com.duhapp.dnotes.features.base.ui.BottomSheetState
 import com.duhapp.dnotes.features.base.ui.BottomSheetViewModel
@@ -10,20 +11,24 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ShowMessageBottomSheetViewModel @Inject constructor() :
-    BottomSheetViewModel<ShowMessageUIEvent, ShowMessageBottomSheetUIState>() {
+    BottomSheetViewModel<ShowMessageUIEvent, ShowMessageBottomSheetUIState, ShowMessageBottomSheetUIStateFunctions>() {
     fun setViewWithBundle(sheetUIState: ShowMessageUIModel, buttonStyle: ButtonStyle) {
-        setSuccessState(
-            ShowMessageBottomSheetUIState(
+        setState(
+            ShowMessageBottomSheetUIState.Success(
                 sheetUIState, buttonStyle
             )
         )
     }
 }
 
-data class ShowMessageBottomSheetUIState(
-    val uiModel: ShowMessageUIModel,
-    val buttonStyle: ButtonStyle = ButtonStyle.Both,
-) : BottomSheetState
+
+@GenerateSealedGetters
+sealed interface ShowMessageBottomSheetUIState : BottomSheetState {
+    data class Success(
+        val uiModel: ShowMessageUIModel,
+        val buttonStyle: ButtonStyle = ButtonStyle.Both,
+    ): ShowMessageBottomSheetUIState
+}
 
 sealed interface ShowMessageUIEvent : BottomSheetEvent {
     object Cancel : ShowMessageUIEvent

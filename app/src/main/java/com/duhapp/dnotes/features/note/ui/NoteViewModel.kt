@@ -21,11 +21,11 @@ import javax.inject.Inject
 class NoteViewModel @Inject constructor(
     private val upsertNote: UpsertNote,
     private val getDefaultCategory: GetDefaultCategory,
-) : FragmentViewModel<NoteUIEvent, NoteUIState>() {
+) : FragmentViewModel<NoteUIEvent, NoteUIState, NoteUIStateFunctions>() {
     val TAG = "NoteViewModel"
 
     init {
-        setSuccessState(
+        setState(
             NoteUIState.Success(
                 SuccessStateData(
                     baseNoteUIModel = getDefaultNote(),
@@ -46,7 +46,7 @@ class NoteViewModel @Inject constructor(
     fun initState(args: NoteFragmentArgs?) {
         if (args?.NoteItem == null) {
             viewModelScope.launch {
-                setSuccessState(
+                setState(
                     NoteUIState.Success(
                         SuccessStateData(
                             baseNoteUIModel = getDefaultNote(),
@@ -56,7 +56,7 @@ class NoteViewModel @Inject constructor(
                 )
             }
         } else {
-            setSuccessState(
+            setState(
                 NoteUIState.Success(
                     SuccessStateData(
                         baseNoteUIModel = args.NoteItem,
@@ -98,7 +98,6 @@ sealed interface NoteUIState : FragmentUIState {
     ) : NoteUIState
 }
 
-@GenerateSealedGetters
 sealed interface NoteUIEvent : FragmentUIEvent {
     object NavigateSelectCategory : NoteUIEvent
 }

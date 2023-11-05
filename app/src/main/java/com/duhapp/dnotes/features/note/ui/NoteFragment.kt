@@ -13,7 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class NoteFragment :
-    BaseFragment<FragmentNoteBinding, NoteUIEvent, NoteUIState, NoteViewModel>() {
+    BaseFragment<FragmentNoteBinding, NoteUIEvent, NoteUIState, NoteViewModel, NoteUIStateFunctions>() {
     private var isCategoryShown = false
     override val layoutId: Int
         get() = R.layout.fragment_note

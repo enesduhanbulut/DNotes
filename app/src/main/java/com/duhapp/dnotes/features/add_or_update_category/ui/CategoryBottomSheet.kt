@@ -15,6 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class CategoryBottomSheet : BaseBottomSheet<
         CategoryUIEvent,
         CategoryBottomSheetUIState,
+        CategoryBottomSheetUIStateFunctions,
         CategoryBottomSheetViewModel,
         FragmentCategoryBottomSheetBinding>() {
     private lateinit var emojiPopup: EmojiPopup

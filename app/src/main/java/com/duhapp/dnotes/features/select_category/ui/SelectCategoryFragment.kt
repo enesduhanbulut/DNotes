@@ -14,7 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SelectCategoryFragment :
-    BaseBottomSheet<SelectCategoryUIEvent, SelectCategoryUIState, SelectCategoryViewModel, FragmentSelectCategoryBinding>() {
+    BaseBottomSheet<SelectCategoryUIEvent, SelectCategoryUIState, SelectCategoryUIStateFunctions, SelectCategoryViewModel, FragmentSelectCategoryBinding>() {
     override val layoutId = R.layout.fragment_select_category
     override val fragmentTag = "SelectCategoryFragment"
     private val selectCategoryViewModel: SelectCategoryViewModel by activityViewModels()

@@ -1,7 +1,7 @@
 package com.duhapp.dnotes.features.base.ui
 
-abstract class FragmentViewModel<UE : FragmentUIEvent, US : FragmentUIState> :
-    BaseViewModel<UE, US>()
+abstract class FragmentViewModel<UE : FragmentUIEvent, US : FragmentUIState, F : BaseStateFunctions> :
+    BaseViewModel<UE, US, F>()
 
 interface FragmentUIState : BaseUIState
 

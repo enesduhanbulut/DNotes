@@ -13,7 +13,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-abstract class BaseBottomSheet<BUE : BottomSheetEvent, BUS : BottomSheetState, VM : BottomSheetViewModel<BUE, BUS>, DB : ViewDataBinding> :
+abstract class BaseBottomSheet<BUE : BottomSheetEvent, BUS : BottomSheetState, F : BaseStateFunctions,VM : BottomSheetViewModel<BUE, BUS, F>, DB : ViewDataBinding> :
     BottomSheetDialogFragment() {
     abstract val layoutId: Int
     abstract val fragmentTag: String

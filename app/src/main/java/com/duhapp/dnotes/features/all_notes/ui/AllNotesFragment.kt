@@ -24,7 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class AllNotesFragment:
-    BaseFragment<FragmentAllNotesBinding, AllNotesEvent, AllNotesState, AllNotesViewModel>() {
+    BaseFragment<FragmentAllNotesBinding, AllNotesEvent, AllNotesState, AllNotesViewModel, AllNotesStateFunctions>() {
     override val layoutId: Int
         get() = R.layout.fragment_all_notes
     override val titleId: Int
@@ -158,8 +158,8 @@ class AllNotesFragment:
                 val fragment = SelectCategoryFragment()
                 showBottomSheet(
                     fragment = fragment,
-                    SelectCategoryFragmentArgs(viewModel.uiState.value.newCopy().).toBundle(),
-                    selectCategoryViewModel
+                    bundle = SelectCategoryFragmentArgs().toBundle(),
+                    activityViewModel = selectCategoryViewModel
                 ){ uiEvent ->
                     when(uiEvent){
                         is SelectCategoryUIEvent.OnCategorySelected -> {
@@ -175,7 +175,7 @@ class AllNotesFragment:
 
     override fun handleUIState(it: AllNotesState) {
         super.handleUIState(it)
-        adapter.setItems(it.notes)
+        adapter.setItems(viewModel.functions.getSuccessNotes(it))
     }
 
     override fun onDestroy() {

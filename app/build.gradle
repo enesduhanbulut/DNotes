@@ -5,6 +5,8 @@ plugins {
     id 'dagger.hilt.android.plugin'
     id 'androidx.navigation.safeargs.kotlin'
     id 'kotlin-parcelize'
+    // add ksp
+    id 'com.google.devtools.ksp'
 }
 
 android {
@@ -99,4 +101,7 @@ dependencies {
     implementation "com.vanniktech:emoji-google:0.16.0"
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.11'
+
+    //gson for typetoken
+    implementation 'com.google.code.gson:gson:2.10.1'
 }

@@ -17,9 +17,9 @@ import javax.inject.Inject
 @HiltViewModel
 class SelectCategoryViewModel @Inject constructor(
     private val getCategories: GetCategories,
-) : BottomSheetViewModel<SelectCategoryUIEvent, SelectCategoryUIState>() {
+) : BottomSheetViewModel<SelectCategoryUIEvent, SelectCategoryUIState, SelectCategoryUIStateFunctions>() {
     fun initState(selectedItemModel: CategoryUIModel) {
-        setSuccessState(
+        setState(
             SelectCategoryUIState.Success(
                 SuccessStateData(
                     selectedCategory = selectedItemModel,
@@ -31,7 +31,7 @@ class SelectCategoryViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val categories = getCategories.invoke()
-                setSuccessState(
+                setState(
                     SelectCategoryUIState.Success(
                         SuccessStateData(
                             selectedCategory = selectedItemModel,
@@ -41,7 +41,7 @@ class SelectCategoryViewModel @Inject constructor(
                     )
                 )
             } catch (e: Exception) {
-                setSuccessState(
+                setState(
                     SelectCategoryUIState.Error(
                         e.asCustomException(message = R.string.Categories_Cannot_Be_Loaded)
                     )

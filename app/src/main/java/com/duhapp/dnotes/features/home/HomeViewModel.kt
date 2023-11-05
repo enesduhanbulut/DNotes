@@ -2,7 +2,11 @@ package com.duhapp.dnotes.features.home
 
 import androidx.lifecycle.viewModelScope
 import com.ahk.annotation.GenerateSealedGetters
+import com.duhapp.dnotes.R
 import com.duhapp.dnotes.features.add_or_update_category.domain.FetchHomeData
+import com.duhapp.dnotes.features.add_or_update_category.ui.CategoryBottomSheetUIState
+import com.duhapp.dnotes.features.base.domain.CustomException
+import com.duhapp.dnotes.features.base.domain.CustomExceptionData
 import com.duhapp.dnotes.features.base.ui.FragmentUIEvent
 import com.duhapp.dnotes.features.base.ui.FragmentUIState
 import com.duhapp.dnotes.features.base.ui.FragmentViewModel
@@ -15,27 +19,32 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val fetchHomeData: FetchHomeData
-) : FragmentViewModel<HomeUIEvent, HomeUIState>() {
+) : FragmentViewModel<HomeUIEvent, HomeUIState, HomeUIStateFunctions>() {
 
     init {
-        setSuccessState(HomeUIState(emptyList()))
+        setState(HomeUIState.Success(emptyList()))
     }
 
     fun loadCategories() {
         viewModelScope.launch {
             fetchHomeData.invoke().let {
                 if (it.isNotEmpty()) {
-                    setSuccessState(
-                        HomeUIState(
-                            categories = it,
-                            errorMessage = "",
+                    setState(
+                        HomeUIState.Success(
+                            it
                         )
                     )
+
                 } else {
-                    setSuccessState(
-                        HomeUIState(
-                            emptyList(),
-                            errorMessage = "No notes found",
+                    setState(
+                        HomeUIState.Error(
+                            CustomException.ThereIsNoSuitableVariableException(
+                                CustomExceptionData(
+                                    R.string.Data_Not_Found,
+                                    R.string.Categories_Cannot_Be_Loaded,
+                                    -1,
+                                )
+                            )
                         )
                     )
                 }
@@ -58,6 +67,9 @@ class HomeViewModel @Inject constructor(
 sealed interface HomeUIState : FragmentUIState {
     data class Success(
         val categories: List<HomeCategoryUIModel>
+    ) : HomeUIState
+    data class Error(
+        val customException: CustomException
     ) : HomeUIState
 }
 

@@ -20,13 +20,15 @@ abstract class BaseFragment<
         DB : ViewDataBinding,
         UE : FragmentUIEvent,
         US : FragmentUIState,
-        VM : FragmentViewModel<UE, US>,
+        VM : FragmentViewModel<UE, US, F>,
+        F : BaseStateFunctions
         > : Fragment() {
 
     protected var observeJobs: MutableList<Job> = mutableListOf()
     private var mBinding: DB? = null
     protected lateinit var binding: DB
     protected lateinit var viewModel: VM
+    protected lateinit var functions: F
 
     @get:LayoutRes
     abstract val layoutId: Int
