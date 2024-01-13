@@ -39,10 +39,7 @@ class ErrorDialog: BaseDialogFragment<ErrorDialogBinding, ErrorDialogUIEvent, Er
         }
     }
 
-
     override fun initView(binding: ErrorDialogBinding) {
-
         Timber.d("initView")
     }
-
 }

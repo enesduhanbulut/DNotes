@@ -4,7 +4,9 @@ import com.vanniktech.emoji.Emoji
 import com.vanniktech.emoji.google.GoogleEmojiProvider
 
 val emojiProvider = GoogleEmojiProvider()
-val emojiUnicodes = emojiProvider.categories.flatMap { category -> category.emojis.map { it.unicode } }
+val emojiUnicodes =
+    emojiProvider.categories.flatMap { category -> category.emojis.map { it.unicode } }
+
 fun Emoji.isEmoji(): Boolean {
     return emojiUnicodes.contains(this.unicode)
 }

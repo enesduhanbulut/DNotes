@@ -2,14 +2,17 @@ package com.duhapp.dnotes.features.base.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 abstract class BaseViewModel<UE : BaseUIEvent, US : BaseUIState> : ViewModel() {
     private val mutableUIEvent = MutableSharedFlow<UE>()
@@ -22,24 +25,28 @@ abstract class BaseViewModel<UE : BaseUIEvent, US : BaseUIState> : ViewModel() {
         mutableUIEvent.emit(event)
     }
 
-    fun setState(state: US) {
+    open fun setState(state: US) {
         if (mutableUIState.value == state) {
             mutableUIState.value = null
         }
         mutableUIState.update { state }
     }
 
-    fun setTemporaryState(state: US, oldState: US, delay: Long) {
-        mutableUIState.update { state }
-        viewModelScope.launch {
+    fun setTemporaryState(state: US, oldState: US?, delay: Long) {
+        if (oldState == null) {
+            setState(state)
+            return
+        }
+        setState(state)
+        run {
             kotlinx.coroutines.delay(delay)
-            mutableUIState.update { oldState }
+            setState(oldState)
         }
     }
 
     fun setStateAndRunMethodAfterDelay(state: US, delay: Long, block: () -> Unit) {
-        mutableUIState.update { state }
-        viewModelScope.launch {
+        setState(state)
+        run {
             kotlinx.coroutines.delay(delay)
             block()
         }
@@ -51,6 +58,12 @@ abstract class BaseViewModel<UE : BaseUIEvent, US : BaseUIState> : ViewModel() {
             return block(it)
         }
         throw IllegalStateException("State is null")
+    }
+
+    fun run(block: suspend CoroutineScope.() -> Unit) {
+        viewModelScope.launch {
+            block()
+        }
     }
 }
 

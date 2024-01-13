@@ -31,7 +31,8 @@ class AllNotesViewModel @Inject constructor(
                 category = defaultCategoryModel, notes = emptyList()
             )
         )
-        viewModelScope.launch {
+
+        run {
             try {
                 val notesById = getNotesByCategoryId.invoke(categoryId)
                 if (notesById.isEmpty()) {

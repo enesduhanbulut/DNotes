@@ -149,4 +149,10 @@ class ManageCategoryFragment :
         }
         adapter.setItems(it.getSuccessCategoryList()!!)
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        adapter.onItemClickListener = null
+
+    }
 }

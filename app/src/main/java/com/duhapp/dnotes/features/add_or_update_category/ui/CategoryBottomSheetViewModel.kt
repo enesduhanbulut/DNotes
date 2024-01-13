@@ -3,47 +3,86 @@ package com.duhapp.dnotes.features.add_or_update_category.ui
 import android.os.Parcelable
 import android.view.View
 import androidx.annotation.StringRes
-import androidx.lifecycle.viewModelScope
 import com.duhapp.dnotes.NoteColor
 import com.duhapp.dnotes.R
 import com.duhapp.dnotes.features.add_or_update_category.domain.UpsertCategory
-import com.duhapp.dnotes.features.add_or_update_category.domain.isEmoji
 import com.duhapp.dnotes.features.base.domain.CustomException
+import com.duhapp.dnotes.features.base.domain.CustomExceptionData
 import com.duhapp.dnotes.features.base.domain.asCustomException
 import com.duhapp.dnotes.features.base.ui.BottomSheetEvent
 import com.duhapp.dnotes.features.base.ui.BottomSheetState
 import com.duhapp.dnotes.features.base.ui.BottomSheetViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import javax.inject.Inject
 
 @HiltViewModel
 class CategoryBottomSheetViewModel @Inject constructor(
     private val upsertCategory: UpsertCategory
-) :
-    BottomSheetViewModel<CategoryUIEvent, CategoryBottomSheetUIState>() {
-    fun onPositiveButtonClicked() {
-        setState(
-            withStateValue {
-                var state = it
-                if (it.isSuccess()) {
-                    viewModelScope.launch {
-                        try {
-                            upsertCategory.invoke(it.getSuccessCategory()!!)
-                            setEvent(CategoryUIEvent.Upserted)
-                        } catch (e: Exception) {
+) : BottomSheetViewModel<CategoryUIEvent, CategoryBottomSheetUIState>() {
+    var lastSuccessState: CategoryBottomSheetUIState.Success? = null
+    override fun setState(state: CategoryBottomSheetUIState) {
+        if (state is CategoryBottomSheetUIState.Success) {
+            lastSuccessState = state
+        }
+        super.setState(state)
+    }
+
+    fun onSaveButtonClick() {
+        val state = uiState.value
+        if (state == null) {
+            setTemporaryState(
+                state = CategoryBottomSheetUIState.Error(
+                    CustomException.UnknownException(
+                        CustomExceptionData(
+                            title = R.string.Save_Category_Failed,
+                            message = R.string.Category_Could_Not_Be_Saved,
+                            code = R.string.Unknown_Error
+                        )
+                    )
+                ),
+                oldState = lastSuccessState,
+                delay = 50
+            )
+        } else {
+            val categoryVal: CategoryUIModel? = if (state.isSuccess())
+                state.getSuccessCategory()
+            else
+                lastSuccessState!!.categoryUIModel
+
+            run {
+                if (categoryVal != null)
+                    try {
+                        upsertCategory.invoke(categoryVal)
+                        setEvent(CategoryUIEvent.Upserted)
+                    } catch (e: Exception) {
+                        setTemporaryState(
                             state = CategoryBottomSheetUIState.Error(
                                 e.asCustomException(
                                     message = R.string.Save_Category_Failed
                                 )
-                            )
-                        }
+                            ),
+                            oldState = lastSuccessState,
+                            delay = 50
+                        )
                     }
+                else {
+                    setTemporaryState(
+                        state = CategoryBottomSheetUIState.Error(
+                            CustomException.UnknownException(
+                                CustomExceptionData(
+                                    title = R.string.Save_Category_Failed,
+                                    message = R.string.Category_Could_Not_Be_Saved,
+                                    code = R.string.Unknown_Error
+                                )
+                            )
+                        ),
+                        oldState = lastSuccessState,
+                        delay = 50
+                    )
                 }
-                state
             }
-        )
+        }
     }
 
     fun setViewWithBundle(categoryUIState: CategoryUIModel, categoryShowType: CategoryShowType) {
@@ -107,44 +146,31 @@ class CategoryBottomSheetViewModel @Inject constructor(
 
 }
 
+data class FormData(
+    @StringRes
+    var title: Int = 0,
+    var message: Int = 0,
+    @StringRes
+    var positiveButtonText: Int = 0,
+    @StringRes
+    var negativeButtonText: Int = 0,
+    var negativeButtonVisibility: Int = View.VISIBLE
+)
+
 sealed interface CategoryBottomSheetUIState : BottomSheetState {
+
     data class Success(
         var colors: List<ColorItemUIModel>,
         var categoryUIModel: CategoryUIModel,
         val categoryShowType: CategoryShowType,
-    ) : CategoryBottomSheetUIState {
-        @StringRes
-        var title: Int = 0
-
-        @StringRes
-        var message: Int = 0
-
-        @StringRes
-        var positiveButtonText: Int = 0
-
-        @StringRes
-        var negativeButtonText: Int = 0
-        var negativeButtonVisibility = View.VISIBLE
-
-        init {
-            when (categoryShowType) {
-                CategoryShowType.Add -> {
-                    title = R.string.New_Category
-                    message = R.string.New_Category_Message
-                    positiveButtonText = R.string.Add
-                    negativeButtonText = R.string.blank
-                    negativeButtonVisibility = View.GONE
-                }
-
-                CategoryShowType.Edit -> {
-                    title = R.string.Edit_Category
-                    message = R.string.Edit_Category_Message
-                    positiveButtonText = R.string.Confirm
-                    negativeButtonText = R.string.Delete
-                }
-            }
-        }
-    }
+        var formData: FormData = FormData(
+            title = R.string.Add_Category,
+            message = R.string.New_Category_Message,
+            positiveButtonText = R.string.Add,
+            negativeButtonText = R.string.Delete,
+            negativeButtonVisibility = View.VISIBLE
+        )
+    ) : CategoryBottomSheetUIState
 
     data class Error(
         val customException: CustomException
@@ -159,6 +185,18 @@ sealed interface CategoryBottomSheetUIState : BottomSheetState {
             (this as Success).colors
         } else {
             null
+        }
+    }
+
+    fun setSuccessCategoryName(text: String) {
+        if (isSuccess()) {
+            (this as Success).categoryUIModel.name = text
+        }
+    }
+
+    fun setSuccessCategoryDescription(text: String) {
+        if (isSuccess()) {
+            (this as Success).categoryUIModel.description = text
         }
     }
 
@@ -188,7 +226,7 @@ sealed interface CategoryBottomSheetUIState : BottomSheetState {
 
     fun getSuccessPositiveButtonText(): Int? {
         return if (isSuccess()) {
-            (this as Success).positiveButtonText
+            (this as Success).formData.positiveButtonText
         } else {
             null
         }

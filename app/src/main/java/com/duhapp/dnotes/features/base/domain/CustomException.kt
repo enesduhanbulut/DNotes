@@ -16,7 +16,7 @@ sealed class CustomException(
     data class UnknownDatabaseException(override val data: CustomExceptionData) : CustomException(data)
     data class ThereIsNoSuitableVariableException(override val data: CustomExceptionData) : CustomException(data)
     data class UndoUnavailableException(override val data: CustomExceptionData) : CustomException(data)
-    data class WrongParametersException(override val data: CustomExceptionData) : CustomException(data)
+    data class NotValidParametersException(override val data: CustomExceptionData) : CustomException(data)
 }
 
 data class CustomExceptionData(
@@ -31,7 +31,7 @@ enum class CustomExceptionCode(val code: Int) {
     THERE_IS_NO_SUITABLE_VARIABLE_EXCEPTION(404),
     DATABASE_EXCEPTION(101),
     UNKNOWN_EXCEPTION(102),
-    WRONG_PARAMETERS_EXCEPTION(103),
+    NOT_VALID_PARAMETERS_EXCEPTION(103),
     AUTHENTICATION_EXCEPTION(401),
     SERVER_EXCEPTION(500),
     UNKNOWN_ERROR(-1),

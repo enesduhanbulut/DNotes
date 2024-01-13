@@ -8,5 +8,5 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class ColorItemUIModel(
     var isSelected: Boolean = false,
-    val color: NoteColor
+    val color: NoteColor = NoteColor.BLUE
 ) : Parcelable, BaseListItem

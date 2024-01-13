@@ -9,15 +9,24 @@ import com.duhapp.dnotes.features.note.data.NoteRepository
 
 class UpdateNotes (private val noteRepository: NoteRepository) {
     suspend operator fun invoke(notes: List<BaseNoteUIModel>) {
-        if(notes.isNotEmpty())
-            noteRepository.updateNotes(notes)
-        else
-            throw CustomException.WrongParametersException(
+        if (notes.any { it.id < 0 })
+            throw CustomException.NotValidParametersException(
+                CustomExceptionData(
+                    title = R.string.Not_Valid_Parameters,
+                    message = R.string.Note_Id_Could_Not_Be_Less_Than_Zero,
+                    code = CustomExceptionCode.NOT_VALID_PARAMETERS_EXCEPTION.code
+                )
+            )
+
+        if (notes.isEmpty())
+            throw CustomException.NotValidParametersException(
                 CustomExceptionData(
                     title = R.string.Error_There_Is_No_Suitable_Variable,
                     message = R.string.Notes_Could_Not_Be_Empty,
-                    code = CustomExceptionCode.WRONG_PARAMETERS_EXCEPTION.code
+                    code = CustomExceptionCode.NOT_VALID_PARAMETERS_EXCEPTION.code
                 )
             )
+
+        noteRepository.updateNotes(notes)
     }
 }

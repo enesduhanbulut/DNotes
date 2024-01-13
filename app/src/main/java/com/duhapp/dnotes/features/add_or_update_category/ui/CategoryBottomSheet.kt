@@ -11,17 +11,11 @@ import com.duhapp.dnotes.features.base.ui.BaseListAdapter
 import com.duhapp.dnotes.features.generic.ui.SpaceModel
 import com.duhapp.dnotes.features.generic.ui.SpacingItemDecorator
 import com.google.android.material.snackbar.Snackbar
-import com.vanniktech.emoji.EmojiManager
 import com.vanniktech.emoji.EmojiPopup
-import com.vanniktech.emoji.EmojiProvider
-import com.vanniktech.emoji.EmojiRange
-import com.vanniktech.emoji.google.GoogleEmojiProvider
-import com.vanniktech.emoji.recent.NoRecentEmoji
 import com.vanniktech.emoji.search.NoSearchEmoji
 import com.vanniktech.emoji.variant.NoVariantEmoji
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
-import java.util.regex.Pattern
 
 @AndroidEntryPoint
 class CategoryBottomSheet : BaseBottomSheet<
@@ -37,18 +31,11 @@ class CategoryBottomSheet : BaseBottomSheet<
     private lateinit var adapter: BaseListAdapter<ColorItemUIModel, LayoutColorSelectorItemBinding>
     private val tag = "CategoryBottomSheet"
     override fun initView(binding: FragmentCategoryBottomSheetBinding) {
-        arguments.let { bundle ->
-            CategoryBottomSheetArgs.fromBundle(bundle!!).let { args ->
-                viewModel.setViewWithBundle(args.uiModel.copy(), args.categoryShowType)
-            }
-        }
-
         val onClickListener =
             BaseListAdapter.OnItemClickListener<ColorItemUIModel> { item, _ ->
                 viewModel.onColorSelected(item)
             }
-        adapter = object :
-            BaseListAdapter<ColorItemUIModel, LayoutColorSelectorItemBinding>() {
+        adapter = object : BaseListAdapter<ColorItemUIModel, LayoutColorSelectorItemBinding>() {
             override fun getLayoutId() = R.layout.layout_color_selector_item
 
             override fun setUIState(
@@ -79,11 +66,14 @@ class CategoryBottomSheet : BaseBottomSheet<
     }
 
     override fun handleUIState(it: CategoryBottomSheetUIState) {
-        when(it) {
+        when (it) {
             is CategoryBottomSheetUIState.Error -> {
-                Snackbar.make(requireView(), it.getErrorCustomException()?.data?.message ?: R.string.Unknown_Error_Message, Snackbar.LENGTH_LONG).show()
+                Snackbar.make(
+                    requireView().rootView,
+                    it.getErrorCustomException()?.data?.message ?: R.string.Unknown_Error,
+                    Snackbar.LENGTH_LONG
+                ).show()
             }
-
             else -> {
                 Timber.d(tag, "Unhandled state: $it")
             }
@@ -95,9 +85,11 @@ class CategoryBottomSheet : BaseBottomSheet<
             is CategoryUIEvent.Canceled, CategoryUIEvent.Upserted -> {
                 dismiss()
             }
+
             is CategoryUIEvent.ColorSelected -> {
                 Timber.d(tag, "ColorSelected: $it")
             }
+
             is CategoryUIEvent.ShowEmojiDialog -> {
                 if (emojiPopup == null) {
                     emojiPopup = EmojiPopup(
@@ -118,6 +110,7 @@ class CategoryBottomSheet : BaseBottomSheet<
                             }
                         }, editText = mBinding!!.categoryIcon
                     )
+
                 }
                 if (emojiPopup!!.isShowing) {
                     emojiPopup!!.dismiss()
@@ -148,6 +141,7 @@ class CategoryBottomSheet : BaseBottomSheet<
 
     override fun onDestroy() {
         super.onDestroy()
+        viewModel.onDismissed()
         adapter.onItemClickListener = null
         emojiPopup.let {
             it?.dismiss()

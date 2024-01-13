@@ -13,31 +13,21 @@ class UpsertCategory(
 ) {
     suspend operator fun invoke(categoryUIModel: CategoryUIModel) {
         if (categoryUIModel.name.isEmpty() && categoryUIModel.description.isEmpty()) {
-            throw CustomException.WrongParametersException(
+            throw CustomException.NotValidParametersException(
                 CustomExceptionData(
-                    title = R.string.Wrong_Parameters,
+                    title = R.string.Not_Valid_Parameters,
                     message = R.string.Category_Name_And_Description_Could_Not_Be_Empty,
-                    code = CustomExceptionCode.WRONG_PARAMETERS_EXCEPTION.code
+                    code = CustomExceptionCode.NOT_VALID_PARAMETERS_EXCEPTION.code
                 )
             )
         }
 
         if (categoryUIModel.name.length > 20) {
-            throw CustomException.WrongParametersException(
+            throw CustomException.NotValidParametersException(
                 CustomExceptionData(
-                    title = R.string.Wrong_Parameters,
+                    title = R.string.Not_Valid_Parameters,
                     message = R.string.Category_Name_Could_Not_Be_More_Than_20_Characters,
-                    code = CustomExceptionCode.WRONG_PARAMETERS_EXCEPTION.code
-                )
-            )
-        }
-
-        if (categoryUIModel.description.length > 150) {
-            throw CustomException.WrongParametersException(
-                CustomExceptionData(
-                    title = R.string.Wrong_Parameters,
-                    message = R.string.Category_Description_Could_Not_Be_More_Than_150_Characters,
-                    code = CustomExceptionCode.WRONG_PARAMETERS_EXCEPTION.code
+                    code = CustomExceptionCode.NOT_VALID_PARAMETERS_EXCEPTION.code
                 )
             )
         }
