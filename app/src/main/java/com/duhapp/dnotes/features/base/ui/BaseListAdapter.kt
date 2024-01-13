@@ -6,6 +6,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import timber.log.Timber
 
 abstract class BaseListAdapter<M : BaseListItem, DB : ViewDataBinding> :
     RecyclerView.Adapter<BaseListAdapter<M, DB>.BaseViewHolder>() {
@@ -28,7 +29,9 @@ abstract class BaseListAdapter<M : BaseListItem, DB : ViewDataBinding> :
     }
 
     fun setItems(items: List<M>) {
-        notifyDataSetChanged()
+        val diffCallback = DiffCallback(itemList, items)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+        diffResult.dispatchUpdatesTo(this)
         itemList = items.toList()
     }
 
@@ -106,12 +109,16 @@ abstract class BaseListAdapter<M : BaseListItem, DB : ViewDataBinding> :
 
         private fun areItemsSame(oldItem: T, newItem: T): Boolean {
             // Implement your logic to determine if two items represent the same object
-            return oldItem === newItem
+            return (oldItem == newItem).also {
+                Timber.d("diffUtil " + "areItemsSame: " + oldItem.toString() + " " + newItem.toString() + " " + " atsiki: " + it)
+            }
         }
 
         private fun areContentsSame(oldItem: T, newItem: T): Boolean {
             // Implement your logic to determine if the item content has changed
-            return oldItem == newItem
+            return (oldItem == newItem).also {
+                Timber.d("diffUtil " + "areContentsSame: " + oldItem.toString() + " " + newItem.toString() + " " + " atsiki: " + it)
+            }
         }
     }
 }

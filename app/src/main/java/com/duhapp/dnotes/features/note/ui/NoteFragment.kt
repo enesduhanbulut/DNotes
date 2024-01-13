@@ -3,17 +3,14 @@ package com.duhapp.dnotes.features.note.ui
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.fragment.findNavController
 import com.duhapp.dnotes.R
 import com.duhapp.dnotes.databinding.FragmentNoteBinding
-import com.duhapp.dnotes.features.base.domain.CustomException
 import com.duhapp.dnotes.features.base.ui.BaseFragment
 import com.duhapp.dnotes.features.base.ui.DialogFragmentState
 import com.duhapp.dnotes.features.base.ui.showSnippedBottomSheet
@@ -49,7 +46,7 @@ class NoteFragment :
             }
         }
 
-        requireActivity().onBackPressedDispatcher.addCallback(this, callback);
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
     }
     override fun setBindingViewModel() {
         mBinding!!.viewModel = viewModel
@@ -199,9 +196,6 @@ class NoteFragment :
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
-        lastUIEvent = NoteUIEvent.Idle
-        lastUIState = NoteUIState.Idle
         mBinding.let {
             it?.bottomSheetCategory?.setOnClickListener(null)
             it?.bottomSheetCategory?.let { bottomSheet ->
@@ -211,5 +205,6 @@ class NoteFragment :
             }
             it?.bottomSheetCategory?.removeAllViews()
         }
+        super.onDestroyView()
     }
 }

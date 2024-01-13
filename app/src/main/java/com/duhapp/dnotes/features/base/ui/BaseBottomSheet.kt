@@ -30,6 +30,6 @@ abstract class BaseBottomSheet<DB : ViewDataBinding, BUE : BottomSheetEvent, BUS
 
     override fun onDetach() {
         super.onDetach()
-        onDeAttachTask()
+        onDestroyViewTask()
     }
 }

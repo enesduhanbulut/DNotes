@@ -55,6 +55,42 @@ open class BaseNoteUIModel(
             categoryId = category.id,
         )
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (other is BaseNoteUIModel) {
+            return other.id == id &&
+                    other.type == type &&
+                    other.category == category &&
+                    other.title == title &&
+                    other.body == body &&
+                    other.color == color &&
+                    other.image == image &&
+                    other.isPinned == isPinned &&
+                    other.isCompletable == isCompletable &&
+                    other.isCompleted == isCompleted &&
+                    other.isSelected == isSelected &&
+                    other.isSelectable == isSelectable
+        }
+        return false
+    }
+
+    override fun hashCode(): Int {
+        var result = id
+        result = 31 * result + type.hashCode()
+        result = 31 * result + category.hashCode()
+        result = 31 * result + title.hashCode()
+        result = 31 * result + body.hashCode()
+        result = 31 * result + color
+        result = 31 * result + image.hashCode()
+        result = 31 * result + isPinned.hashCode()
+        result = 31 * result + isCompletable.hashCode()
+        result = 31 * result + isCompleted.hashCode()
+        result = 31 * result + isSelected.hashCode()
+        result = 31 * result + isSelectable.hashCode()
+        return result
+
+    }
+
 }
 
 sealed class NoteType(

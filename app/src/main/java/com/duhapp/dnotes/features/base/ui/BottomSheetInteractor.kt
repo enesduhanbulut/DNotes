@@ -1,6 +1,8 @@
 package com.duhapp.dnotes.features.base.ui
 
 import android.os.Bundle
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
@@ -76,7 +78,7 @@ private fun <T : BottomSheetEvent, BS : BaseBottomSheet<*, *, *, *>> BaseFragmen
 }
 
 
-fun <BOE : BottomSheetEvent, BOS: BottomSheetState, BS : BaseBottomSheet<*, *, *, *>> BaseFragment<*, *, *, *>.showSnippedBottomSheet(
+fun <BOE : BottomSheetEvent, BOS : BottomSheetState, BS : BaseBottomSheet<*, *, *, *>> BaseFragment<*, *, *, *>.showSnippedBottomSheet(
     containerId: Int,
     fragment: Class<BS>,
     bundle: Bundle? = null,
@@ -99,7 +101,7 @@ fun <BOE : BottomSheetEvent, BOS: BottomSheetState, BS : BaseBottomSheet<*, *, *
     )
 }
 
-private fun <BOE: BottomSheetEvent, BOS: BottomSheetState, BS: BaseBottomSheet<*,*,*,*>> BaseFragment<*,*,*,*>.showSnippedBottomSheet(
+private fun <BOE : BottomSheetEvent, BOS : BottomSheetState, BS : BaseBottomSheet<*, *, *, *>> BaseFragment<*, *, *, *>.showSnippedBottomSheet(
     containerId: Int,
     fragment: Class<BS>,
     bundle: Bundle? = null,
@@ -111,7 +113,7 @@ private fun <BOE: BottomSheetEvent, BOS: BottomSheetState, BS: BaseBottomSheet<*
     unsubscribeState: BottomSheetState? = null,
 ) {
     var job1: Job? = null
-    job1 = lifecycleScope.launch {
+    job1 = viewLifecycleOwner.lifecycleScope.launch {
         if (stateCollector != null)
             activityViewModel.uiState.collect {
                 it?.let {
@@ -123,21 +125,34 @@ private fun <BOE: BottomSheetEvent, BOS: BottomSheetState, BS: BaseBottomSheet<*
             }
     }
     var job2: Job? = null
-    job2 = lifecycleScope.launch {
+    job2 = viewLifecycleOwner.lifecycleScope.launch {
         if (singleEventCollector != null)
             activityViewModel.uiEvent.collectLatest {
                 singleEventCollector.invoke(it)
                 job2?.cancel()
+                parentFragmentManager.findFragmentByTag("bottomSheet")?.let {
+                    parentFragmentManager.beginTransaction().remove(it).commit()
+                }
             }
         else {
             activityViewModel.uiEvent.collect {
                 eventCollector?.invoke(it)
                 if (it.javaClass == unsubscribeEvent?.javaClass) {
                     job2?.cancel()
+                    parentFragmentManager.findFragmentByTag("bottomSheet")?.let {
+                        parentFragmentManager.beginTransaction().remove(it).commit()
+                    }
                 }
             }
         }
     }
+    viewLifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
+        override fun onDestroy(owner: LifecycleOwner) {
+            super.onDestroy(owner)
+            job1.cancel()
+            job2.cancel()
+        }
+    })
 
     parentFragmentManager.beginTransaction().add(
         containerId,
@@ -195,8 +210,14 @@ private fun <T : BottomSheetEvent> BaseFragment<*, *, *, *>.showBottomSheet(
                 }
             }
         }
-
     }
+    viewLifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
+        override fun onDestroy(owner: LifecycleOwner) {
+            super.onDestroy(owner)
+            job.cancel()
+        }
+    }
+    )
     fragment.arguments = bundle
     fragment.show(
         childFragmentManager,

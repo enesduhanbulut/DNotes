@@ -95,7 +95,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeUIEvent, HomeUIState,
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         mBinding?.categories?.adapter = null
+        super.onDestroyView()
     }
 }

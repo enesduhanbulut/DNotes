@@ -11,9 +11,9 @@ import com.duhapp.dnotes.databinding.LayoutBasicNoteListItemBinding
 import com.duhapp.dnotes.features.base.ui.BaseFragment
 import com.duhapp.dnotes.features.base.ui.BaseListAdapter
 import com.duhapp.dnotes.features.base.ui.MenuContainer
+import com.duhapp.dnotes.features.base.ui.setup
 import com.duhapp.dnotes.features.base.ui.showBottomSheet
 import com.duhapp.dnotes.features.generic.ui.SpaceModel
-import com.duhapp.dnotes.features.generic.ui.SpacingItemDecorator
 import com.duhapp.dnotes.features.home.home_screen_category.ui.BaseNoteUIModel
 import com.duhapp.dnotes.features.home.home_screen_category.ui.BasicNoteUIModel
 import com.duhapp.dnotes.features.select_category.ui.SelectCategoryFragment
@@ -37,7 +37,6 @@ class AllNotesFragment :
     private val TAG = "AllNotesFragment"
     override fun initView(binding: FragmentAllNotesBinding) {
         initAdapter()
-        initRecyclerView()
         menuContainer = MenuContainer(
             mBinding!!.selectActionMenu.id,
             R.menu.note_item_general_menu,
@@ -62,28 +61,18 @@ class AllNotesFragment :
         menuContainer.defineMenu(mBinding!!.root)
     }
 
-    private fun initRecyclerView() {
-        val widthOfItem = context?.resources?.getDimension(R.dimen.note_list_item_width)
-        mBinding!!.notes.layoutManager = AutoColumnGridLayout(
+    private fun initAdapter() {
+        val widthOfItem = context?.resources?.getDimension(R.dimen.all_note_list_item_width)
+        val layout = AutoColumnGridLayout(
             widthOfItem!!.toInt(),
             requireContext(),
             2,
             GridLayoutManager.VERTICAL,
             false
         )
-        mBinding!!.notes.addItemDecoration(
-            SpacingItemDecorator(
-                SpaceModel(
-                    16,
-                    16,
-                    16,
-                    16,
-                ),
-            ),
-        )
-    }
 
-    private fun initAdapter() {
+        val spaceModel = SpaceModel(16, 16, 16, 16)
+
         adapter = object : BaseListAdapter<BaseNoteUIModel, LayoutBasicNoteListItemBinding>() {
             override fun getLayoutId(): Int {
                 return R.layout.layout_basic_note_list_item
@@ -137,7 +126,11 @@ class AllNotesFragment :
             BaseListAdapter.OnItemLongClickListener { noteUIModel, _ ->
                 viewModel.enableSelectionModeAndSelectANote(noteUIModel)
             }
-        mBinding!!.adapter = adapter
+        mBinding!!.notes.setup(
+            adapter,
+            layoutManager = layout,
+            spaceModel = spaceModel
+        )
     }
 
     override fun setBindingViewModel() {
@@ -174,24 +167,23 @@ class AllNotesFragment :
                     }
                 }
             }
+
             is AllNotesEvent.NavigateToHome -> {
                 findNavController().popBackStack()
             }
+
             else -> Timber.d(TAG, "Unhandled event: $it")
         }
     }
 
     override fun handleUIState(it: AllNotesState) {
-        if (::adapter.isInitialized.not()) {
-            initAdapter()
-        }
-        it.getSuccessNotes()?.let {
-            adapter.setItems(it)
+        if (it is AllNotesState.Success) {
+            adapter.setItems(it.notes)
         }
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         menuContainer.destroyMenu()
+        super.onDestroy()
     }
 }

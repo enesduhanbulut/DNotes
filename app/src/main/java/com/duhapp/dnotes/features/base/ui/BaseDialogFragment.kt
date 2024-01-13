@@ -32,7 +32,7 @@ abstract class BaseDialogFragment<
 
     override fun onDestroyView() {
         super.onDestroyView()
-        onDeAttachTask()
+        onDestroyViewTask()
     }
 }
 

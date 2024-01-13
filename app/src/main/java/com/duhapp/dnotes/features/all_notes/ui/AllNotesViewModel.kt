@@ -31,7 +31,10 @@ class AllNotesViewModel @Inject constructor(
                 category = defaultCategoryModel, notes = emptyList()
             )
         )
+        loadNotes(categoryId)
+    }
 
+    private fun loadNotes(categoryId: Int) {
         run {
             try {
                 val notesById = getNotesByCategoryId.invoke(categoryId)
@@ -125,33 +128,29 @@ class AllNotesViewModel @Inject constructor(
 
 
     fun onDeleteNoteClick(noteItem: BaseNoteUIModel) {
-        setState(
-            withStateValue { state ->
-                var stateVal = state
-                viewModelScope.launch {
-                    try {
-                        deleteNote.invoke(listOf(noteItem))
-                        if (!stateVal.isSuccess()) {
-                            stateVal = state
-                            return@launch
-                        }
-                        val notes = getNotesByCategoryId.invoke(stateVal.getSuccessCategory()!!.id)
-                        stateVal = AllNotesState.Success(
-                            category = stateVal.getSuccessCategory()!!,
-                            notes = notes
+        val state = uiState.value ?: return
+        if (!state.isSuccess()) {
+            return
+        }
+        viewModelScope.launch {
+            setState(
+                try {
+                    deleteNote.invoke(listOf(noteItem))
+                    val notes = getNotesByCategoryId.invoke(state.getSuccessCategory()!!.id)
+                    AllNotesState.Success(
+                        category = state.getSuccessCategory()!!,
+                        notes = notes
+                    )
+                } catch (e: Exception) {
+                    AllNotesState.Error(
+                        customException = e.asCustomException(
+                            message = R.string.Note_Could_Not_Be_Updated
                         )
-                    } catch (e: Exception) {
-                        stateVal = AllNotesState.Error(
-                            customException = e.asCustomException(
-                                message = R.string.Note_Could_Not_Be_Updated
-                            )
-                        )
-                    }
-
+                    )
                 }
-                stateVal
-            }
-        )
+            )
+
+        }
     }
 
     fun onEditNoteClick(baseNoteUIModel: BaseNoteUIModel) = setEvent(

@@ -27,6 +27,6 @@ abstract class BaseFragment<
 
     override fun onDestroyView() {
         super.onDestroyView()
-        onDeAttachTask()
+        onDestroyViewTask()
     }
 }

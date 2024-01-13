@@ -140,12 +140,12 @@ class CategoryBottomSheet : BaseBottomSheet<
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         viewModel.onDismissed()
         adapter.onItemClickListener = null
         emojiPopup.let {
             it?.dismiss()
             emojiPopup = null
         }
+        super.onDestroy()
     }
 }

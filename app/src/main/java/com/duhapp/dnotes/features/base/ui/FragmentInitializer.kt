@@ -68,7 +68,7 @@ interface FragmentInitializer<DB : ViewDataBinding, UE : BaseUIEvent, US : BaseU
         )
     }
 
-    fun onDeAttachTask() {
+    fun onDestroyViewTask() {
         observeJobs.forEach {
             it.cancel()
         }

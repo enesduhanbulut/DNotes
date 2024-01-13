@@ -24,7 +24,6 @@ class ManageCategoryViewModel @Inject constructor(
 ) : FragmentViewModel<ManageCategoryUIEvent, ManageCategoryUIState>() {
     init {
         setEvent(ManageCategoryUIEvent.Loading)
-        setState(ManageCategoryUIState.Success(emptyList()))
         loadCategories()
     }
 
