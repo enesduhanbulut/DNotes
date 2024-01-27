@@ -22,7 +22,7 @@ class UpsertNote(
             )
         }
 
-        if (noteModel.title.length > 20 || noteModel.body.length > 500) {
+        if (noteModel.title.length > 180) {
             throw CustomException.ThereIsNoSuitableVariableException(
                 CustomExceptionData(
                     title = R.string.Error_Note_Cannot_Be_Saved,

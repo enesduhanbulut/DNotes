@@ -33,8 +33,6 @@ class NoteFragment :
     override val viewModel: NoteViewModel by viewModels()
     override val fragmentTag = "NoteFragment"
     private val categoryViewModel: SelectCategoryViewModel by activityViewModels()
-    private lateinit var lastUIEvent: NoteUIEvent
-    private lateinit var lastUIState: NoteUIState
     private lateinit var bottomSheetCallback: BottomSheetBehavior.BottomSheetCallback
 
     override fun initView(binding: FragmentNoteBinding) {
@@ -48,6 +46,7 @@ class NoteFragment :
 
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
     }
+
     override fun setBindingViewModel() {
         mBinding!!.viewModel = viewModel
     }
@@ -55,6 +54,7 @@ class NoteFragment :
     override fun handleArgs(args: Bundle) {
         viewModel.initState(NoteFragmentArgs.fromBundle(args))
     }
+
     private fun initBottomSheet() {
         with(mBinding!!.bottomSheetCategory) {
             val bottomSheetBehavior = BottomSheetBehavior.from(this)
@@ -87,7 +87,6 @@ class NoteFragment :
     }
 
     override fun handleUIState(noteState: NoteUIState) {
-        lastUIState = noteState
         when (noteState) {
             is NoteUIState.Success -> {
                 handleSuccessState(noteState)
@@ -100,8 +99,7 @@ class NoteFragment :
     }
 
     override fun handleUIEvent(it: NoteUIEvent) {
-        lastUIEvent=it
-        when(it) {
+        when (it) {
             is NoteUIEvent.BackButtonClicked -> {
                 viewModel.saveAndGoBackStack()
             }
@@ -110,13 +108,13 @@ class NoteFragment :
             }
             is NoteUIEvent.ShowWarningDialogBeforeExit -> {
                 navigateOptionalDialog(
-                    lastUIState.getException()!!.data.title,
+                    it.customException.data.title,
                     R.string.Note_Could_Not_Be_Saved_Would_You_Like_To_Exit,
                     positiveAction = {
                         viewModel.setEvent(NoteUIEvent.GoToBackStack)
                     },
                     negativeAction = {
-                        viewModel.initState(NoteFragmentArgs.fromBundle(requireArguments()))
+                        viewModel.initStateWithLastSuccessState()
                     }
                 )
             }
@@ -146,8 +144,8 @@ class NoteFragment :
     private fun handleErrorState(noteState: NoteUIState.Error) {
         Snackbar.make(
             requireView(),
-            noteState.customException.message ?: getString(R.string.Unknown_Error),
-            Snackbar.LENGTH_LONG
+            noteState.customException.data.message,
+            Snackbar.LENGTH_LONG,
         ).show()
     }
 
@@ -161,7 +159,7 @@ class NoteFragment :
     }
 
     private fun handleBottomSheetState(selectCategoryUIState: SelectCategoryUIState) {
-        when(selectCategoryUIState) {
+        when (selectCategoryUIState) {
             is SelectCategoryUIState.Error -> {
                 viewModel.setState(NoteUIState.Error(selectCategoryUIState.customException))
             }
@@ -169,7 +167,12 @@ class NoteFragment :
         }
     }
 
-    private fun navigateOptionalDialog(@StringRes title: Int, @StringRes message: Int, positiveAction: () -> Unit, negativeAction: () -> Unit) {
+    private fun navigateOptionalDialog(
+        @StringRes title: Int,
+        @StringRes message: Int,
+        positiveAction: () -> Unit,
+        negativeAction: () -> Unit
+    ) {
         findNavController().navigate(
             NoteFragmentDirections.actionNavigationNoteToErrorDialog(
                 DialogFragmentState.OptionDialog(
@@ -190,8 +193,7 @@ class NoteFragment :
     }
 
     override fun onPause() {
-        if (lastUIEvent !is NoteUIEvent.BackButtonClicked)
-            viewModel.save()
+        viewModel.saveAccordingToLastUIEvent()
         super.onPause()
     }
 

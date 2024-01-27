@@ -9,4 +9,10 @@ import kotlinx.parcelize.Parcelize
 data class ColorItemUIModel(
     var isSelected: Boolean = false,
     val color: NoteColor = NoteColor.BLUE
-) : Parcelable, BaseListItem
+) : Parcelable, BaseListItem {
+    fun newCopy(isSelected: Boolean = this.isSelected, color: NoteColor = this.color) =
+        ColorItemUIModel(
+            isSelected = isSelected,
+            color = color
+        )
+}

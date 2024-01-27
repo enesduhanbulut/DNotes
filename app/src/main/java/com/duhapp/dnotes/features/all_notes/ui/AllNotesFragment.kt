@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
 import com.duhapp.dnotes.R
 import com.duhapp.dnotes.databinding.FragmentAllNotesBinding
 import com.duhapp.dnotes.databinding.LayoutBasicNoteListItemBinding
@@ -20,7 +19,11 @@ import com.duhapp.dnotes.features.select_category.ui.SelectCategoryFragment
 import com.duhapp.dnotes.features.select_category.ui.SelectCategoryFragmentArgs
 import com.duhapp.dnotes.features.select_category.ui.SelectCategoryUIEvent
 import com.duhapp.dnotes.features.select_category.ui.SelectCategoryViewModel
-import com.duhapp.dnotes.ui.custom_views.AutoColumnGridLayout
+import com.google.android.flexbox.AlignItems
+import com.google.android.flexbox.FlexDirection
+import com.google.android.flexbox.FlexWrap
+import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.flexbox.JustifyContent
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -62,16 +65,13 @@ class AllNotesFragment :
     }
 
     private fun initAdapter() {
-        val widthOfItem = context?.resources?.getDimension(R.dimen.all_note_list_item_width)
-        val layout = AutoColumnGridLayout(
-            widthOfItem!!.toInt(),
-            requireContext(),
-            2,
-            GridLayoutManager.VERTICAL,
-            false
-        )
+        val spaceModel = SpaceModel(16)
 
-        val spaceModel = SpaceModel(16, 16, 16, 16)
+        val layout = FlexboxLayoutManager(context)
+        layout.justifyContent = JustifyContent.SPACE_AROUND
+        layout.alignItems = AlignItems.FLEX_START
+        layout.flexDirection = FlexDirection.ROW
+        layout.flexWrap = FlexWrap.WRAP
 
         adapter = object : BaseListAdapter<BaseNoteUIModel, LayoutBasicNoteListItemBinding>() {
             override fun getLayoutId(): Int {

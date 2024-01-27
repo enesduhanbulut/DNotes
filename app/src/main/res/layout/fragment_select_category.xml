@@ -67,7 +67,7 @@
                     android:layout_marginHorizontal="@dimen/small_margin"
                     android:layout_marginVertical="@dimen/small_margin"
                     android:gravity="start"
-                    android:text="@{viewModel.uiState.isSuccess() ? viewModel.uiState.getSuccessSelectedCategory().name : ``}"
+                    app:showMediumText="@{viewModel.uiState.isSuccess() ? viewModel.uiState.getSuccessSelectedCategory().name : ``}"
                     android:textColor="@color/white"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/arrow"

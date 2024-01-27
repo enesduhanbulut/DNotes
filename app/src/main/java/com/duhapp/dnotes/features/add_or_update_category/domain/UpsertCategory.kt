@@ -22,7 +22,7 @@ class UpsertCategory(
             )
         }
 
-        if (categoryUIModel.name.length > 20) {
+        if (categoryUIModel.name.length > 180) {
             throw CustomException.NotValidParametersException(
                 CustomExceptionData(
                     title = R.string.Not_Valid_Parameters,

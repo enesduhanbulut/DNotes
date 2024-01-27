@@ -19,15 +19,6 @@ import javax.inject.Singleton
 object AppModule {
     @Singleton
     @Provides
-    fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
-        return Room.databaseBuilder(
-            context,
-            AppDatabase::class.java, "app_database"
-        ).build()
-    }
-
-    @Singleton
-    @Provides
     fun provideDefaultCategory(@ApplicationContext context: Context): CategoryUIModel {
         val defaultCategoryName = context.getString(R.string.default_category_name)
         val defaultCategoryEmoji = context.getString(R.string.default_category_emoji)

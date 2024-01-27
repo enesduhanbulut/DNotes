@@ -121,29 +121,29 @@ class CategoryBottomSheetViewModel @Inject constructor(
     }
 
     fun onColorSelected(itemUIModel: ColorItemUIModel) {
-        val list = uiState.value?.getSuccessColors()
-        list?.map {
-            it.isSelected = it.color == itemUIModel.color
-        }
-        setState(
-            withStateValue {
-                return@withStateValue if (!it.isSuccess())
-                    it
-                else
-                    CategoryBottomSheetUIState.Success(
-                        colors = list!!,
-                        categoryUIModel = it.getSuccessCategory()!!.copy(
-                            color = itemUIModel.apply {
-                                isSelected = true
-                            }
-                        ),
-                        it.getSuccessCategoryShowType()!!
-                    )
+        val state = uiState.value
+        if (state != null) {
+            if (!state.isSuccess()) {
+                return
             }
-        )
+
+            var list = state.getSuccessColors() ?: lastSuccessState?.colors ?: return
+            list.map {
+                it.newCopy(isSelected = it.color.ordinal == itemUIModel.color.ordinal)
+            }.also { list = it }
+            var category = state.getSuccessCategory()
+            category = category?.apply {
+                color = itemUIModel
+            } ?: return
+            setState(
+                CategoryBottomSheetUIState.Success(
+                    colors = list,
+                    categoryUIModel = category,
+                    state.getSuccessCategoryShowType()!!
+                )
+            )
+        }
     }
-
-
 }
 
 data class FormData(
@@ -162,7 +162,7 @@ sealed interface CategoryBottomSheetUIState : BottomSheetState {
     data class Success(
         var colors: List<ColorItemUIModel>,
         var categoryUIModel: CategoryUIModel,
-        val categoryShowType: CategoryShowType,
+        val categoryShowType: CategoryShowType = CategoryShowType.Add,
         var formData: FormData = FormData(
             title = R.string.Add_Category,
             message = R.string.New_Category_Message,

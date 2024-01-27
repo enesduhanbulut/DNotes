@@ -74,7 +74,7 @@
                     android:layout_marginHorizontal="@dimen/small_margin"
                     android:layout_marginVertical="@dimen/small_margin"
                     android:gravity="start"
-                    android:text="@{viewModel.uiState.getSuccessCategory().name}"
+                    app:showMediumText="@{viewModel.uiState.getSuccessCategory().name}"
                     android:textColor="@color/white"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@id/category_icon_card"
@@ -100,7 +100,7 @@
                 android:layout_height="0dp"
                 android:layout_marginHorizontal="@dimen/small_margin"
                 android:layout_marginTop="@dimen/small_margin"
-                android:clipToPadding="false"
+                android:layout_gravity="center_horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/select_category_header"
                 tools:listitem="@layout/layout_basic_note_list_item" />
@@ -111,6 +111,7 @@
                 android:layout_marginHorizontal="@dimen/xl_margin"
                 android:layout_marginBottom="@dimen/xl_margin"
                 android:background="@drawable/note_item_selectable_navigation"
+                android:backgroundTint="@{viewModel.uiState.isSuccess() ? context.getColor(viewModel.uiState.getSuccessCategory().color.color.darkColor) : context.getColor(viewModel.lastSuccessUIState.category.color.color.darkColor), default=@color/dark_error }"
                 android:gravity="center"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -125,6 +126,7 @@
                     android:layout_marginHorizontal="@dimen/_12dp"
                     android:background="@color/transparent"
                     android:onClick="@{() -> viewModel.deleteSelectedNotes()}"
+                    android:tint="@{viewModel.uiState.isSuccess() ? context.getColor(viewModel.uiState.getSuccessCategory().color.color.textColor) : context.getColor(viewModel.lastSuccessUIState.category.color.color.textColor), default=@color/light_error }"
                     android:src="@drawable/delete_48" />
 
                 <androidx.constraintlayout.utils.widget.ImageFilterButton
@@ -134,6 +136,7 @@
                     android:layout_marginHorizontal="@dimen/_12dp"
                     android:background="@color/transparent"
                     android:onClick="@{() -> viewModel.moveSelectedNotes()}"
+                    android:tint="@{viewModel.uiState.isSuccess() ? context.getColor(viewModel.uiState.getSuccessCategory().color.color.textColor) : context.getColor(viewModel.lastSuccessUIState.category.color.color.textColor), default=@color/light_error }"
                     android:src="@drawable/move_48" />
 
                 <androidx.constraintlayout.utils.widget.ImageFilterButton
@@ -143,6 +146,7 @@
                     android:layout_marginHorizontal="@dimen/_12dp"
                     android:background="@color/transparent"
                     android:onClick="@{() -> viewModel.cancelSelectionMode()}"
+                    android:tint="@{viewModel.uiState.isSuccess() ? context.getColor(viewModel.uiState.getSuccessCategory().color.color.textColor) : context.getColor(viewModel.lastSuccessUIState.category.color.color.textColor), default=@color/light_error }"
                     android:src="@drawable/cancel_48" />
             </LinearLayout>
 

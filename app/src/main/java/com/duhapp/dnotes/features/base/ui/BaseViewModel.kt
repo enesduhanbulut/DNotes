@@ -21,7 +21,7 @@ abstract class BaseViewModel<UE : BaseUIEvent, US : BaseUIState> : ViewModel() {
     val uiState: StateFlow<US?> = mutableUIState
         .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
-    fun setEvent(event: UE) = viewModelScope.launch {
+    open fun setEvent(event: UE) = viewModelScope.launch {
         mutableUIEvent.emit(event)
     }
 

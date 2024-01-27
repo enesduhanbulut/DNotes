@@ -1,6 +1,7 @@
 package com.duhapp.dnotes.features.all_notes.ui
 
 import android.view.View
+import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.duhapp.dnotes.R
 
@@ -23,3 +24,29 @@ fun setBorder(view: View, selectable: Boolean) {
     )
 }
 
+@BindingAdapter("showShortText")
+fun setCategoryTitleText(view: TextView, text: String) {
+    view.text = if (text.length > 25) {
+        text.substring(0, 25) + "..."
+    } else {
+        text
+    }
+}
+
+@BindingAdapter("showMediumText")
+fun setCategoryBodyText(view: TextView, text: String) {
+    view.text = if (text.length > 40) {
+        text.substring(0, 40) + "..."
+    } else {
+        text
+    }
+}
+
+@BindingAdapter("showLongText")
+fun setCategoryLongText(view: TextView, text: String) {
+    view.text = if (text.length > 350) {
+        text.substring(0, 350) + "..."
+    } else {
+        text
+    }
+}

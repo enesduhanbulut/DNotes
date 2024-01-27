@@ -25,6 +25,16 @@ class AllNotesViewModel @Inject constructor(
     private val deleteNote: DeleteNote,
     private val updateNotes: UpdateNotes,
 ) : FragmentViewModel<AllNotesEvent, AllNotesState>() {
+
+    var lastSuccessUIState: AllNotesState.Success? = null
+
+    override fun setState(state: AllNotesState) {
+        if (state.isSuccess()) {
+            lastSuccessUIState = state as AllNotesState.Success
+        }
+        super.setState(state)
+    }
+
     fun initiate(categoryId: Int) {
         setState(
             AllNotesState.Success(

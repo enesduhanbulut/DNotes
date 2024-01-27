@@ -24,8 +24,23 @@ class NoteViewModel @Inject constructor(
 ) : FragmentViewModel<NoteUIEvent, NoteUIState>() {
     private val TAG = "NoteViewModel"
     var selectedCategory: CategoryUIModel? = DEFAULT_NOTE_MODEL.category
+    var lastUIEvent: NoteUIEvent? = null
+    var lastSuccesState: NoteUIState.Success? = null
 
-    fun save() {
+    override fun setState(state: NoteUIState) {
+        if (state is NoteUIState.Success) {
+            lastSuccesState = state
+        }
+        super.setState(state)
+    }
+
+    override fun setEvent(event: NoteUIEvent) = viewModelScope.launch {
+        lastUIEvent = event
+        super.setEvent(event)
+    }
+
+
+    private fun save() {
         withStateValue {
             viewModelScope.launch {
                 try {
@@ -73,14 +88,15 @@ class NoteViewModel @Inject constructor(
                     setEvent(NoteUIEvent.GoToBackStack)
                 } catch (e: Exception) {
                     Timber.e(TAG, e)
-                    setState(
-                        NoteUIState.Error(
-                            e.asCustomException(
-                                message = R.string.Note_Could_Not_Be_Updated
-                            )
-                        ),
+                    val errorState = NoteUIState.Error(
+                        e.asCustomException(
+                            message = R.string.Note_Could_Not_Be_Updated
+                        )
                     )
-                    setEvent(NoteUIEvent.ShowWarningDialogBeforeExit)
+                    setState(
+                        errorState
+                    )
+                    setEvent(NoteUIEvent.ShowWarningDialogBeforeExit(errorState.customException))
                 }
             }
             it
@@ -101,6 +117,17 @@ class NoteViewModel @Inject constructor(
                 } else state
             }
         )
+    }
+
+    fun initStateWithLastSuccessState() {
+        lastSuccesState?.let {
+            setState(
+                NoteUIState.Success(
+                    baseNoteUIModel = it.baseNoteUIModel,
+                    editableMode = true,
+                )
+            )
+        } ?: initState(null)
     }
 
     fun initState(args: NoteFragmentArgs?) {
@@ -135,10 +162,10 @@ class NoteViewModel @Inject constructor(
             }
         } else {
             Timber.d(TAG, "Update mode opened")
-            selectedCategory = args.NoteItem!!.category
+            selectedCategory = args.NoteItem.category
             setState(
                 NoteUIState.Success(
-                    baseNoteUIModel = args.NoteItem!!,
+                    baseNoteUIModel = args.NoteItem,
                     editableMode = true,
                 )
             )
@@ -157,6 +184,11 @@ class NoteViewModel @Inject constructor(
             }
         )
     }
+
+    fun saveAccordingToLastUIEvent() {
+        if (lastUIEvent !is NoteUIEvent.BackButtonClicked)
+            save()
+    }
 }
 
 sealed interface NoteUIEvent : FragmentUIEvent {
@@ -164,7 +196,10 @@ sealed interface NoteUIEvent : FragmentUIEvent {
     object NavigateSelectCategory : NoteUIEvent
     object Loading : NoteUIEvent
     object GoToBackStack : NoteUIEvent
-    object ShowWarningDialogBeforeExit : NoteUIEvent
+    data class ShowWarningDialogBeforeExit(
+        val customException: CustomException
+    ) : NoteUIEvent
+
     object BackButtonClicked : NoteUIEvent
 }
 

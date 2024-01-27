@@ -109,16 +109,12 @@ abstract class BaseListAdapter<M : BaseListItem, DB : ViewDataBinding> :
 
         private fun areItemsSame(oldItem: T, newItem: T): Boolean {
             // Implement your logic to determine if two items represent the same object
-            return (oldItem == newItem).also {
-                Timber.d("diffUtil " + "areItemsSame: " + oldItem.toString() + " " + newItem.toString() + " " + " atsiki: " + it)
-            }
+            return (oldItem == newItem)
         }
 
         private fun areContentsSame(oldItem: T, newItem: T): Boolean {
             // Implement your logic to determine if the item content has changed
-            return (oldItem == newItem).also {
-                Timber.d("diffUtil " + "areContentsSame: " + oldItem.toString() + " " + newItem.toString() + " " + " atsiki: " + it)
-            }
+            return (oldItem == newItem)
         }
     }
 }
