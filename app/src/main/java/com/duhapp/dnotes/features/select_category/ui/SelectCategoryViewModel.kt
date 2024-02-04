@@ -1,6 +1,5 @@
 package com.duhapp.dnotes.features.select_category.ui
 
-import androidx.lifecycle.viewModelScope
 import com.duhapp.dnotes.R
 import com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel
 import com.duhapp.dnotes.features.base.domain.CustomException
@@ -10,7 +9,6 @@ import com.duhapp.dnotes.features.base.ui.BottomSheetState
 import com.duhapp.dnotes.features.base.ui.BottomSheetViewModel
 import com.duhapp.dnotes.features.manage_category.domain.GetCategories
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,7 +22,7 @@ class SelectCategoryViewModel @Inject constructor(
                 emptyList()
             )
         )
-        viewModelScope.launch {
+        run {
             try {
                 val categories = getCategories.invoke()
                 setState(
@@ -90,10 +88,13 @@ class SelectCategoryViewModel @Inject constructor(
             }
         )
     }
+
+    fun dismissFragment() {
+        setEvent(SelectCategoryUIEvent.Dismiss)
+    }
 }
 
 sealed interface SelectCategoryUIEvent : BottomSheetEvent {
-    object Idle : SelectCategoryUIEvent
     object Dismiss : SelectCategoryUIEvent
     data class OnCategorySelected(val category: CategoryUIModel) : SelectCategoryUIEvent
 }
@@ -118,6 +119,4 @@ sealed interface SelectCategoryUIState : BottomSheetState {
     fun getSuccessCategories() = if (isSuccess()) (this as Success).categories else null
 
     fun getSuccessIsExpanded() = if (isSuccess()) (this as Success).isExpanded else null
-
-    fun getException() = if (isError()) (this as Error).customException else null
 }

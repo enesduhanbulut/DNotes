@@ -68,7 +68,7 @@ class AllNotesFragment :
         val spaceModel = SpaceModel(16)
 
         val layout = FlexboxLayoutManager(context)
-        layout.justifyContent = JustifyContent.SPACE_AROUND
+        layout.justifyContent = JustifyContent.CENTER
         layout.alignItems = AlignItems.FLEX_START
         layout.flexDirection = FlexDirection.ROW
         layout.flexWrap = FlexWrap.WRAP
@@ -90,25 +90,26 @@ class AllNotesFragment :
                 return MenuContainer(
                     binding.selectActionMenu.id,
                     R.menu.single_note_item_menu
-                ) {
-                    when (it.itemId) {
+                ) { menuItem ->
+                    val baseNoteItem: BaseNoteUIModel = binding.item as BaseNoteUIModel
+                    when (menuItem.itemId) {
                         R.id.delete_note -> {
-                            viewModel.onDeleteNoteClick(binding.item as BaseNoteUIModel)
+                            viewModel.onDeleteNoteClick(baseNoteItem)
                             true
                         }
 
                         R.id.edit_note -> {
-                            viewModel.onEditNoteClick(binding.item as BaseNoteUIModel)
+                            viewModel.onEditNoteClick(baseNoteItem)
                             true
                         }
 
                         R.id.select_note -> {
-                            viewModel.enableSelectionModeAndSelectANote(binding.item as BaseNoteUIModel)
+                            viewModel.enableSelectionModeAndSelectANote(baseNoteItem)
                             true
                         }
 
                         R.id.move_note -> {
-                            viewModel.onMoveNoteClick(binding.item as BaseNoteUIModel)
+                            viewModel.onMoveNoteClick(baseNoteItem)
                             true
                         }
 
@@ -166,8 +167,11 @@ class AllNotesFragment :
                         else -> Timber.d(TAG, "Unhandled event: $uiEvent")
                     }
                 }
-            }
 
+            }
+            is AllNotesEvent.CloseBottomSheet -> {
+                selectCategoryViewModel.dismissFragment()
+            }
             is AllNotesEvent.NavigateToHome -> {
                 findNavController().popBackStack()
             }

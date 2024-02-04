@@ -25,28 +25,40 @@ fun setBorder(view: View, selectable: Boolean) {
 }
 
 @BindingAdapter("showShortText")
-fun setCategoryTitleText(view: TextView, text: String) {
-    view.text = if (text.length > 25) {
-        text.substring(0, 25) + "..."
-    } else {
-        text
+fun setCategoryTitleText(view: TextView, text: String?) {
+    text?.let {
+        view.text = if (text.length > 25) {
+            text.substring(0, 25) + "..."
+        } else {
+            text
+        }
+    } ?: run {
+        view.text = ""
     }
 }
 
 @BindingAdapter("showMediumText")
-fun setCategoryBodyText(view: TextView, text: String) {
-    view.text = if (text.length > 40) {
-        text.substring(0, 40) + "..."
-    } else {
-        text
+fun setCategoryBodyText(view: TextView, text: String? = "") {
+    text?.let {
+        view.text = if (text.length > 40) {
+            text.substring(0, 40) + "..."
+        } else {
+            text
+        }
+    } ?: run {
+        view.text = ""
     }
 }
 
 @BindingAdapter("showLongText")
-fun setCategoryLongText(view: TextView, text: String) {
-    view.text = if (text.length > 350) {
-        text.substring(0, 350) + "..."
-    } else {
-        text
+fun setCategoryLongText(view: TextView, text: String?) {
+    text?.let {
+        view.text = if (text.length > 350) {
+            text.substring(0, 350) + "..."
+        } else {
+            text
+        }
+    } ?: run {
+        view.text = ""
     }
 }

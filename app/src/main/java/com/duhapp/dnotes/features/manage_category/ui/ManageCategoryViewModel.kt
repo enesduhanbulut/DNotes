@@ -1,6 +1,5 @@
 package com.duhapp.dnotes.features.manage_category.ui
 
-import androidx.lifecycle.viewModelScope
 import com.duhapp.dnotes.R
 import com.duhapp.dnotes.features.add_or_update_category.domain.DeleteCategory
 import com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel
@@ -12,7 +11,6 @@ import com.duhapp.dnotes.features.base.ui.FragmentViewModel
 import com.duhapp.dnotes.features.manage_category.domain.GetCategories
 import com.duhapp.dnotes.features.manage_category.domain.UndoCategory
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -28,7 +26,7 @@ class ManageCategoryViewModel @Inject constructor(
     }
 
     private fun loadCategories() {
-        viewModelScope.launch {
+        run {
             try {
                 val list = getCategories.invoke()
                 setState(ManageCategoryUIState.Success(list))
@@ -56,8 +54,8 @@ class ManageCategoryViewModel @Inject constructor(
         setEvent(ManageCategoryUIEvent.NavigateAddCategory)
     }
 
-    fun handleDeleteCategory(categoryUIModel: CategoryUIModel) {
-        viewModelScope.launch {
+    fun handleDeleteCategory(categoryUIModel: CategoryUIModel, position: Int) {
+        run {
             try {
                 deleteCategory.invoke(categoryUIModel)
                 setEvent(
@@ -75,6 +73,7 @@ class ManageCategoryViewModel @Inject constructor(
                     1000
                 ) {
                     loadCategories()
+                    setEvent(ManageCategoryUIEvent.RefreshCategoryListElement(position))
                 }
             }
         }
@@ -85,7 +84,7 @@ class ManageCategoryViewModel @Inject constructor(
     }
 
     fun onUndoDelete() {
-        viewModelScope.launch {
+        run {
             try {
                 undoCategory.invoke()
                 loadCategories()
@@ -107,7 +106,7 @@ class ManageCategoryViewModel @Inject constructor(
 
 }
 
-sealed interface ManageCategoryUIState: FragmentUIState {
+sealed interface ManageCategoryUIState : FragmentUIState {
     data class Success(
         val categoryList: List<CategoryUIModel> = emptyList(),
     ) : ManageCategoryUIState
@@ -118,7 +117,9 @@ sealed interface ManageCategoryUIState: FragmentUIState {
 
     fun isSuccess(): Boolean = this is Success
     fun isError(): Boolean = this is Error
-    fun getSuccessCategoryList(): List<CategoryUIModel>? = if (this is Success) categoryList else null
+    fun getSuccessCategoryList(): List<CategoryUIModel>? =
+        if (this is Success) categoryList else null
+
     fun getErrorCustomException(): CustomException? = if (this is Error) customException else null
 }
 
@@ -127,12 +128,12 @@ sealed interface ManageCategoryUIEvent : FragmentUIEvent {
     data class OnCategorySelected(
         val category: CategoryUIModel,
     ) : ManageCategoryUIEvent
+
     data class OnCategoryDeleted(
         val category: CategoryUIModel,
     ) : ManageCategoryUIEvent
 
+    data class RefreshCategoryListElement(val position: Int) : ManageCategoryUIEvent
+
     object Loading : ManageCategoryUIEvent
-    data class ShowItemMenu(
-        val categoryUIModel: CategoryUIModel,
-    ) : ManageCategoryUIEvent
 }

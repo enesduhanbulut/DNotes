@@ -1,6 +1,5 @@
 package com.duhapp.dnotes.features.home
 
-import androidx.lifecycle.viewModelScope
 import com.duhapp.dnotes.R
 import com.duhapp.dnotes.features.add_or_update_category.domain.FetchHomeData
 import com.duhapp.dnotes.features.base.domain.CustomException
@@ -12,7 +11,6 @@ import com.duhapp.dnotes.features.base.ui.FragmentViewModel
 import com.duhapp.dnotes.features.home.home_screen_category.ui.BaseNoteUIModel
 import com.duhapp.dnotes.features.home.home_screen_category.ui.HomeCategoryUIModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,7 +27,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun loadCategories() {
-        viewModelScope.launch {
+        run {
             fetchHomeData.invoke().let { categories ->
                 if (categories.isEmpty()) {
                     setState(
@@ -83,8 +81,6 @@ sealed interface HomeUIState : FragmentUIState {
 }
 
 sealed interface HomeUIEvent : FragmentUIEvent {
-    object Idle : HomeUIEvent
-    object OnCreateNoteClicked : HomeUIEvent
     data class OnNoteClicked(val noteUIModel: BaseNoteUIModel) : HomeUIEvent
     data class OnViewAllClicked(val homeCategoryUIModel: HomeCategoryUIModel) : HomeUIEvent
 }

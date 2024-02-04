@@ -8,11 +8,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 abstract class BaseViewModel<UE : BaseUIEvent, US : BaseUIState> : ViewModel() {
     private val mutableUIEvent = MutableSharedFlow<UE>()
@@ -33,11 +31,10 @@ abstract class BaseViewModel<UE : BaseUIEvent, US : BaseUIState> : ViewModel() {
     }
 
     fun setTemporaryState(state: US, oldState: US?, delay: Long) {
+        setState(state)
         if (oldState == null) {
-            setState(state)
             return
         }
-        setState(state)
         run {
             kotlinx.coroutines.delay(delay)
             setState(oldState)

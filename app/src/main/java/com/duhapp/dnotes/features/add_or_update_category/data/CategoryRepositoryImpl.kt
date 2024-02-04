@@ -1,17 +1,13 @@
 package com.duhapp.dnotes.features.add_or_update_category.data
 
-import com.duhapp.dnotes.NoteColor
 import com.duhapp.dnotes.R
 import com.duhapp.dnotes.app.database.CategoryDao
-import com.duhapp.dnotes.app.database.CategoryEntity
 import com.duhapp.dnotes.app.database.NoteDao
 import com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel
-import com.duhapp.dnotes.features.add_or_update_category.ui.ColorItemUIModel
 import com.duhapp.dnotes.features.base.data.BaseRepository
 import com.duhapp.dnotes.features.base.domain.CustomException
 import com.duhapp.dnotes.features.base.domain.CustomExceptionCode
 import com.duhapp.dnotes.features.base.domain.CustomExceptionData
-import com.duhapp.dnotes.features.base.domain.asCustomException
 import com.duhapp.dnotes.features.home.home_screen_category.ui.BaseNoteUIModel
 import kotlinx.coroutines.CoroutineDispatcher
 import timber.log.Timber
@@ -24,7 +20,10 @@ class CategoryRepositoryImpl(
     private var lastDeletedCategory: CategoryUIModel? = null
     private var lastMovedCategoryNotes: List<BaseNoteUIModel>? = null
 
-    override suspend fun deleteCategory(categoryUIModel: CategoryUIModel, categoryNotes: List<BaseNoteUIModel>) {
+    override suspend fun deleteCategory(
+        categoryUIModel: CategoryUIModel,
+        categoryNotes: List<BaseNoteUIModel>
+    ) {
         runOnIO {
             try {
                 categoryDao.deleteCategoryWithId(categoryUIModel.id)
@@ -146,6 +145,7 @@ class CategoryRepositoryImpl(
             )
         }
     }
+
     private fun clearLastDeletedCategory() {
         lastDeletedCategory = null
         lastMovedCategoryNotes = null

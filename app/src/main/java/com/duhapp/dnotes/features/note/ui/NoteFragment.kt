@@ -34,6 +34,7 @@ class NoteFragment :
     override val fragmentTag = "NoteFragment"
     private val categoryViewModel: SelectCategoryViewModel by activityViewModels()
     private lateinit var bottomSheetCallback: BottomSheetBehavior.BottomSheetCallback
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
 
     override fun initView(binding: FragmentNoteBinding) {
         initBottomSheet()
@@ -57,7 +58,7 @@ class NoteFragment :
 
     private fun initBottomSheet() {
         with(mBinding!!.bottomSheetCategory) {
-            val bottomSheetBehavior = BottomSheetBehavior.from(this)
+            bottomSheetBehavior = BottomSheetBehavior.from(this)
             bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
                 override fun onStateChanged(bottomSheet: View, newState: Int) {
                     if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
@@ -65,6 +66,7 @@ class NoteFragment :
                         viewModel.setEditable(true)
                     }
                     if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                        hideKeyboard()
                         categoryViewModel.onExpand()
                         viewModel.setEditable(false)
                     }
@@ -76,7 +78,6 @@ class NoteFragment :
             }
             bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
             setOnClickListener {
-                hideKeyboard()
                 if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_COLLAPSED) {
                     bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
                 } else if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
@@ -86,15 +87,23 @@ class NoteFragment :
         }
     }
 
-    override fun handleUIState(noteState: NoteUIState) {
-        when (noteState) {
+    private fun collapseBottomSheet() {
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+    }
+
+    override fun handleUIState(it: NoteUIState) {
+        when (it) {
             is NoteUIState.Success -> {
-                handleSuccessState(noteState)
+                handleSuccessState(it)
             }
+
             is NoteUIState.Error -> {
-                handleErrorState(noteState)
+                handleErrorState(it)
             }
-            else -> {}
+
+            else -> {
+                Timber.d("State not handled yet $it")
+            }
         }
     }
 
@@ -103,9 +112,11 @@ class NoteFragment :
             is NoteUIEvent.BackButtonClicked -> {
                 viewModel.saveAndGoBackStack()
             }
+
             is NoteUIEvent.GoToBackStack -> {
                 findNavController().popBackStack()
             }
+
             is NoteUIEvent.ShowWarningDialogBeforeExit -> {
                 navigateOptionalDialog(
                     it.customException.data.title,
@@ -118,8 +129,13 @@ class NoteFragment :
                     }
                 )
             }
+
+            is NoteUIEvent.CollapseBottomSheet -> {
+                collapseBottomSheet()
+            }
+
             else -> {
-                Timber.d("Event not handled yet")
+                Timber.d("Event not handled yet $it")
             }
         }
     }
@@ -154,7 +170,10 @@ class NoteFragment :
             is SelectCategoryUIEvent.OnCategorySelected -> {
                 viewModel.onCategorySelected(event.category)
             }
-            else -> {}
+
+            else -> {
+                Timber.d("Event not handled yet")
+            }
         }
     }
 
@@ -163,7 +182,10 @@ class NoteFragment :
             is SelectCategoryUIState.Error -> {
                 viewModel.setState(NoteUIState.Error(selectCategoryUIState.customException))
             }
-            else -> {}
+
+            else -> {
+                Timber.d("State not handled yet $selectCategoryUIState")
+            }
         }
     }
 

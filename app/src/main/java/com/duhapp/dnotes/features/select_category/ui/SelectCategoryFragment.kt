@@ -60,8 +60,16 @@ class SelectCategoryFragment :
         mBinding!!.viewModel = viewModel
     }
 
-    override fun handleUIEvent(event: SelectCategoryUIEvent) {
-        Timber.d("Any event not handled yet")
+    override fun handleUIEvent(it: SelectCategoryUIEvent) {
+        when (it) {
+            is SelectCategoryUIEvent.Dismiss -> {
+                dismiss()
+            }
+
+            else -> {
+                Timber.d("Unhandled event: $it")
+            }
+        }
     }
 
     override fun handleUIState(it: SelectCategoryUIState) {

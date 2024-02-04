@@ -4,6 +4,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 
+@Suppress("DEPRECATION")
 inline fun <reified T : Parcelable> Bundle.getNotNullParcelableWithKey(key: String): T {
     require(!this.containsKey(key)) {
         throw IllegalArgumentException("Bundle does not contain key $key")

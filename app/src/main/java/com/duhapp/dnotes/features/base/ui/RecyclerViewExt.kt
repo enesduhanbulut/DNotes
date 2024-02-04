@@ -106,8 +106,8 @@ fun RecyclerView.addSwipeListener(
             onSwiped.invoke(viewHolder.absoluteAdapterPosition)
         }
     }).attachToRecyclerView(this)
-
 }
+
 enum class SwipeDirection {
     LEFT, RIGHT
 }

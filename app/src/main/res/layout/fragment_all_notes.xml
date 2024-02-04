@@ -20,6 +20,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/background_color"
         tools:context=".features.all_notes.ui.AllNotesFragment">
 
         <com.duhapp.dnotes.ui.custom_views.ErrorItemLayout
@@ -60,7 +61,7 @@
                         android:layout_centerInParent="true"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:text="@{viewModel.uiState.getSuccessCategory().emoji}"
+                        android:text="@{viewModel.uiState.isSuccess() ? viewModel.uiState.getSuccessCategory().emoji : viewModel.lastSuccessUIState.category.emoji, default=``}"
                         android:textColor="@color/white"
                         android:textSize="16sp"
                         tools:text="😀" />
@@ -74,7 +75,7 @@
                     android:layout_marginHorizontal="@dimen/small_margin"
                     android:layout_marginVertical="@dimen/small_margin"
                     android:gravity="start"
-                    app:showMediumText="@{viewModel.uiState.getSuccessCategory().name}"
+                    app:showMediumText="@{viewModel.uiState.isSuccess() ? viewModel.uiState.getSuccessCategory().name : viewModel.lastSuccessUIState.category.name }"
                     android:textColor="@color/white"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@id/category_icon_card"

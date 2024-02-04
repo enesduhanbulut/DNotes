@@ -41,6 +41,7 @@ class ManageCategoryFragment :
 
     private lateinit var adapter: BaseListAdapter<CategoryUIModel, CategoryListItemBinding>
     private val categoryBottomSheetViewModel: CategoryBottomSheetViewModel by activityViewModels()
+
     override fun initView(binding: FragmentManageCategoryBinding) {
         binding.categories.addItemDecoration(
             SpacingItemDecorator(
@@ -75,7 +76,6 @@ class ManageCategoryFragment :
         }
         adapter.onItemClickListener =
             BaseListAdapter.OnItemClickListener(viewModel::handleCategorySelect)
-        // TODO There is a warning at resources.getDrawable, Use ResourcesCompat.getDrawable()
         mBinding!!.categories.addSwipeListener(
             ResourcesCompat.getDrawable(
                 resources,
@@ -85,11 +85,15 @@ class ManageCategoryFragment :
             ColorDrawable(Color.RED),
             {},
             { position ->
-                viewModel.handleDeleteCategory(adapter.items[position])
+                viewModel.handleDeleteCategory(adapter.items[position], position)
             },
             SwipeDirection.LEFT,
         )
         mBinding!!.categories.adapter = adapter
+    }
+
+    private fun reloadRecyclerView(position: Int) {
+        adapter.notifyItemChanged(position)
     }
 
     override fun handleUIEvent(it: ManageCategoryUIEvent) {
@@ -110,6 +114,9 @@ class ManageCategoryFragment :
                 ).setAction(R.string.Undo) { _ ->
                     viewModel.onUndoDelete()
                 }.show()
+            }
+            is ManageCategoryUIEvent.RefreshCategoryListElement -> {
+                reloadRecyclerView(it.position)
             }
 
             else -> {

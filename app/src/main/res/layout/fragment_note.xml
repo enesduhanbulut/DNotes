@@ -16,7 +16,8 @@
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@{viewModel.uiState.isSuccess() ? context.getColor(viewModel.uiState.getSuccessNote().category.color.color.lightColor) : context.getColor(viewModel.selectedCategory.color.color.lightColor), default=@color/light_error }">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -26,7 +27,6 @@
             android:layout_gravity="fill"
             android:paddingHorizontal="24dp"
             android:paddingTop="32dp"
-            android:background="@{viewModel.uiState.isSuccess() ? context.getColor(viewModel.uiState.getSuccessNote().category.color.color.lightColor) : context.getColor(viewModel.selectedCategory.color.color.lightColor), default=@color/light_error }"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:background="@color/note_color_red_dark">
@@ -40,6 +40,8 @@
                 android:maxLines="1"
                 android:text="@{viewModel.uiState.isSuccess() ? viewModel.uiState.getSuccessNote().title : viewModel.lastSuccesState.baseNoteUIModel.title, default=``}"
                 android:onTextChanged="@{(text, start, before, count) -> viewModel.uiState.setSuccessTitle(text.toString())}"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
                 app:isLocked="@{viewModel.uiState.getSuccessEditableMode()}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -57,6 +59,8 @@
                 android:text="@{viewModel.uiState.getSuccessNote() != null ? viewModel.uiState.getSuccessNote().body : ``}"
                 android:onTextChanged="@{(text, start, before, count) -> viewModel.uiState.setSuccessBody(text.toString())}"
                 app:isLocked="@{viewModel.uiState.getSuccessEditableMode()}"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title"

@@ -5,7 +5,6 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -42,14 +41,9 @@ class MainActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == R.id.navigation_note || destination.id == R.id.navigation_manage_category) {
-                binding.bottomNavContainer.visibility = View.GONE
-                binding.fab.visibility = View.GONE
-            } else if (destination.id == R.id.navigation_manage_category) {
-                binding.bottomNavContainer.visibility = View.VISIBLE
-                binding.fab.visibility = View.GONE
+                setBottomAppBarVisibility(View.GONE)
             } else {
-                binding.bottomNavContainer.visibility = View.VISIBLE
-                binding.fab.visibility = View.VISIBLE
+                setBottomAppBarVisibility(View.VISIBLE)
             }
         }
 
@@ -65,7 +59,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.initializeDefaultDataModels()
     }
 
-    fun setBottomAppBarVisibility(visibility: Int) {
+    private fun setBottomAppBarVisibility(visibility: Int) {
         binding.bottomNavView.visibility = visibility
         binding.fab.visibility = visibility
     }

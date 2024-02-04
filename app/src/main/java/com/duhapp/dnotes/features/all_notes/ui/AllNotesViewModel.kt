@@ -67,6 +67,7 @@ class AllNotesViewModel @Inject constructor(
                             category = notesById.first().category, notes = notesById
                         )
                     )
+                    setEvent(AllNotesEvent.CloseBottomSheet)
                 }
             } catch (e: Exception) {
                 setState(
@@ -112,17 +113,11 @@ class AllNotesViewModel @Inject constructor(
         if (!state.isSuccess()) return
         val selectedNotes = state.getSuccessSelectedNotes()!!
         val category = state.getSuccessCategory()!!
-        viewModelScope.launch {
+
+        run {
             try {
                 deleteNote.invoke(selectedNotes)
-                val notes = getNotesByCategoryId.invoke(category.id)
-                setState(
-                    AllNotesState.Success(
-                        category = category,
-                        notes = notes,
-                        isSelectable = false
-                    )
-                )
+                loadNotes(category.id)
             } catch (e: Exception) {
                 setState(
                     AllNotesState.Error(
@@ -142,24 +137,19 @@ class AllNotesViewModel @Inject constructor(
         if (!state.isSuccess()) {
             return
         }
-        viewModelScope.launch {
-            setState(
-                try {
-                    deleteNote.invoke(listOf(noteItem))
-                    val notes = getNotesByCategoryId.invoke(state.getSuccessCategory()!!.id)
-                    AllNotesState.Success(
-                        category = state.getSuccessCategory()!!,
-                        notes = notes
-                    )
-                } catch (e: Exception) {
+        run {
+            try {
+                deleteNote.invoke(listOf(noteItem))
+                loadNotes(noteItem.category.id)
+            } catch (e: Exception) {
+                setState(
                     AllNotesState.Error(
                         customException = e.asCustomException(
                             message = R.string.Note_Could_Not_Be_Updated
                         )
                     )
-                }
-            )
-
+                )
+            }
         }
     }
 
@@ -175,6 +165,7 @@ class AllNotesViewModel @Inject constructor(
         noteUIModel: MutableList<BaseNoteUIModel>,
         category: CategoryUIModel
     ) {
+        val oldCategoryId = noteUIModel.first().category.id
         noteUIModel.forEach {
             it.category = category
         }
@@ -183,15 +174,7 @@ class AllNotesViewModel @Inject constructor(
             val state = uiState.value ?: return@launch
             if (!state.isSuccess()) return@launch
             try {
-                val notes = getNotesByCategoryId.invoke(state.getSuccessCategory()!!.id)
-                setState(
-                    AllNotesState.Success(
-                        category = state.getSuccessCategory()!!,
-                        notes = notes,
-                        isSelectable = false
-                    )
-                )
-                if (notes.isEmpty()) setEvent(AllNotesEvent.NavigateToHome)
+                loadNotes(oldCategoryId)
             } catch (e: Exception) {
                 setState(
                     AllNotesState.Error(
@@ -263,10 +246,10 @@ class AllNotesViewModel @Inject constructor(
 }
 
 sealed interface AllNotesEvent : FragmentUIEvent {
-    object Idle : AllNotesEvent
     data class OnEditNoteEvent(val noteUIModel: BaseNoteUIModel) : AllNotesEvent
     data class OnMoveAnotherCategoryEvent(val noteUIModel: MutableList<BaseNoteUIModel>) :
         AllNotesEvent
+    object CloseBottomSheet : AllNotesEvent
 
     object NavigateToHome : AllNotesEvent
 }
@@ -295,18 +278,5 @@ sealed interface AllNotesState : FragmentUIState {
     fun getSuccessSelectedNotes() = (this as? Success)?.notes?.filter {
         it.isSelected
     }
-
-    fun getSuccessSelectedNote() = (this as? Success)?.notes?.firstOrNull {
-        it.isSelected
-    }
-
-    fun getSuccessUnSelectedNotes() = (this as? Success)?.notes?.filter {
-        !it.isSelected
-    }
-
-    fun getSuccessUnSelectedNote() = (this as? Success)?.notes?.firstOrNull {
-        !it.isSelected
-    }
-
     fun getException() = (this as? Error)?.customException
 }

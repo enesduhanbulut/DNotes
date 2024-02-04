@@ -22,15 +22,16 @@ class NoteViewModel @Inject constructor(
     private val upsertNote: UpsertNote,
     private val getDefaultCategory: GetDefaultCategory,
 ) : FragmentViewModel<NoteUIEvent, NoteUIState>() {
-    private val TAG = "NoteViewModel"
     var selectedCategory: CategoryUIModel? = DEFAULT_NOTE_MODEL.category
     var lastUIEvent: NoteUIEvent? = null
     var lastSuccesState: NoteUIState.Success? = null
 
     override fun setState(state: NoteUIState) {
+        Timber.d( "setState: $state")
         if (state is NoteUIState.Success) {
             lastSuccesState = state
         }
+        Timber.d( "lastSuccesState: $lastSuccesState")
         super.setState(state)
     }
 
@@ -42,7 +43,7 @@ class NoteViewModel @Inject constructor(
 
     private fun save() {
         withStateValue {
-            viewModelScope.launch {
+            run {
                 try {
                     val noteModel = upsertNote.invoke(
                         it.getSuccessNote()!!
@@ -54,7 +55,7 @@ class NoteViewModel @Inject constructor(
                         )
                     )
                 } catch (e: Exception) {
-                    Timber.e(TAG, e)
+                    Timber.e(e)
                     setState(
                         NoteUIState.Error(
                             e.asCustomException(
@@ -74,7 +75,7 @@ class NoteViewModel @Inject constructor(
 
     fun saveAndGoBackStack() {
         withStateValue {
-            viewModelScope.launch {
+            run {
                 try {
                     val noteModel = upsertNote.invoke(
                         it.getSuccessNote()!!
@@ -87,7 +88,7 @@ class NoteViewModel @Inject constructor(
                     )
                     setEvent(NoteUIEvent.GoToBackStack)
                 } catch (e: Exception) {
-                    Timber.e(TAG, e)
+                    Timber.e(e)
                     val errorState = NoteUIState.Error(
                         e.asCustomException(
                             message = R.string.Note_Could_Not_Be_Updated
@@ -117,6 +118,7 @@ class NoteViewModel @Inject constructor(
                 } else state
             }
         )
+        setEvent(NoteUIEvent.CollapseBottomSheet)
     }
 
     fun initStateWithLastSuccessState() {
@@ -135,13 +137,15 @@ class NoteViewModel @Inject constructor(
             NoteUIState.Idle
         )
         if (args == null || args.NoteItem == null) {
-            Timber.d(TAG, "Insert mode opened")
-            viewModelScope.launch {
+            Timber.d("Insert mode opened")
+            run {
                 try {
                     val defaultCategory = getDefaultCategory.invoke()
                     val state = uiState.value!!
-                    val note = state.getSuccessNote()?.apply { category = defaultCategory }
-                        ?: DEFAULT_NOTE_MODEL.newCopy()
+                    var note = state.getSuccessNote() ?: DEFAULT_NOTE_MODEL.newCopy()
+                    note = note.newCopy().apply {
+                        category = defaultCategory
+                    }
                     selectedCategory = note.category
                     setState(
                         NoteUIState.Success(
@@ -150,7 +154,7 @@ class NoteViewModel @Inject constructor(
                         )
                     )
                 } catch (e: Exception) {
-                    Timber.e(TAG, e)
+                    Timber.e(e)
                     setState(
                         NoteUIState.Error(
                             e.asCustomException(
@@ -161,14 +165,16 @@ class NoteViewModel @Inject constructor(
                 }
             }
         } else {
-            Timber.d(TAG, "Update mode opened")
-            selectedCategory = args.NoteItem.category
-            setState(
-                NoteUIState.Success(
-                    baseNoteUIModel = args.NoteItem,
-                    editableMode = true,
+            Timber.d( "Update mode opened")
+            args.NoteItem.let {
+                selectedCategory = it.category
+                setState(
+                    NoteUIState.Success(
+                        baseNoteUIModel = it,
+                        editableMode = true,
+                    )
                 )
-            )
+            }
         }
     }
 
@@ -192,15 +198,13 @@ class NoteViewModel @Inject constructor(
 }
 
 sealed interface NoteUIEvent : FragmentUIEvent {
-    object Idle : NoteUIEvent
-    object NavigateSelectCategory : NoteUIEvent
-    object Loading : NoteUIEvent
     object GoToBackStack : NoteUIEvent
     data class ShowWarningDialogBeforeExit(
         val customException: CustomException
     ) : NoteUIEvent
 
     object BackButtonClicked : NoteUIEvent
+    object CollapseBottomSheet : NoteUIEvent
 }
 
 sealed interface NoteUIState : FragmentUIState {
@@ -219,8 +223,6 @@ sealed interface NoteUIState : FragmentUIState {
 
     fun isError() = this is Error
 
-    fun getException() = if (isError()) (this as Error).customException else null
-
     fun getSuccessNote() = if (isSuccess()) (this as Success).baseNoteUIModel else null
 
     fun setSuccessTitle(title: String) =
@@ -229,5 +231,5 @@ sealed interface NoteUIState : FragmentUIState {
     fun setSuccessBody(body: String) =
         if (isSuccess()) (this as Success).baseNoteUIModel.body = body else Unit
 
-    fun getSuccessEditableMode() = if (isSuccess()) (this as Success).editableMode else false
+    fun getSuccessEditableMode() = isSuccess() && (this as Success).editableMode
 }

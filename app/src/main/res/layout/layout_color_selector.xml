@@ -7,7 +7,7 @@
 
         <variable
             name="uiModel"
-            type="com.duhapp.dnotes.features.add_or_update_category.ui.ColorSelectorUIMModel" />
+            type="com.duhapp.dnotes.features.add_or_update_category.ui.ColorSelectorUIModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

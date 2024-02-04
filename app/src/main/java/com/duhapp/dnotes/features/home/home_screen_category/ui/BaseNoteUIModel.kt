@@ -9,7 +9,7 @@ import com.duhapp.dnotes.features.add_or_update_category.ui.ColorItemUIModel
 import com.duhapp.dnotes.features.base.ui.BaseListItem
 import kotlinx.parcelize.Parcelize
 
-val DEFAULT_NOTE_MODEL: BaseNoteUIModel = BasicNoteUIModel(
+var DEFAULT_NOTE_MODEL: BaseNoteUIModel = BasicNoteUIModel(
     id = -1,
     isPinned = false,
     isCompleted = false,

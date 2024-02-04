@@ -6,7 +6,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import timber.log.Timber
 
 abstract class BaseListAdapter<M : BaseListItem, DB : ViewDataBinding> :
     RecyclerView.Adapter<BaseListAdapter<M, DB>.BaseViewHolder>() {
@@ -36,10 +35,13 @@ abstract class BaseListAdapter<M : BaseListItem, DB : ViewDataBinding> :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
-        val binding = DataBindingUtil.inflate<ViewDataBinding>(
+        val binding: ViewDataBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context), getLayoutId(), parent, false
         )
-        val viewHolder = onCreateViewHolder(binding as DB)
+        @Suppress("UNCHECKED_CAST")
+        val baseListAdapter: DB = binding as DB
+                
+        val viewHolder = onCreateViewHolder(baseListAdapter)
         binding.root.setOnClickListener {
             val position = viewHolder.bindingAdapterPosition
             if (position != RecyclerView.NO_POSITION) {
@@ -54,6 +56,7 @@ abstract class BaseListAdapter<M : BaseListItem, DB : ViewDataBinding> :
             true
         }
         return viewHolder
+
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
