@@ -1,9 +1,13 @@
 package com.duhapp.dnotes.features.note.ui
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.duhapp.dnotes.NoteColor
+import com.duhapp.dnotes.R
 import com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel
 import com.duhapp.dnotes.features.add_or_update_category.ui.ColorItemUIModel
+import com.duhapp.dnotes.features.base.domain.CustomException
+import com.duhapp.dnotes.features.base.domain.CustomExceptionData
 import com.duhapp.dnotes.features.base.ui.FragmentUIEvent
 import com.duhapp.dnotes.features.base.ui.FragmentUIState
 import com.duhapp.dnotes.features.base.ui.FragmentViewModel
@@ -20,7 +24,7 @@ class NoteViewModel @Inject constructor(
     private val upsertNote: UpsertNote,
     private val getDefaultCategory: GetDefaultCategory,
 ) : FragmentViewModel<NoteUIEvent, NoteUIState>() {
-
+    val TAG = "NoteViewModel"
     init {
         setSuccessState(getDefaultNote())
     }
@@ -28,11 +32,33 @@ class NoteViewModel @Inject constructor(
     fun save() {
         withStateValue {
             viewModelScope.launch {
-                setSuccessState(
-                    it.copy(
-                        baseNoteUIModel = upsertNote.invoke(it.baseNoteUIModel)
+                try {
+                    val baseNoteUIModel = upsertNote.invoke(it.baseNoteUIModel)
+                    setSuccessState(
+                        it.copy(
+                            baseNoteUIModel = baseNoteUIModel,
+                        )
                     )
-                )
+                } catch (e: Exception) {
+                    setSuccessState(
+                        it.copy(
+                            error = when (e) {
+                                is CustomException -> e.message
+                                else -> {
+                                    val errorMessage = e.message ?: "Unknown Error"
+                                    Log.e(TAG, errorMessage, e)
+                                    CustomException.UnknownException(
+                                        CustomExceptionData(
+                                            title = R.string.Unknown_Error,
+                                            message = R.string.Unknown_Error_Message,
+                                            -1,
+                                        )
+                                    )
+                                }
+                            } as CustomException?
+                        )
+                    )
+                }
             }
             it
         }
@@ -49,14 +75,35 @@ class NoteViewModel @Inject constructor(
             }
         )
         viewModelScope.launch {
-            val noteModel = upsertNote.invoke(
-                uiState.value!!.baseNoteUIModel
-            )
-            setSuccessState(
-                uiState.value!!.copy(
-                    baseNoteUIModel = noteModel
+            try {
+                val noteModel = upsertNote.invoke(
+                    uiState.value!!.baseNoteUIModel
                 )
-            )
+                setSuccessState(
+                    uiState.value!!.copy(
+                        baseNoteUIModel = noteModel
+                    )
+                )
+            } catch (e: Exception) {
+                setSuccessState(
+                    uiState.value!!.copy(
+                        error = when (e) {
+                            is CustomException -> e.message
+                            else -> {
+                                val errorMessage = e.message ?: "Unknown Error"
+                                Log.e(TAG, errorMessage, e)
+                                CustomException.UnknownException(
+                                    CustomExceptionData(
+                                        title = R.string.Unknown_Error,
+                                        message = R.string.Unknown_Error_Message,
+                                        -1,
+                                    )
+                                )
+                            }
+                        } as CustomException?
+                    )
+                )
+            }
         }
     }
 
@@ -133,4 +180,5 @@ data class NoteUIState(
         color = -1,
     ),
     var editableMode: Boolean = true,
+    var error: CustomException? = null,
 ) : FragmentUIState

@@ -13,6 +13,7 @@ sealed class CustomException : Exception() {
     data class UnknownDatabaseException(val data: CustomExceptionData) : CustomException()
     data class ThereIsNoSuitableVariableException(val data: CustomExceptionData) : CustomException()
     data class UndoUnavailableException(val data: CustomExceptionData) : CustomException()
+    data class InvalidInputException(val data: CustomExceptionData) : CustomException()
 }
 
 data class CustomExceptionData(

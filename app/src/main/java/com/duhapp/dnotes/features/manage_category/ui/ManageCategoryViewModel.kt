@@ -1,7 +1,6 @@
 package com.duhapp.dnotes.features.manage_category.ui
 
 import android.util.Log
-import android.view.View
 import androidx.lifecycle.viewModelScope
 import com.duhapp.dnotes.features.add_or_update_category.domain.DeleteCategory
 import com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel
@@ -9,7 +8,6 @@ import com.duhapp.dnotes.features.base.ui.FragmentUIEvent
 import com.duhapp.dnotes.features.base.ui.FragmentUIState
 import com.duhapp.dnotes.features.base.ui.FragmentViewModel
 import com.duhapp.dnotes.features.manage_category.domain.GetCategories
-import com.duhapp.dnotes.features.manage_category.domain.InsertCategory
 import com.duhapp.dnotes.features.manage_category.domain.UndoCategory
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
