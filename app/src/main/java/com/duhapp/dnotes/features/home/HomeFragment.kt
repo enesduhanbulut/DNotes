@@ -13,6 +13,7 @@ import com.duhapp.dnotes.features.generic.ui.SpaceModel
 import com.duhapp.dnotes.features.generic.ui.SpacingItemDecorator
 import com.duhapp.dnotes.features.home.home_screen_category.ui.HomeCategoryUIModel
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding, HomeUIEvent, HomeUIState, HomeViewModel>() {
@@ -84,15 +85,17 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeUIEvent, HomeUIState,
             }
 
             else -> {
-
+                Timber.d(fragmentTag, "Unhandled UI Event $it")
             }
         }
     }
 
     override fun handleUIState(it: HomeUIState) {
-        if (it.categories.isEmpty()) {
-            return
-        }
-        adapter.setItems(it.categories)
+        adapter.setItems(it.getSuccessCategories() ?: emptyList())
+    }
+
+    override fun onDestroyView() {
+        mBinding?.categories?.adapter = null
+        super.onDestroyView()
     }
 }

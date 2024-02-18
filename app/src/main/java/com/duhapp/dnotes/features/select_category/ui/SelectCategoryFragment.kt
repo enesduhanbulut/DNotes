@@ -2,15 +2,16 @@ package com.duhapp.dnotes.features.select_category.ui
 
 import android.os.Bundle
 import androidx.fragment.app.activityViewModels
-import com.duhan.satelliteinfo.features.base.presentation.BaseBottomSheet
 import com.duhapp.dnotes.R
 import com.duhapp.dnotes.databinding.CategorySelectListItemBinding
 import com.duhapp.dnotes.databinding.FragmentSelectCategoryBinding
 import com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel
+import com.duhapp.dnotes.features.base.ui.BaseBottomSheet
 import com.duhapp.dnotes.features.base.ui.BaseListAdapter
+import com.duhapp.dnotes.features.base.ui.setup
 import com.duhapp.dnotes.features.generic.ui.SpaceModel
-import com.duhapp.dnotes.features.generic.ui.SpacingItemDecorator
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class SelectCategoryFragment :
@@ -29,14 +30,11 @@ class SelectCategoryFragment :
     }
 
     override fun initView(binding: FragmentSelectCategoryBinding) {
-        binding.categories.addItemDecoration(
-            SpacingItemDecorator(
-                SpaceModel(
-                    16,
-                    16,
-                    16,
-                    16,
-                ),
+        initAdapter()
+        binding.categories.setup(
+            adapter = adapter,
+            spaceModel = SpaceModel(
+                resources.getDimensionPixelSize(R.dimen.tiny_margin),
             ),
         )
     }
@@ -60,16 +58,26 @@ class SelectCategoryFragment :
 
     override fun setBindingViewModel() {
         mBinding!!.viewModel = viewModel
-        initAdapter()
     }
 
-    override fun handleUIEvent(event: SelectCategoryUIEvent) {
-        when (event) {
-            else -> {}
+    override fun handleUIEvent(it: SelectCategoryUIEvent) {
+        when (it) {
+            is SelectCategoryUIEvent.Dismiss -> {
+                dismiss()
+            }
+
+            else -> {
+                Timber.d("Unhandled event: $it")
+            }
         }
     }
 
     override fun handleUIState(it: SelectCategoryUIState) {
-        adapter.setItems(it.categories)
+        adapter.setItems(it.getSuccessCategories() ?: emptyList())
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        adapter.onItemClickListener = null
     }
 }

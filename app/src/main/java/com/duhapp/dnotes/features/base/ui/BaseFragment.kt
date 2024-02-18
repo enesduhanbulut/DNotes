@@ -25,8 +25,8 @@ abstract class BaseFragment<
         return mBinding!!.root
     }
 
-    override fun onDetach() {
-        super.onDetach()
-        onDeAttachTask()
+    override fun onDestroyView() {
+        super.onDestroyView()
+        onDestroyViewTask()
     }
 }

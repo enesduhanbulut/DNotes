@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="adapter"
             type="com.duhapp.dnotes.features.base.ui.BaseListAdapter" />
@@ -19,6 +21,12 @@
         android:layout_height="match_parent"
         android:background="@color/background_color"
         tools:context=".features.home.HomeFragment">
+        <com.duhapp.dnotes.ui.custom_views.ErrorItemLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:setErrorContent="@{viewModel.uiState.exception}"
+            android:visibility="@{viewModel.uiState.isError() ? View.VISIBLE : View.GONE }"/>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/categories"
@@ -27,11 +35,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:adapter="@{adapter}"
-            app:submitList="@{viewModel.uiState.categories}"
+            app:submitList="@{viewModel.uiState.getSuccessCategories()}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:itemCount="4"
+            android:visibility="@{viewModel.uiState.isSuccess() ? View.VISIBLE : View.GONE }"
             tools:listitem="@layout/layout_home_category" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -4,24 +4,28 @@ import android.os.Bundle
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
 import com.duhapp.dnotes.R
 import com.duhapp.dnotes.databinding.FragmentAllNotesBinding
 import com.duhapp.dnotes.databinding.LayoutBasicNoteListItemBinding
 import com.duhapp.dnotes.features.base.ui.BaseFragment
 import com.duhapp.dnotes.features.base.ui.BaseListAdapter
 import com.duhapp.dnotes.features.base.ui.MenuContainer
+import com.duhapp.dnotes.features.base.ui.setup
 import com.duhapp.dnotes.features.base.ui.showBottomSheet
 import com.duhapp.dnotes.features.generic.ui.SpaceModel
-import com.duhapp.dnotes.features.generic.ui.SpacingItemDecorator
 import com.duhapp.dnotes.features.home.home_screen_category.ui.BaseNoteUIModel
 import com.duhapp.dnotes.features.home.home_screen_category.ui.BasicNoteUIModel
 import com.duhapp.dnotes.features.select_category.ui.SelectCategoryFragment
 import com.duhapp.dnotes.features.select_category.ui.SelectCategoryFragmentArgs
 import com.duhapp.dnotes.features.select_category.ui.SelectCategoryUIEvent
 import com.duhapp.dnotes.features.select_category.ui.SelectCategoryViewModel
-import com.duhapp.dnotes.ui.custom_views.AutoColumnGridLayout
+import com.google.android.flexbox.AlignItems
+import com.google.android.flexbox.FlexDirection
+import com.google.android.flexbox.FlexWrap
+import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.flexbox.JustifyContent
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class AllNotesFragment :
@@ -33,9 +37,9 @@ class AllNotesFragment :
     override val fragmentTag = "AllNotesFragment"
     private val selectCategoryViewModel: SelectCategoryViewModel by activityViewModels()
     private lateinit var menuContainer: MenuContainer
+    private val TAG = "AllNotesFragment"
     override fun initView(binding: FragmentAllNotesBinding) {
         initAdapter()
-        initRecyclerView()
         menuContainer = MenuContainer(
             mBinding!!.selectActionMenu.id,
             R.menu.note_item_general_menu,
@@ -60,28 +64,15 @@ class AllNotesFragment :
         menuContainer.defineMenu(mBinding!!.root)
     }
 
-    private fun initRecyclerView() {
-        val widthOfItem = context?.resources?.getDimension(R.dimen.note_list_item_width)
-        mBinding!!.notes.layoutManager = AutoColumnGridLayout(
-            widthOfItem!!.toInt(),
-            requireContext(),
-            2,
-            GridLayoutManager.VERTICAL,
-            false
-        )
-        mBinding!!.notes.addItemDecoration(
-            SpacingItemDecorator(
-                SpaceModel(
-                    16,
-                    16,
-                    16,
-                    16,
-                ),
-            ),
-        )
-    }
-
     private fun initAdapter() {
+        val spaceModel = SpaceModel(16)
+
+        val layout = FlexboxLayoutManager(context)
+        layout.justifyContent = JustifyContent.CENTER
+        layout.alignItems = AlignItems.FLEX_START
+        layout.flexDirection = FlexDirection.ROW
+        layout.flexWrap = FlexWrap.WRAP
+
         adapter = object : BaseListAdapter<BaseNoteUIModel, LayoutBasicNoteListItemBinding>() {
             override fun getLayoutId(): Int {
                 return R.layout.layout_basic_note_list_item
@@ -99,25 +90,26 @@ class AllNotesFragment :
                 return MenuContainer(
                     binding.selectActionMenu.id,
                     R.menu.single_note_item_menu
-                ) {
-                    when (it.itemId) {
+                ) { menuItem ->
+                    val baseNoteItem: BaseNoteUIModel = binding.item as BaseNoteUIModel
+                    when (menuItem.itemId) {
                         R.id.delete_note -> {
-                            viewModel.onDeleteNoteClick(binding.item as BaseNoteUIModel)
+                            viewModel.onDeleteNoteClick(baseNoteItem)
                             true
                         }
 
                         R.id.edit_note -> {
-                            viewModel.onEditNoteClick(binding.item as BaseNoteUIModel)
+                            viewModel.onEditNoteClick(baseNoteItem)
                             true
                         }
 
                         R.id.select_note -> {
-                            viewModel.enableSelectionModeAndSelectANote(binding.item as BaseNoteUIModel)
+                            viewModel.enableSelectionModeAndSelectANote(baseNoteItem)
                             true
                         }
 
                         R.id.move_note -> {
-                            viewModel.onMoveNoteClick(binding.item as BaseNoteUIModel)
+                            viewModel.onMoveNoteClick(baseNoteItem)
                             true
                         }
 
@@ -135,7 +127,11 @@ class AllNotesFragment :
             BaseListAdapter.OnItemLongClickListener { noteUIModel, _ ->
                 viewModel.enableSelectionModeAndSelectANote(noteUIModel)
             }
-        mBinding!!.adapter = adapter
+        mBinding!!.notes.setup(
+            adapter,
+            layoutManager = layout,
+            spaceModel = spaceModel
+        )
     }
 
     override fun setBindingViewModel() {
@@ -157,9 +153,10 @@ class AllNotesFragment :
 
             is AllNotesEvent.OnMoveAnotherCategoryEvent -> {
                 val fragment = SelectCategoryFragment()
+
                 showBottomSheet(
                     fragment = fragment,
-                    SelectCategoryFragmentArgs(viewModel.uiState.value!!.category).toBundle(),
+                    SelectCategoryFragmentArgs(viewModel.uiState.value!!.getSuccessCategory()).toBundle(),
                     selectCategoryViewModel
                 ) { uiEvent ->
                     when (uiEvent) {
@@ -167,26 +164,30 @@ class AllNotesFragment :
                             viewModel.onMoveActionTriggered(it.noteUIModel, uiEvent.category)
                         }
 
-                        else -> {}
+                        else -> Timber.d(TAG, "Unhandled event: $uiEvent")
                     }
                 }
+
+            }
+            is AllNotesEvent.CloseBottomSheet -> {
+                selectCategoryViewModel.dismissFragment()
             }
             is AllNotesEvent.NavigateToHome -> {
                 findNavController().popBackStack()
             }
-            else -> {}
+
+            else -> Timber.d(TAG, "Unhandled event: $it")
         }
     }
 
     override fun handleUIState(it: AllNotesState) {
-        if (::adapter.isInitialized.not()) {
-            initAdapter()
+        if (it is AllNotesState.Success) {
+            adapter.setItems(it.notes)
         }
-        adapter.setItems(it.notes)
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         menuContainer.destroyMenu()
+        super.onDestroy()
     }
 }

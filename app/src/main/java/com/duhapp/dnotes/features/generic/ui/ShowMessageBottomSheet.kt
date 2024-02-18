@@ -2,9 +2,9 @@ package com.duhapp.dnotes.features.generic.ui
 
 import android.os.Bundle
 import androidx.fragment.app.viewModels
-import com.duhan.satelliteinfo.features.base.presentation.BaseBottomSheet
 import com.duhapp.dnotes.R
 import com.duhapp.dnotes.databinding.FragmentShowMessageBottomSheetBinding
+import com.duhapp.dnotes.features.base.ui.BaseBottomSheet
 import com.duhapp.dnotes.features.generic.domain.getNotNullParcelableWithKey
 import dagger.hilt.android.AndroidEntryPoint
 

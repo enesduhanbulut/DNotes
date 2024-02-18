@@ -24,6 +24,7 @@ import com.duhapp.dnotes.features.generic.ui.SpaceModel
 import com.duhapp.dnotes.features.generic.ui.SpacingItemDecorator
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class ManageCategoryFragment :
@@ -40,6 +41,7 @@ class ManageCategoryFragment :
 
     private lateinit var adapter: BaseListAdapter<CategoryUIModel, CategoryListItemBinding>
     private val categoryBottomSheetViewModel: CategoryBottomSheetViewModel by activityViewModels()
+
     override fun initView(binding: FragmentManageCategoryBinding) {
         binding.categories.addItemDecoration(
             SpacingItemDecorator(
@@ -74,7 +76,6 @@ class ManageCategoryFragment :
         }
         adapter.onItemClickListener =
             BaseListAdapter.OnItemClickListener(viewModel::handleCategorySelect)
-        // TODO There is a warning at resources.getDrawable, Use ResourcesCompat.getDrawable()
         mBinding!!.categories.addSwipeListener(
             ResourcesCompat.getDrawable(
                 resources,
@@ -84,11 +85,15 @@ class ManageCategoryFragment :
             ColorDrawable(Color.RED),
             {},
             { position ->
-                viewModel.handleDeleteCategory(adapter.items[position])
+                viewModel.handleDeleteCategory(adapter.items[position], position)
             },
             SwipeDirection.LEFT,
         )
         mBinding!!.categories.adapter = adapter
+    }
+
+    private fun reloadRecyclerView(position: Int) {
+        adapter.notifyItemChanged(position)
     }
 
     override fun handleUIEvent(it: ManageCategoryUIEvent) {
@@ -110,8 +115,12 @@ class ManageCategoryFragment :
                     viewModel.onUndoDelete()
                 }.show()
             }
+            is ManageCategoryUIEvent.RefreshCategoryListElement -> {
+                reloadRecyclerView(it.position)
+            }
 
             else -> {
+                Timber.d(fragmentTag,"Unhandled event $it")
             }
         }
     }
@@ -136,14 +145,21 @@ class ManageCategoryFragment :
             }
 
             else -> {
+                Timber.d(fragmentTag,"Unhandled event $it")
             }
         }
     }
 
     override fun handleUIState(it: ManageCategoryUIState) {
-        if (it.categoryList.isEmpty()) {
+        if (it.isError() || it.getSuccessCategoryList()!!.isEmpty()) {
             return
         }
-        adapter.setItems(it.categoryList)
+        adapter.setItems(it.getSuccessCategoryList()!!)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        adapter.onItemClickListener = null
+
     }
 }

@@ -14,7 +14,7 @@ interface CategoryDao {
     fun getAll(): Flow<List<CategoryEntity>>
 
     @Insert
-    suspend fun insert(categoryEntity: CategoryEntity)
+    suspend fun insert(categoryEntity: CategoryEntity): Long
 
     @Update
     suspend fun update(categoryEntity: CategoryEntity)

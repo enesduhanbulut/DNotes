@@ -2,10 +2,31 @@ package com.duhapp.dnotes.features.home.home_screen_category.ui
 
 import android.os.Parcelable
 import androidx.annotation.ColorRes
+import com.duhapp.dnotes.NoteColor
 import com.duhapp.dnotes.app.database.NoteEntity
 import com.duhapp.dnotes.features.add_or_update_category.ui.CategoryUIModel
+import com.duhapp.dnotes.features.add_or_update_category.ui.ColorItemUIModel
 import com.duhapp.dnotes.features.base.ui.BaseListItem
 import kotlinx.parcelize.Parcelize
+
+var DEFAULT_NOTE_MODEL: BaseNoteUIModel = BasicNoteUIModel(
+    id = -1,
+    isPinned = false,
+    isCompleted = false,
+    isCompletable = false,
+    title = "",
+    body = "",
+    category = CategoryUIModel(
+        id = -1,
+        name = "",
+        emoji = "",
+        description = "",
+        color = ColorItemUIModel(
+            color = NoteColor.BLUE,
+        )
+    ),
+    color = -1,
+)
 
 @Parcelize
 open class BaseNoteUIModel(
@@ -14,11 +35,11 @@ open class BaseNoteUIModel(
     var category: CategoryUIModel,
     var title: String,
     var body: String,
-    @ColorRes val color: Int,
-    val image: String,
-    val isPinned: Boolean,
-    val isCompletable: Boolean,
-    val isCompleted: Boolean,
+    @ColorRes var color: Int,
+    var image: String,
+    var isPinned: Boolean,
+    var isCompletable: Boolean,
+    var isCompleted: Boolean,
     var isSelected: Boolean = false,
     var isSelectable: Boolean = false,
 ) : Cloneable, BaseListItem, Parcelable {
@@ -34,6 +55,42 @@ open class BaseNoteUIModel(
             categoryId = category.id,
         )
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (other is BaseNoteUIModel) {
+            return other.id == id &&
+                    other.type == type &&
+                    other.category == category &&
+                    other.title == title &&
+                    other.body == body &&
+                    other.color == color &&
+                    other.image == image &&
+                    other.isPinned == isPinned &&
+                    other.isCompletable == isCompletable &&
+                    other.isCompleted == isCompleted &&
+                    other.isSelected == isSelected &&
+                    other.isSelectable == isSelectable
+        }
+        return false
+    }
+
+    override fun hashCode(): Int {
+        var result = id
+        result = 31 * result + type.hashCode()
+        result = 31 * result + category.hashCode()
+        result = 31 * result + title.hashCode()
+        result = 31 * result + body.hashCode()
+        result = 31 * result + color
+        result = 31 * result + image.hashCode()
+        result = 31 * result + isPinned.hashCode()
+        result = 31 * result + isCompletable.hashCode()
+        result = 31 * result + isCompleted.hashCode()
+        result = 31 * result + isSelected.hashCode()
+        result = 31 * result + isSelectable.hashCode()
+        return result
+
+    }
+
 }
 
 sealed class NoteType(
@@ -95,6 +152,10 @@ class BasicNoteUIModel(
 
     override fun newCopy(): BasicNoteUIModel {
         return super.clone() as BasicNoteUIModel
+    }
+
+    override fun toString(): String {
+        return "BasicNoteUIModel(id=$id, type=$type, category=$category, title='$title', body='$body', color=$color, image='$image', isPinned=$isPinned, isCompletable=$isCompletable, isCompleted=$isCompleted, isSelected=$isSelected, isSelectable=$isSelectable)"
     }
 }
 

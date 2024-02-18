@@ -8,16 +8,18 @@
         <variable
             name="item"
             type="com.duhapp.dnotes.features.home.home_screen_category.ui.BasicNoteUIModel" />
-
         <variable
             name="hasSelectMode"
             type="Boolean" />
+
+        <import type="com.duhapp.dnotes.R" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="@dimen/note_list_item_width"
         android:layout_height="@dimen/note_list_item_height"
-        app:border="@{item.selected &amp;&amp; item.selectable}">
+        app:border="@{item.selected &amp;&amp; item.selectable}"
+        >
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card"
@@ -39,9 +41,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/_12dp"
-                    android:text="@{item.title}"
+                    app:showShortText="@{item.title}"
                     android:textColor="@color/black"
-                    app:layout_constraintEnd_toStartOf="@id/select_action_menu"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="Title" />
@@ -62,7 +64,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/_12dp"
-                    android:text="@{item.body}"
+                    app:showLongText="@{item.body}"
                     android:textColor="@color/black"
                     app:layout_constraintTop_toBottomOf="@id/title"
                     tools:text="Body" />
@@ -81,7 +83,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/_12dp"
-                        android:text="@{item.category.name}"
+                        app:showShortText="@{item.category.name}"
                         android:textColor="@color/white"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"

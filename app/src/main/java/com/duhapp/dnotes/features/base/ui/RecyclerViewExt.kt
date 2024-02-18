@@ -5,6 +5,42 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.duhapp.dnotes.features.generic.ui.SpaceModel
+import androidx.annotation.DrawableRes
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DividerItemDecoration
+import com.duhapp.dnotes.R
+import com.duhapp.dnotes.features.generic.ui.SpacingItemDecorator
+
+
+fun RecyclerView.setup(
+    adapter: RecyclerView.Adapter<*>,
+    layoutManager: RecyclerView.LayoutManager = androidx.recyclerview.widget.LinearLayoutManager(
+        context,
+        RecyclerView.VERTICAL,
+        false
+    ),
+    hasFixedSize: Boolean = false,
+    spaceModel: SpaceModel? = null,
+    @DrawableRes dividerId: Int = R.drawable.rc_divider,
+    itemAnimator: RecyclerView.ItemAnimator? = null,
+) {
+    DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
+        .apply {
+            setDrawable(
+                ContextCompat.getDrawable(
+                    context,
+                    dividerId
+                )!!
+            )
+            addItemDecoration(this)
+        }
+    spaceModel?.let { addItemDecoration(SpacingItemDecorator(it)) }
+    this.adapter = adapter
+    this.layoutManager = layoutManager
+    this.setHasFixedSize(hasFixedSize)
+    itemAnimator?.let { this.itemAnimator = it }
+}
 
 
 fun RecyclerView.addSwipeListener(
@@ -70,8 +106,8 @@ fun RecyclerView.addSwipeListener(
             onSwiped.invoke(viewHolder.absoluteAdapterPosition)
         }
     }).attachToRecyclerView(this)
-
 }
+
 enum class SwipeDirection {
     LEFT, RIGHT
 }

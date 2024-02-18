@@ -41,7 +41,7 @@ class NoteItemListAdapter : BaseListAdapter<BaseNoteUIModel, ViewDataBinding>() 
         }
 
         binding.root.setOnClickListener {
-            val position = viewHolder.adapterPosition
+            val position = viewHolder.absoluteAdapterPosition
             if (position != RecyclerView.NO_POSITION) {
                 onItemClickListener?.onItemClick(itemList[position], position)
             }

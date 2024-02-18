@@ -26,4 +26,11 @@ data class SpaceModel(
     val bottomSpace: Int = 0,
     val leftSpace: Int = 0,
     val rightSpace: Int = 0
-)
+) {
+    constructor(space: Int) : this(space, space, space, space)
+
+    constructor(
+        verticalSpace: Int = 0,
+        horizontalSpace: Int = 0
+    ) : this(verticalSpace, verticalSpace, horizontalSpace, horizontalSpace)
+}

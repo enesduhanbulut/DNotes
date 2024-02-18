@@ -28,34 +28,35 @@ abstract class BaseListAdapter<M : BaseListItem, DB : ViewDataBinding> :
     }
 
     fun setItems(items: List<M>) {
-        // TODO: Use DiffUtil to calculate the difference between the old and new list
-
-        /*val diffResult = DiffUtil.calculateDiff(DiffCallback(itemList, items.toList()))
+        val diffCallback = DiffCallback(itemList, items)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
         diffResult.dispatchUpdatesTo(this)
-        */
-        notifyDataSetChanged()
         itemList = items.toList()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
-        val binding = DataBindingUtil.inflate<ViewDataBinding>(
+        val binding: ViewDataBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context), getLayoutId(), parent, false
         )
-        val viewHolder = onCreateViewHolder(binding as DB)
+        @Suppress("UNCHECKED_CAST")
+        val baseListAdapter: DB = binding as DB
+                
+        val viewHolder = onCreateViewHolder(baseListAdapter)
         binding.root.setOnClickListener {
-            val position = viewHolder.adapterPosition
+            val position = viewHolder.bindingAdapterPosition
             if (position != RecyclerView.NO_POSITION) {
                 onItemClickListener?.onItemClick(itemList[position], position)
             }
         }
         binding.root.setOnLongClickListener {
-            val position = viewHolder.adapterPosition
+            val position = viewHolder.bindingAdapterPosition
             if (position != RecyclerView.NO_POSITION) {
                 onItemLongClickListener?.onItemLongClick(itemList[position], position)
             }
             true
         }
         return viewHolder
+
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
@@ -111,12 +112,12 @@ abstract class BaseListAdapter<M : BaseListItem, DB : ViewDataBinding> :
 
         private fun areItemsSame(oldItem: T, newItem: T): Boolean {
             // Implement your logic to determine if two items represent the same object
-            return oldItem === newItem
+            return (oldItem == newItem)
         }
 
         private fun areContentsSame(oldItem: T, newItem: T): Boolean {
             // Implement your logic to determine if the item content has changed
-            return oldItem == newItem
+            return (oldItem == newItem)
         }
     }
 }

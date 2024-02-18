@@ -13,14 +13,14 @@ data class CategoryUIModel(
     var emoji: String = "",
     var description: String = "",
     var color: ColorItemUIModel = ColorItemUIModel(
-        color = NoteColor.fromOrdinal(0)
+        color = NoteColor.BLUE
     ),
     var isDefault: Boolean = false
 ) : Parcelable, BaseListItem {
     fun toEntity() = CategoryEntity(
         name = name,
-        emoji = emoji,
         message = description,
+        emoji = emoji,
         colorId = color.color.ordinal,
         isDefault = isDefault
     )

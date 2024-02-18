@@ -1,4 +1,4 @@
-package com.duhan.satelliteinfo.features.base.presentation
+package com.duhapp.dnotes.features.base.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,10 +7,6 @@ import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.DialogFragment
 import com.duhapp.dnotes.R
-import com.duhapp.dnotes.features.base.ui.BottomSheetEvent
-import com.duhapp.dnotes.features.base.ui.BottomSheetState
-import com.duhapp.dnotes.features.base.ui.BottomSheetViewModel
-import com.duhapp.dnotes.features.base.ui.FragmentInitializer
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.Job
 
@@ -34,6 +30,6 @@ abstract class BaseBottomSheet<DB : ViewDataBinding, BUE : BottomSheetEvent, BUS
 
     override fun onDetach() {
         super.onDetach()
-        onDeAttachTask()
+        onDestroyViewTask()
     }
 }

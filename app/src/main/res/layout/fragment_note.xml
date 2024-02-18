@@ -5,6 +5,10 @@
 
     <data>
 
+        <import type="com.duhapp.dnotes.R" />
+
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.duhapp.dnotes.features.note.ui.NoteViewModel" />
@@ -12,21 +16,20 @@
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@{viewModel.uiState.isSuccess() ? context.getColor(viewModel.uiState.getSuccessNote().category.color.color.lightColor) : context.getColor(viewModel.selectedCategory.color.color.lightColor), default=@color/light_error }">
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/noteContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="fill"
-            android:background="@{context.getColor(viewModel.uiState.baseNoteUIModel.category.color.color.lightColor)}"
             android:paddingHorizontal="24dp"
             android:paddingTop="32dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:background="@color/note_color_red_dark">
-
-
             <EditText
                 android:id="@+id/title"
                 style="@style/text_lg_bold"
@@ -35,11 +38,16 @@
                 android:backgroundTint="@color/transparent"
                 android:hint="@string/Title"
                 android:maxLines="1"
-                android:text="@={viewModel.uiState.baseNoteUIModel.title}"
-                app:isLocked="@{viewModel.uiState.editableMode}"
+                android:text="@{viewModel.uiState.isSuccess() ? viewModel.uiState.getSuccessNote().title : viewModel.lastSuccesState.baseNoteUIModel.title, default=``}"
+                android:onTextChanged="@{(text, start, before, count) -> viewModel.uiState.setSuccessTitle(text.toString())}"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                app:isLocked="@{viewModel.uiState.getSuccessEditableMode()}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:autofillHints="body"
+                android:inputType="text" />
 
             <EditText
                 android:id="@+id/description"
@@ -48,11 +56,16 @@
                 android:layout_marginTop="24dp"
                 android:backgroundTint="@color/transparent"
                 android:hint="@string/Details"
-                android:text="@={viewModel.uiState.baseNoteUIModel.body}"
-                app:isLocked="@{viewModel.uiState.editableMode}"
+                android:text="@{viewModel.uiState.getSuccessNote() != null ? viewModel.uiState.getSuccessNote().body : ``}"
+                android:onTextChanged="@{(text, start, before, count) -> viewModel.uiState.setSuccessBody(text.toString())}"
+                app:isLocked="@{viewModel.uiState.getSuccessEditableMode()}"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/title" />
+                app:layout_constraintTop_toBottomOf="@id/title"
+                android:autofillHints="body"
+                android:inputType="textMultiLine" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

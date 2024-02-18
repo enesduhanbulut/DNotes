@@ -8,7 +8,6 @@ import androidx.room.Upsert
 
 @Dao
 interface NoteDao {
-
     @Insert
     suspend fun insert(noteEntity: NoteEntity): Long
 

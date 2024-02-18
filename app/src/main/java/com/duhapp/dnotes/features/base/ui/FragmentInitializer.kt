@@ -40,9 +40,9 @@ interface FragmentInitializer<DB : ViewDataBinding, UE : BaseUIEvent, US : BaseU
         mBinding = DataBindingUtil.inflate(inflater, layoutId, container, false) as DB
         mBinding!!.lifecycleOwner = viewLifecycleOwner
         setBindingViewModel()
+        initView(mBinding!!)
         observeUIEvent(viewLifecycleOwner)
         observeUIState(viewLifecycleOwner)
-        initView(mBinding!!)
         return mBinding!!
     }
 
@@ -68,7 +68,7 @@ interface FragmentInitializer<DB : ViewDataBinding, UE : BaseUIEvent, US : BaseU
         )
     }
 
-    fun onDeAttachTask() {
+    fun onDestroyViewTask() {
         observeJobs.forEach {
             it.cancel()
         }
