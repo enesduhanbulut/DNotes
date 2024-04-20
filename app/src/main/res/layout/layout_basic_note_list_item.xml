@@ -56,7 +56,9 @@
                     android:src="@drawable/item_menu_trigger"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:visibility="@{hasSelectMode &amp;&amp; !item.selectable}" />
+                    app:visibility="@{hasSelectMode &amp;&amp; !item.selectable}"
+                    android:contentDescription="@string/Open_Note_Options"
+                    />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/body"
@@ -84,7 +86,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/_12dp"
                         app:showShortText="@{item.category.name}"
-                        android:textColor="@color/white"
+                        android:textColor="@{context.getColor(item.category.color.color.textColor)}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"

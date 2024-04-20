@@ -65,7 +65,8 @@
                 android:onClickListener="@{() -> viewModel.onAddCategoryClick()}"
                 android:src="@drawable/baseline_add_24"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                android:contentDescription="@string/Add_Category" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

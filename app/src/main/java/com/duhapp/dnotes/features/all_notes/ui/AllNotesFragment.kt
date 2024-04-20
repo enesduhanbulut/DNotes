@@ -176,7 +176,7 @@ class AllNotesFragment :
                 findNavController().popBackStack()
             }
 
-            else -> Timber.d(TAG, "Unhandled event: $it")
+            else -> Timber.d( "Unhandled event: $it")
         }
     }
 

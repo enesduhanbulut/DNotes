@@ -32,8 +32,8 @@
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/category_icon"
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_centerInParent="true"
                     android:background="@color/transparent"
                     android:ellipsize="end"
@@ -41,6 +41,7 @@
                     android:maxLines="1"
                     android:text="@{uiModel.emoji}"
                     android:textColor="@color/white"
+                    android:textSize="@dimen/medium_body_text_size"
                     tools:text="😀" />
             </RelativeLayout>
 

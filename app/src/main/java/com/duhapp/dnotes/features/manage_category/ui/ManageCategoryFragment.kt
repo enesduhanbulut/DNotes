@@ -50,6 +50,7 @@ class ManageCategoryFragment :
                 ),
             ),
         )
+        binding.manageCategoryContent
     }
 
     override fun setBindingViewModel() {
@@ -115,26 +116,30 @@ class ManageCategoryFragment :
                     viewModel.onUndoDelete()
                 }.show()
             }
+
             is ManageCategoryUIEvent.RefreshCategoryListElement -> {
                 reloadRecyclerView(it.position)
             }
 
             else -> {
-                Timber.d(fragmentTag,"Unhandled event $it")
+                Timber.d(fragmentTag, "Unhandled event $it")
             }
         }
     }
 
     private fun showCategoryScreen(categoryUIModel: CategoryUIModel, showType: CategoryShowType) {
+        val bottomSheet = CategoryBottomSheet()
         showBottomSheet(
-            CategoryBottomSheet(),
+            bottomSheet,
             activityViewModel = categoryBottomSheetViewModel,
             bundle = CategoryBottomSheetArgs(
                 categoryUIModel,
                 showType,
-            ).toBundle(), collector = {
+            ).toBundle(),
+            collector = {
                 handleBottomSheetResponse(it)
-            }, unsubscribeEvent = CategoryUIEvent.Dismissed
+            },
+            unsubscribeEvent = CategoryUIEvent.Dismissed
         )
     }
 
@@ -145,7 +150,7 @@ class ManageCategoryFragment :
             }
 
             else -> {
-                Timber.d(fragmentTag,"Unhandled event $it")
+                Timber.d(fragmentTag, "Unhandled event $it")
             }
         }
     }

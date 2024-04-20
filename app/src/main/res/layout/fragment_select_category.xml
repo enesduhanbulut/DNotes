@@ -48,8 +48,8 @@
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/category_icon"
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:layout_centerInParent="true"
                         android:layout_gravity="center"
                         android:gravity="center"

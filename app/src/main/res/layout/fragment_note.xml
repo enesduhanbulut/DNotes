@@ -25,8 +25,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="fill"
-            android:paddingHorizontal="24dp"
-            android:paddingTop="32dp"
+            android:paddingHorizontal="@dimen/medium_margin"
+            android:paddingTop="@dimen/large_margin"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:background="@color/note_color_red_dark">
@@ -35,6 +35,7 @@
                 style="@style/text_lg_bold"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:minHeight="@dimen/_48dp"
                 android:backgroundTint="@color/transparent"
                 android:hint="@string/Title"
                 android:maxLines="1"
@@ -46,6 +47,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                android:textSize="@dimen/medium_body_text_size"
                 android:autofillHints="body"
                 android:inputType="text" />
 
@@ -53,7 +55,8 @@
                 android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:minHeight="@dimen/_48dp"
+                android:layout_marginTop="@dimen/medium_margin"
                 android:backgroundTint="@color/transparent"
                 android:hint="@string/Details"
                 android:text="@{viewModel.uiState.getSuccessNote() != null ? viewModel.uiState.getSuccessNote().body : ``}"
@@ -61,6 +64,7 @@
                 app:isLocked="@{viewModel.uiState.getSuccessEditableMode()}"
                 android:textColor="@color/black"
                 android:textColorHint="@color/black"
+                android:textSize="@dimen/medium_small_body_text_size"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title"
@@ -71,7 +75,7 @@
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
-            android:layout_height="400dp"
+            android:layout_height="@dimen/Category_Bottomsheet_Height"
             android:layout_gravity="bottom"
             app:layout_constraintTop_toBottomOf="@id/noteContainer">
 

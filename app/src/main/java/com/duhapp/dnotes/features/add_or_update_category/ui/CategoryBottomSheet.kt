@@ -10,6 +10,8 @@ import com.duhapp.dnotes.features.base.ui.BaseBottomSheet
 import com.duhapp.dnotes.features.base.ui.BaseListAdapter
 import com.duhapp.dnotes.features.generic.ui.SpaceModel
 import com.duhapp.dnotes.features.generic.ui.SpacingItemDecorator
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import com.vanniktech.emoji.EmojiPopup
 import com.vanniktech.emoji.search.NoSearchEmoji
@@ -52,6 +54,13 @@ class CategoryBottomSheet : BaseBottomSheet<
                 SpaceModel(rightSpace = 32)
             ),
         )
+        dialog.let {
+            it?.setOnShowListener {
+                val bottomSheet = it as BottomSheetDialog
+                val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet.findViewById(com.google.android.material.R.id.design_bottom_sheet)!!)
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            }
+        }
         mBinding!!.adapter = adapter
     }
 

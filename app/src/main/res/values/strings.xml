@@ -28,8 +28,8 @@
     <string name="Edit">Edit</string>
     <string name="Manage_Category_Fragment">Manage Categories</string>
     <string name="Item_deleted_do_you_want_to_undo">Item deleted. Do you want to undo?</string>
-    <string name="Choose_a_color">Choose a background color</string>
-    <string name="fill_the_title_and_description_click_on_the_icon_to_change">Fill the title and description. Click on the icon to change it.</string>
+    <string name="Choose_a_color">Choose a color for category</string>
+    <string name="fill_the_category_info_and_change_color_and_emoji">Fill the category info and change color and emoji of it.</string>
     <string name="select_a_category_for_edit">Select A Category For Edit</string>
     <string name="default_category_name" >This category is default category</string>
     <string name="default_category_emoji">😀</string>
@@ -86,4 +86,13 @@
     <string name="Error_Note_Info_Is_Too_Long"><![CDATA[Error title length must be < 20 and description length must be < 500]]></string>
     <string name="Category_Could_Not_Be_Saved">Category couln\'t be saved</string>
     <string name="Note_Id_Could_Not_Be_Less_Than_Zero">Note id couldn\'t have minus value</string>
+    <string name="Delete_Notes">Delete notes</string>
+    <string name="Move_Notes">Move notes to another category</string>
+    <string name="Cancel_Selection">Cancel selection process</string>
+    <string name="Open_Manage_Notes_Menu">Open manage notes menu</string>
+    <string name="Select_Emoji">Select emoji</string>
+    <string name="Open_Note_Options">Open note options menu</string>
+    <string name="Cancel">Cancel</string>
+    <string name="Move_Selected_Notes">Move selected notes to another category</string>
+    <string name="Delete_Selected_Notes">Delete selected notes</string>
 </resources>

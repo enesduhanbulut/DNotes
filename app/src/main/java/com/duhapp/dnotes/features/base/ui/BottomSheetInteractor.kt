@@ -130,8 +130,8 @@ private fun <BOE : BottomSheetEvent, BOS : BottomSheetState, BS : BaseBottomShee
             activityViewModel.uiEvent.collectLatest {
                 singleEventCollector.invoke(it)
                 job2?.cancel()
-                parentFragmentManager.findFragmentByTag("bottomSheet")?.let {
-                    parentFragmentManager.beginTransaction().remove(it).commit()
+                parentFragmentManager.findFragmentByTag("bottomSheet")?.let { fragment ->
+                    parentFragmentManager.beginTransaction().remove(fragment).commit()
                 }
             }
         else {

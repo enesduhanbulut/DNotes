@@ -85,7 +85,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeUIEvent, HomeUIState,
             }
 
             else -> {
-                Timber.d(fragmentTag, "Unhandled UI Event $it")
+                Timber.d( "Unhandled UI Event $it")
             }
         }
     }

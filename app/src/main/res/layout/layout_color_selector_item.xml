@@ -14,7 +14,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:contentDescription="@{uiModel.color.name()}">
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="@dimen/color_item_size"

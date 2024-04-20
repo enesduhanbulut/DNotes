@@ -24,6 +24,24 @@ class CategoryBottomSheetViewModel @Inject constructor(
     override fun setState(state: CategoryBottomSheetUIState) {
         if (state is CategoryBottomSheetUIState.Success) {
             lastSuccessState = state
+            val formData = if (state.categoryShowType == CategoryShowType.Add) {
+                FormData(
+                    title = R.string.Add_Category,
+                    message = R.string.New_Category_Message,
+                    positiveButtonText = R.string.Add_Category,
+                    negativeButtonText = R.string.Cancel,
+                    negativeButtonVisibility = View.VISIBLE
+                )
+            } else {
+                FormData(
+                    title = R.string.Edit_Category,
+                    message = R.string.Edit_Category_Message,
+                    positiveButtonText = R.string.Edit_Category,
+                    negativeButtonText = R.string.Cancel,
+                    negativeButtonVisibility = View.VISIBLE
+                )
+            }
+            state.formData = formData
         }
         super.setState(state)
     }
@@ -83,6 +101,10 @@ class CategoryBottomSheetViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun onCancelButtonClick() {
+        setEvent(CategoryUIEvent.Canceled)
     }
 
     fun setViewWithBundle(categoryUIState: CategoryUIModel, categoryShowType: CategoryShowType) {
@@ -148,13 +170,13 @@ class CategoryBottomSheetViewModel @Inject constructor(
 
 data class FormData(
     @StringRes
-    var title: Int = 0,
-    var message: Int = 0,
+    var title: Int = R.string.Add_Category,
+    var message: Int = R.string.New_Category_Message,
     @StringRes
-    var positiveButtonText: Int = 0,
+    var positiveButtonText: Int = R.string.Positive_Button_Text,
     @StringRes
-    var negativeButtonText: Int = 0,
-    var negativeButtonVisibility: Int = View.VISIBLE
+    var negativeButtonText: Int = R.string.Negative_Button_Text,
+    var negativeButtonVisibility: Int = View.GONE
 )
 
 sealed interface CategoryBottomSheetUIState : BottomSheetState {
@@ -163,13 +185,7 @@ sealed interface CategoryBottomSheetUIState : BottomSheetState {
         var colors: List<ColorItemUIModel>,
         var categoryUIModel: CategoryUIModel,
         val categoryShowType: CategoryShowType = CategoryShowType.Add,
-        var formData: FormData = FormData(
-            title = R.string.Add_Category,
-            message = R.string.New_Category_Message,
-            positiveButtonText = R.string.Add,
-            negativeButtonText = R.string.Delete,
-            negativeButtonVisibility = View.VISIBLE
-        )
+        var formData: FormData = FormData()
     ) : CategoryBottomSheetUIState
 
     data class Error(
@@ -227,6 +243,14 @@ sealed interface CategoryBottomSheetUIState : BottomSheetState {
     fun getSuccessPositiveButtonText(): Int? {
         return if (isSuccess()) {
             (this as Success).formData.positiveButtonText
+        } else {
+            null
+        }
+    }
+
+    fun getSuccessNegativeButtonText(): Int? {
+        return if (isSuccess()) {
+            (this as Success).formData.negativeButtonText
         } else {
             null
         }

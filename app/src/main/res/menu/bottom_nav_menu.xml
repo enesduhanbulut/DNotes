@@ -8,7 +8,8 @@
 
     <item
         android:id="@+id/placeHolder"
-        android:title="@string/blank" />
+        android:title="@string/blank"
+        android:contentDescription="@string/blank"/>
 
     <item
         android:id="@+id/navigation_manage_category"
